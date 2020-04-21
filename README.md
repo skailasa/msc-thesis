@@ -5,7 +5,7 @@
 ```bash
 @MastersThesis{Kailasa:Thesis:2020,
     author = {Srinath Kailasa},
-    title = {{Accellerating Fast Multipole Methods}},
+    title = {{Accelerating Fast Multipole Methods}},
     school = {University College London},
     address = {United Kingdom},
     year = {2020},
