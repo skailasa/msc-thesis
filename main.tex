@@ -1,0 +1,52 @@
+% Preamble
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{Accellerating Fast Multipole Methods}
+\fancyfoot{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,CE]{Chapter \thechapter}
+\fancyfoot[CO,RE]{Srinath Kailasa}
+
+\usepackage[style=alphabetic]{biblatex}
+\addbibresource{references.bib}
+
+\usepackage{lipsum}
+
+\begin{document}
+
+    \input{titlepage.tex}
+
+    \input{abstract.tex}
+
+    
+    \tableofcontents
+
+    \chapter{Introduction}
+    \input{chapters/introduction}
+
+    \chapter{Chapter Two Title}
+    \input{chapters/chapter02}
+
+    \chapter{Chapter Three Title}
+    \input{chapters/chapter03}
+
+    \chapter{Chapter Four Title}
+    \input{chapters/chapter04}
+
+    \chapter{Conclusion}
+    \input{chapters/conclusion}
+
+    \appendix
+    \chapter{Appendix Title}
+    \input{chapters/appendix}
+
+    \printbibliography
+\end{document}
