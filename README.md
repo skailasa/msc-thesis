@@ -1,6 +1,7 @@
 <h1 align='center'> Master's Thesis </h1>
 
-## Build
+## Build
+
 ```bash
 sh compile.sh
 ```
