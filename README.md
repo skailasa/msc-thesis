@@ -11,7 +11,7 @@ sh compile.sh
 ```bash
 @MastersThesis{Kailasa:Thesis:2020,
     author = {Srinath Kailasa},
-    title = {{Accelerating Fast Multipole Methods}},
+    title = {{Accelerating the Kernel-Independent Fast Multipole Method}},
     school = {University College London},
     address = {United Kingdom},
     year = {2020},
