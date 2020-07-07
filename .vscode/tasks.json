@@ -1,0 +1,25 @@
+{
+    "version": "0.1.0",
+    "command": "build",
+    "isShellCommand": true,
+    "showOutput": "always",
+    "args": [
+        "-c"
+    ],
+    "tasks": [
+        {
+            "taskName": "Run Compile Script",
+            "suppressTaskName": true,
+            "isBuildCommand": true,
+            "args": [
+                "sh compile.sh"
+            ],
+            "problemMatcher": [],
+            "label": "Run Compile Script",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
