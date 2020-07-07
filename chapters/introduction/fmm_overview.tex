@@ -1,5 +1,196 @@
 \subsection{Motivation}
 
+\textbf{Notes from \cite{Cipra:2000:SN}}
+
+Accurate N-Body simulations (stars in a galaxy, atoms in a protein) require
+$\mathcal{O}(n^2)$ calculations. Using multipole expansions in the far field,
+and hierarchical partitioning of the space. Comes equipped with rigorous error bounds.
+
+\hspace{10pt}
+
+\textbf{Notes from \cite{Greengard:1987:Yale}}
+
+\begin{itemize}
+    \item particle simulation important in many fields: e.g. celestial mechanics
+    \item 2 approaches, (1) solving N2L with given initial conditions and find trajectories as
+    function of time
+    \item or, (2) find equilibrium configuration by solving for potential.
+\end{itemize}
+
+Potential of the form
+
+\begin{flalign}
+    \Phi = \Phi_{\text{near}} + \Phi_{\text{external}} + \Phi_{\text{far}}
+\end{flalign}
+
+\begin{enumerate}
+    \item $\Phi_{\text{external}}$, underlying potential (background).
+    \item $\Phi_{\text{near}}$, rapid decaying (e.g. Van Der Waals)
+    \item $\Phi_{\text{far}}$, far field, e.g Coulombic, Gravitational.
+\end{enumerate}
+
+1 and 2 are $\mathcal{O}(n)$ to evaluate at N points. 3 decays slower,
+so all particles must be accounted for, naively evaluating results
+in $\mathcal{O}(n^2)$
+
+Shows up in celestial mechanics, plasma physics, molecular dynamics etc
+
+\hspace{10pt}
+
+
+\textbf{Notes from \cite{Beatson:1997:SCF}}
+
+Again, reference efficacy in particle simulations for computing pairwise interactions.
+As this is where they are most easily understood. Equally useful in the solution
+of certain partial differential equations by first recasting as integral equations.
+
+`Atomic' problem of many probs in comp. phys. boils down to,
+
+Examples of physical problems,
+
+Gravitational potential 3D
+
+\begin{flalign}
+    \phi(x_j) = \sum_{i = 1, \> i \neq j}^N\frac{m_i}{r_{i,j}}
+\end{flalign}
+
+Gravitational field 3D.
+
+\begin{flalign}
+    \mathbf{E}(\mathbf{x_j}) = \sum_{i = 1, \> i \neq j}^Nm_i \frac{\bf{x_j}-\bf{x_i}}{r_{i,j}^3}
+\end{flalign}
+
+Same as electrostatics, where coulomb's law used instead, mass $\rightarrow$ charge.
+
+Can turn into integral, for continuous distributions of mass/charge. (Biot-Savart law etc)
+
+Acoustic Scattering and diffusion, examples given too. Probably wont write in report.
+
+
+Each physical problem results in integral equation,
+
+\begin{flalign}
+    u(\mathbf{x}) = \int K(\mathbf{x}, \mathbf{y}) w(\mathbf{y})d\mathbf{y}
+\end{flalign}
+
+Discrete case,
+
+\begin{flalign}
+    u(\mathbf{x}) = \sum_{i=1}^N w_i K(\mathbf{x}, \mathbf{y}_i)
+\end{flalign}
+
+Direct evaluations obviously quadratic computational cost. Most famous fast
+summation method FFT $\sum_{k=1}^N e^{\frac{2\pi ijk}{N}}w_k$ in $\mathcal{O}(n \log(n))$.
+FFT different, it's exact method, based on symmetry (algebra) - requires uniform spatial grid (geometry dep).
+FMM are approximate - i.e. based on analytic considerations (vs algebra), insensitive
+to source distribution (geometry).
+
+FMM approach based on the following features
+
+\begin{itemize}
+    \item A specified acceptable accuracy $\epsilon$
+    \item A hierarchical tree division of space
+    \item a far field expansion of the kernel, in which the influence of the
+    source and target points separates
+    \item (optionally) the conversion of far field expansions into local expansions
+\end{itemize}
+
+\textbf{Idea}: Compress field in the far field as it's (relatively) smooth if it's well
+separated from evaluation point. How? Using a `multipole expansion'. What are these?
+
+\hspace{10pt}
+
+\textbf{Notes from \cite{Griffiths:2017:CUP}}
+
+page 152 develops the multipole expansion for the potential of an arbitrary
+charge distribution in 3D.
+
+\begin{flalign}
+    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0} \int \frac{1}{d}\rho(\mathbf{r}')d\tau'
+\end{flalign}
+
+$\mathbf{r}$ - vector from centre of expansion at charge distribution to the point
+of evaluation, $d$ - the  distance from volume element $d\tau'$ to the point of
+evaluation, $\rho(\mathbf{r}')$ - charge density, $\mathbf{r}'$ - the vector
+from the centre of expansion to the volume element. $alpha$ is the angle between
+$r$ and $r'$.
+
+From law of the cosines,
+
+\begin{flalign}
+    d^2 &= r^2 + (r')^2 - 2rr'\cos \alpha = r^2 \left [ 1 + \left ( \frac{r'}{r} \right)^2 - 2 \left (\frac{r'}{r} \right)\cos \alpha \right]\\
+    d &= r \sqrt{1+\epsilon}
+\end{flalign}
+
+Where,
+
+\begin{flalign}
+    \epsilon \equiv \left ( \frac{r'}{r} \right) \left (\frac{r'}{r} - 2 \cos \alpha \right)
+\end{flalign}
+
+$\epsilon$ is small far away from charge dist. so can expand $1/d$ binomially
+
+\begin{flalign}
+    \frac{1}{d} &= \frac{1}{r}(1+\epsilon)^{-1/2} = \frac{1}{r}\left (1 - \frac{1}{2}\epsilon + \frac{3}{8}\epsilon^2 - ... \right) \\
+    \frac{1}{d} &= \frac{1}{r} \sum_{n=0}^{\infty} \left(\frac{r'}{r} \right)^n P_n(\cos \alpha)
+\end{flalign}
+
+So can write multipole expansion in terms of legendre polynomials coefficients
+exactly in 3D,
+
+\begin{flalign}
+    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
+\end{flalign}
+
+Again from \cite{Greengard:1987:Yale},
+
+For discrete distributions of $N$ charges $q_i$ this goes to,
+
+\begin{flalign}
+    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)
+\end{flalign}
+
+Addition theorem for Legendre polynomials,
+
+\begin{flalign}
+    P_n(cos \gamma) = \sum_{m=-n}^n Y_n^{-m}(\alpha, \beta) Y_n^m(\theta, \phi)
+\end{flalign}
+
+where two points P and Q with sph. coords. $(r, \theta, \phi)$ and $(\rho, \alpha, \beta)$
+$\gamma$ is angle subtended between them,
+
+From addition theorem, Multipole expansion goes to,
+
+\begin{flalign}
+    V(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
+    & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r')^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{r^{n+1}}Y_n^m(\theta, \phi)\\
+    & = \sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n\frac{M_n^m}{r^{n+1}} \cdot Y_n^m(\theta, \phi)
+\end{flalign}
+
+This is an exact expansion, can be truncated as reqiured for tunable precision.
+
+If instead expansion taken with centre at targets, at distance from sources, Can
+rewrite as Local Expansion.
+
+\begin{flalign}
+    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0} \sum_{i=1}^N \sum_{j=0}^{\infty} \sum_{k=-j}^j L_j^k \cdot  Y_j^k(\theta, \phi) \cdot r^j
+\end{flalign}
+
+Where the coefficients of the local expansion can be derived from the coefficients
+of the the multipole expansion.
+
+Analytic expressions for shifting multipole and local expansions explained. Should
+probably specify shift operators in appendix for completeness...
+
+\hspace{10pt}
+
 \subsection{Algorithm structure}
+
+\textbf{Notes from \cite{Ying:2004:JCP}}
+
+FMM makes use of these representations in a recursive algorithm. computational
+domain is a box containing all particles, sources and targets,
+
+\gls{maths}
 
 \subsection{Analysis}

@@ -2,6 +2,8 @@
 \documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{amsmath}
+
 \graphicspath{ {images/} }
 
 \usepackage[a4paper,width=150mm,top=20mm,bottom=20mm,bindingoffset=6mm]{geometry}
@@ -20,13 +22,18 @@
 \titleformat{\chapter}[display]
   {\normalfont\bfseries}{}{0pt}{\Huge}
 
-
-\usepackage[style=alphabetic]{biblatex}
+\usepackage{biblatex}
 \addbibresource{references.bib}
 
 \usepackage{lipsum}
 
+\usepackage[toc]{glossaries}
+
+\makeglossaries
+\input{glossary.tex}
+
 \begin{document}
+
 
     \input{titlepage.tex}
 
@@ -45,5 +52,8 @@
     \appendix
     \input{appendix.tex}
 
-    \printbibliography
+    \printbibliography[heading=bibintoc]
+    \printglossary
+
+
 \end{document}
