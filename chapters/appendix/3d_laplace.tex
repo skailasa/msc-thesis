@@ -1,0 +1,108 @@
+Expressions derived in \cite{Greengard:1987:Yale}\\
+
+For $l$ charges of strengths $q_1,..., q_l$ located inside
+sphere $D$ of radius $a$ center at $Q=(\rho, \alpha, \beta)$, and that for points
+$P=(r, \theta, \phi)$ outside $D$ potential given by multipole expansion
+
+Multipole Expansion,
+
+\begin{flalign}
+    \Phi(P) = \sum_{n=0}^\infty \sum_{m=-n}^n \frac{O_n^m}{r'^{n+1}} \cdot Y_n^m(\theta', \phi'))
+\end{flalign}
+
+$P-Q = (r', \theta', \phi')$. Then for any point $P$ outside sphere $D_1$ of radius
+$a+\rho$, M2M shifted\\
+
+\begin{flalign}
+    \Phi(P) = \sum_{j=0}^\infty \sum_{k=-j}^j \frac{M_j^k}{r^{j+1}} \cdot Y_j^k(\theta, \phi)
+\end{flalign}
+
+
+Defined,
+
+\begin{flalign}
+    M_j^k = \sum_{n=0}^j\sum_{m=-n}^n \frac{O_{j-n}^{k-m} \cdot J_m^{k-m} \cdot A_n^m \cdot A_{j-n}^{k-m} \cdot \rho^n \cdot Y_n^{-m}(\alpha, \beta)}{A_j^k}
+\end{flalign}
+
+and,
+
+\begin{equation}
+    J_m^{m'} =
+      \begin{cases}
+        (-1)^{\min{(|m'|, |m|)}} & \text{if } m \cdot m' < 0\\
+        1 & \text{otherwise}
+      \end{cases}
+\end{equation}
+
+\begin{flalign}
+    A_n^m = \frac{(-1)^n}{\sqrt{(n-m)! \cdot (n+1)!}}
+\end{flalign} \\
+
+
+M2L shifted \\
+
+For $l$ charges of strengths $q_1,..., q_l$ located inside
+sphere $D_Q$ of radius $a$ center at $Q=(\rho, \alpha, \beta)$, and that
+$\rho > (c+1)a$ with $c>1$. The corresponding multipole expansion, converges
+inside sphere $D_0$ of radius $a$ centered at origin. Inside $D_0$ the potential
+due to charges has the local expansion,
+
+\begin{flalign}
+    \Phi(P) = \sum_{j=0}^\infty \sum_{k=-j}^j L_j^k \cdot Y_j^k(\theta, \phi) \cdot r^j
+\end{flalign}
+
+where,
+
+\begin{flalign}
+    L_j^k = \sum_{n=0}^\infty \sum_{m=-n}^n \frac{O_n^m \cdot J_k^m \cdot A_n^m \cdot A_j^k \cdot Y_{j+n}^{m-k}(\alpha, \beta)}{A_{j+n}^{m-k} \cdot \rho^{j+n+1}}
+\end{flalign}
+
+where $A_n^m$ same as above,
+
+but,
+
+\begin{equation}
+    J_m^{m'} =
+      \begin{cases}
+        (-1)^{n'}(-1)^{\min{(|m'|, |m|)}} & \text{if } m \cdot m' < 0\\
+        (-1)^{n'} & \text{otherwise}
+      \end{cases}
+\end{equation}
+
+
+$n'$ refers to $j$, $m'$ refers to $k$
+
+and that for points
+$P=(r, \theta, \phi)$ outside $D$ potential given by multipole expansion\\
+
+
+L2L shifted \\
+
+Let $Q=(\rho \alpha, \beta)$ be the origin of a local expansion,
+
+\begin{flalign}
+    \Phi(P) = \sum_{n=0}^p\sum_{m=-n}^n O_n^m \cdot Y_n^m(\theta', \phi') \cdot r'^n
+\end{flalign}
+
+Where $P=(r, \theta, \phi)$ and $P-Q = (r', \theta', \phi')$.
+
+\begin{flalign}
+    \Phi(O) = \sum_{j=0}^p \sum_{k=-j}^j L_j^k \cdot Y_j^k(\theta, \phi) \cdot r^j
+\end{flalign}
+
+where,
+
+\begin{flalign}
+    L_j^k = \sum_{n=j}^p\sum_{m=-n}^n \frac{O_n^m \cdot J_{n-j, m-k}^{m} \cdot A_{n-j}^{m-k} \cdot A_j^k \cdot Y_{n-j}^{m-k}(\alpha, \beta) \cdot \rho^{n-j}}{A^k_j}
+\end{flalign}
+
+where $A_n^m$ same as above,
+
+\begin{equation}
+    J_{n, m}^{m'} =
+      \begin{cases}
+        (-1)^{n}(-1)^m & \text{if } m \cdot m' < 0\\
+        (-1)^{n}(-1)^{m'-m} & \text{if } m \cdot m' > 0 and |m'| < |m|\\
+        (-1)^n & \text{otherwise}
+      \end{cases}
+\end{equation}
