@@ -1,0 +1,85 @@
+textbf{Notes from \cite{Greengard:1987:Yale}}
+
+\textbf{Initialisation}: Choose refinement of $n \approx \log_8 N$ and precision
+$\epsilon$, set $p= \lceil -\log_2(\epsilon) \rceil$. \\
+
+\textbf{Upward Pass}
+\begin{center}
+    \textbf{Step 1}
+\end{center}
+From multipole expansions of potential field due to particles in each box at
+leaf level. \\
+
+\noindent \textbf{do} $\textit{ibox}=1,..,8^n$ \\
+\indent   Form $p^{th}$ degree multipole expansion \\
+\noindent \textbf{end}
+
+\begin{center}
+    \textbf{Step 2}
+\end{center}
+Translate Multipole expansion to coarser levels from the bottom up.\\
+
+\noindent \textbf{do} $l=n-1,..,0$ \\
+\indent \textbf{do} $\textit{ibox}=1,..,8^l$ \\
+\indent \indent M2M shifting \\
+\indent \textbf{end} \\
+\noindent \textbf{end} \\
+
+\textbf{Downward Pass} \\
+
+Computations at the coarsest possible level. For a given box, done by including
+interactions with those boxes which are \gls{well-separated}, and whose interactions
+have not been accounted for at the parent level.
+
+\begin{center}
+    \textbf{Step 3}
+\end{center}
+Form local expansion about center of each box at each level $l \leq n-1$, describes
+field due to all particles that are not contained in the current box, it's \gls{near-neighbours}
+or it's secondary near neighbors.
+
+\noindent \textbf{do} $l=1,...,n-1$ \\
+\indent \textbf{do} $\textit{ibox}=1,...,8^l$ \\
+\indent \indent Do M2L OPERATIONS \\
+\indent \textbf{end} \\
+\indent \textbf{do} $1,...,8^l$ \\
+\indent \indent Do L2L OPERATIONS \\
+\indent \textbf{end} \\
+\noindent \textbf{end}\\
+
+\begin{center}
+    \textbf{Step 4}
+\end{center}
+After this step, leaf local expansions are available, can use this to evaluate
+potential at leaves from all particles in the far field.\\
+
+\noindent \textbf{do} $\textit{ibox}=1,...,8^n$ \\
+\indent Find local expansion at leaf level, by doing M2L from interaction list. \\
+\noindent \textbf{end}
+
+\begin{center}
+    \textbf{Step 5}
+\end{center}
+Evaluate local expansions at particle positions in all leaves\\
+
+\noindent \textbf{do} $\textit{ibox}=1,...,8^n$ \\
+\indent For every particle in $\textit{ibox}$'th box, evaluate local expansion. \\
+\noindent \textbf{end} \\
+
+\begin{center}
+    \textbf{Step 6}
+\end{center}
+Compute nearest neighbors directly,
+
+\noindent \textbf{do} $\textit{ibox}=1,...,8^n$ \\
+\indent For every particle in $\textit{ibox}$'th box, compute potential directly with nearest neighbors. \\
+\noindent \textbf{end} \\
+
+
+\begin{center}
+    \textbf{Step 7}
+\end{center}
+
+\noindent \textbf{do} $\textit{ibox}=1,...,8^n$ \\
+\indent Add direct and far field terms together for every particle in $\textit{ibox}$\\
+\noindent \textbf{end} \\

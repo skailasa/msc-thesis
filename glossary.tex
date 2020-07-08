@@ -4,10 +4,29 @@
     description={Is a mark up language specially suited
     for scientific documents}
 }
-\newglossaryentry{maths}
+
+\newglossaryentry{near-neighbours}
 {
-    name=random,
-    description={Mathematics is what mathematicians do}
+    name={near neighbours},
+    description={
+        Two boxes in computational tree are near neighbours if they are at the
+        same level of refinement, and share a boundary point.
+    }
 }
-\newglossaryentry{test}{
-    name={testing},description={this is a test}}
+
+\newglossaryentry{well-separated}
+{
+    name={well separated},
+    description={
+        Two boxes in computational tree are near neighbours if they are at the
+        same level of refinement, and are not near neighbours.
+    }
+}
+
+\newglossaryentry{interaction-list}{
+    name={interaction list},
+    description={
+        For box $B$, this consists of the children of the \textit{near neighbours}
+        of $B$'s parent box, which are themselves well separated from $B$.
+    }
+}
