@@ -35,12 +35,13 @@ This thesis presents a Python implementation of
 the KIFMM, with investigations made into both mathematical and computational
 techniques for the acceleration of the algorithm. Python is chosen as it has emerged as a standard
 for scientific and data intensive computing in recent years, with a huge increase
-in usage and a well supported ecosystem of libraries and tools available for
+in adoption, and a well supported ecosystem of libraries and tools available for
 accelerating numerical codes. The wider context of this thesis
 is an ongoing collaboration with the ExaFMM Project \cite{exafmm} to produce a Pythonic
 implementation of the KIFMM that sacrifices as little performance as possible.
-This thesis presents a systematic performance analysis
-of a naive implementation of the KIFMM algorithm, before proceeding to examine and implement
-acceleration techniques. The speed and accuracy of the implementation is tested
-for some simple Green's functions, and it concludes with a discussion on future avenues
-for investigation.
+This thesis introduces the relevant theoretical background, before
+proceeding to discuss the strategies used in the practical implementation of the
+software. Key bottlenecks in the implementation are examined and addressed, with the speed
+and accuracy of the software benchmarked for the Laplace kernel. Finally, future
+avenues of investigation and software development are discussed, in the context
+of wider literature.
