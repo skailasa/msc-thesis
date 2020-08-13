@@ -10,7 +10,7 @@ sources, I confirm that this has been indicated in the thesis.
     \textbf{Abstract}
 \end{center}
 
-The Fast Multipole Method (FMM) is a numerical method to accelerate the solution
+The Fast Multipole Method (\gls{FMM}) is a numerical method to accelerate the solution
 of the `n-body' problem, which appears in numerous contexts in science and engineering,
 for example in solving for gravitational or electrostatic potentials. It does so by approximating
 the Green's function of the
@@ -21,7 +21,7 @@ original Fast Multipole Method depend on the Green's function of the system in
 question (Helmholtz, Laplace etc.), and in practice a new implementations
 must be written for a given system.
 
-The Kernel-Independent Fast Multipole Method (KIFMM),
+The Kernel-Independent Fast Multipole Method (\gls{KIFMM}),
 first presented by Ying et al. \cite{Ying:2004:JCP}, is a similar approach that replaces
 the analytic series expansions with a continuous distribution of so called
 `equivalent density' supported at discrete points on a box enclosing a set of
@@ -38,8 +38,8 @@ for scientific and data intensive computing in recent years, with a huge increas
 in usage and a well supported ecosystem of libraries and tools available for
 accelerating numerical codes. The wider context of this thesis
 is an ongoing collaboration with the ExaFMM Project \cite{exafmm} to produce a Pythonic
-implementation of the KIFMM that can compete in terms of performance with
-a C++ equivalent. This thesis presents a systematic performance analysis
+implementation of the KIFMM that sacrifices as little performance as possible.
+This thesis presents a systematic performance analysis
 of a naive implementation of the KIFMM algorithm, before proceeding to examine and implement
 acceleration techniques. The speed and accuracy of the implementation is tested
 for some simple Green's functions, and it concludes with a discussion on future avenues

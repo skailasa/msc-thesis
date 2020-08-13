@@ -1,7 +1,5 @@
  # Plan
 
-
-
 ## Overview of the Analytic FMM
 
 ### Motivation
@@ -13,7 +11,7 @@
 step procedure to introduce the efficacy of the algorithm?
 
 Figures required:
-
+ None
 
 ### Algorithm structure
 
@@ -21,6 +19,8 @@ Figures required:
 - List steps of pseudo algorithm, write full loop in the appendix to save space
 
 Figures required:
+
+Figure demonstrating m2m vs m2l vs l2l differences in 3D, can make in powerpoint.
 
 
 ### Analysis
@@ -34,6 +34,7 @@ spec.
 
 Figures required:
 
+None
 
 ## Overview of KIFMM
 
@@ -43,7 +44,7 @@ Figures required:
 but get easy implementation
 
 Figures required:
-
+ None
 
 ### Algorithm structure
 
@@ -51,34 +52,38 @@ Figures required:
 - Highlight differences in the operators based on the equivalent density concept.
 
 Figures required:
-
+    Similar to the ones in the previous section, but with grids.
+    can plot these.
 
 ### Analysis
 
-- Get same computational complexity (Justify from L Ying), different practical
-bottlenecks. Highlight new tradeoffs, compare to old ones and justify!
+- Get same computational complexity (Justify from L Ying), different practical bottlenecks. Highlight new tradeoffs, compare to old ones and justify!
 
 Figures required:
-
+    None
 
 ## Strategy for Practical Implementation
 
-- Comment on section outline. Comment on the efficiency savings that different
-implementations could benefit from in terms of real software.
+- Comment on section outline. Comment on the efficiency savings that different implementations could benefit from in terms of real software.
 
 
 Figures required:
-
+    None
 
 ### Bottlenecks
 
 - List and analyse main mathematical bottlenecks
+    - Large number of similar M2L computations.
+        - SVD Compression.
+    - Pseudo-Inverse computation of gram matrix.
+        - Operator Caching + Reusing surfaces
+
 - List and analyse main software/hardware bottlenecks
-- Provide numerical/mathematical justification for urgency/priority of bottlenecks
-- Suggest solutions, and describe solutions attempted in this paper
+    - Large number of similar M2L computations.
+        - Multiprocessing
 
 Figures required:
-
+    None
 
 ### Space Filling Curves
 
@@ -87,25 +92,51 @@ Figures required:
 - Explain usefulness (vector representation, ready for optimization)
 
 Figures required:
+    Morton z-encoding figure to illustrate point.
 
-
-### Operator Caching
+### Operator Caching and Multiprocessing
 
 - Comment on dependence between particles and operators required to be computed.
-- Comment on potential computational waste on `empty' operators.
 
 Figures required:
-
+    None
 
 ### SVD Compression
 
 - Comment on FFT compression already in use by ExaFMM, PVFMM etc. Comment on lack of software implementations of SVD based approach in 3D.
 - For now, derive basic SVD caching idea applied to M2L operators.
-- Leave space (5-10 pages) for alternative SVD based approaches which may be
-explored in the future.
 
 Figures required:
+    None
 
+## Experiments and Results
 
+### Benchmarking
 
+- Estimate cost savings from parallelization steps.
 
+- Compare experimental results for FMM vs Direct computation as a function of number of particles.
+
+Figures required:
+    - KEY RESULT: Benchmarking figure as a function of N - particles
+    - IMPORTANT TO MEASURE:
+        Cost benefit of SVD Compression for some random matrices.
+    - relative error plot - vars of tree depth/expansion order.
+
+### Optimum SVD Parameter
+
+Figures required:
+    - relative error plot - fixed tree depth/expansion order vs SVD tolerance.
+
+## Conclusion
+
+- 3D lib with some optimisations
+- results of benchmarking
+
+### Future Work
+
+- Parallel tree construction
+- An adaptive algorithm
+- Offloading M2L computation to specialized hardware
+- More robust SVD compression, randomized compression.
+- Taking more check points than multipole/local points for more robust pseudo-inverse.
