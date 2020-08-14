@@ -109,6 +109,11 @@ Figures required:
 Figures required:
     None
 
+### Software Design
+
+- Comment briefly on software design principles used in this project. OOP from the start. The requirement for simple objects. Debugging as well as numerics requirements.
+- Namely the separation of concerns, dependency injection, and open-close principle.
+
 ## Experiments and Results
 
 ### Benchmarking
