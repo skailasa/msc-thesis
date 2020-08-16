@@ -103,7 +103,7 @@ Figures required:
         - Justify why this is fine.
     - requirement for vectorized data of different formats, hence small number
     of simple objects.
-    - requirement for design around parallelization of loops via tools like numba and numexpr.
+    - requirement for design around parallelization of loops via JIT tools like numba and numexpr.
     - requirement of modularity in order to be compatible with future extensions
     that would use GPUs
     - requirement for maintainability/testability in the face of a complex
@@ -166,6 +166,14 @@ Figures required:
 
 ### Software Design
 
+- Comment on Overhead of using Python vs Compiled languages C++/Fortran
+    - Why trading efficiency for productivity is good.
+    - Short discussion on JIT techniques like numba and numexpr
+    - Comment on locations in code (tree creation/manipulation) where JIT is used.
+    - Simple benchmark number for speedup offered by numba for a simple piece of
+    numerical code.
+    - programmer efficiency of thinking in familiar loops.
+
 - Comment on techniques and patterns followed:
 - The requirement for simple objects. Debugging as well as numerics requirements.
 - Namely the separation of concerns, dependency injection, and open-close principle.
@@ -175,12 +183,12 @@ Figures required:
 - dependency injection crucial for separating logic and data
 - open-close
     - crucial for extensiblity of functionality.
+
 - OOP in general crucial for offering a few heavyweight objects for testing.
     - requirement for safety objects for unit testing.
 
 - Comment on how future versions will iterate on design, introducing more differential
 testing as numerical testing is not very accurate.
-
 
 ## Experiments and Results
 
