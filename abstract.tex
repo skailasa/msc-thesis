@@ -11,14 +11,14 @@ sources, I confirm that this has been indicated in the thesis.
 \end{center}
 
 The Fast Multipole Method (\gls{FMM}) is a numerical method to accelerate the solution
-of the `n-body' problem, which appears in numerous contexts in science and engineering,
-for example in solving for gravitational or electrostatic potentials. It does so by approximating
-the Green's function of the
+of the $N$-Body problem, which appears in numerous contexts in science and engineering,
+for example in solving for gravitational or electrostatic potentials in multi-particle
+systems. It does so by approximating the Green's function of the
 system with analytic infinite series expansions (the origin of the `multipole' in its name),
- and coalescing the effect of distinct distant sources together so as to
+and coalescing the effect of distinct distant sources together so as to
 greatly reduce the number of computations. The analytic expansions of the
 original Fast Multipole Method depend on the Green's function of the system in
-question (Helmholtz, Laplace etc.), and in practice a new implementations
+question (Helmholtz, Laplace etc.), and in practice a new implementation
 must be written for a given system.
 
 The Kernel-Independent Fast Multipole Method (\gls{KIFMM}),
@@ -42,6 +42,6 @@ implementation of the KIFMM that sacrifices as little performance as possible.
 This thesis introduces the relevant theoretical background, before
 proceeding to discuss the strategies used in the practical implementation of the
 software. Key bottlenecks in the implementation are examined and addressed, with the speed
-and accuracy of the software benchmarked for the Laplace kernel. Finally, future
-avenues of investigation and software development are discussed, in the context
+and accuracy of the software benchmarked for the Laplace kernel for electrostatic problems.
+Finally, future avenues of investigation and software development are discussed, in the context
 of the wider literature.

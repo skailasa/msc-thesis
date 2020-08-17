@@ -6,12 +6,12 @@
 sh compile.sh
 ```
 
-## Citatation 
+## Citatation
 
 ```bash
 @MastersThesis{Kailasa:Thesis:2020,
     author = {Srinath Kailasa},
-    title = {{Accelerating the Kernel-Independent Fast Multipole Method}},
+    title = {{Implementing Fast-Multipole Methods with High-Level Interpreted Languages}},
     school = {University College London},
     address = {United Kingdom},
     year = {2020},
