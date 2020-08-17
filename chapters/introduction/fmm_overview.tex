@@ -13,18 +13,18 @@ written in the form of the following sum,
 \label{eq:n_body_problem}
 \end{equation}
 
-Where $i, j \in [1,N]$ and $K(x, y)$ is called a kernel function where we are generally
-concerned with coordinates of particles in an $n=2 \> \> \text{or} \> \> 3$ dimensional Hilbert space
-taking  $\{(x, y) | \> x, y \in \mathbb{R}^n \}$. Additionally, each summand is
-weighted by $w_i$. For calculating electrostatic problems in three dimensions,
-which is used as a model problem throughout this thesis, this goes to,
+Where $i, j \in [1,N]$ and $K(x, y)$ is called the Green's function, or equivalently
+a `kernel function', where we are generally concerned with coordinates of particles in an
+$n=2 \> \> \text{or} \> \> 3$ dimensional Hilbert space taking  $\{(x, y) | \> x, y \in \mathbb{R}^n \}$.
+Additionally, each summand is weighted by $w_i$. For calculating electrostatic
+problems in three dimensions, which is used as a model problem throughout this thesis, this goes to,
 
 \begin{equation}
 \Phi(x_j) = \sum_{i=1}^N q_iK(x_i, x_j)
 \label{eq:electrostatic_paradigm}
 \end{equation}
 
-where $q_i$ refers to a charge density and,
+where $q_i$ refers to a charge density with the kernel function,
 
 \begin{equation}
     K(x, y) = \frac{1}{4\pi \epsilon_0}\frac{1}{| x - y |}
@@ -44,130 +44,75 @@ First presented by Greengard \cite{Greengard:1987:Yale}, the analytic \gls{FMM} 
 equipped with rigorous error bounds, making accurate massive $N$-Body simulations
 feasible on available computing hardware.
 
-The universality of the $N$-Body problem in computational science is exampled by
-the vast diversity of applications the FMM has found.
+The original analytic FMM developed by Greengard, solves the electrostatic problem
+in two and three dimensions, this is equivalently known as the Poisson problem,
+represented by the differential equation,
 
+\begin{equation}
+    \nabla^2 \phi =f
+\label{eq:poisson}
+\end{equation}
 
-\textbf{Notes from \cite{Cipra:2000:SN}}
+Where $\phi$ is some scalar potential to be determined, and $f$ is a scalar source
+term which is usually known. For electrostatics the corresponding formulation
+can be derived from Gauss' law as \cite{Griffiths:2017:CUP},
 
-Accurate N-Body simulations (stars in a galaxy, atoms in a protein) require
-$\mathcal{O}(n^2)$ calculations. Using multipole expansions in the far field,
-and hierarchical partitioning of the space. Comes equipped with rigorous error bounds.
+\begin{equation}
+  \nabla^2 \phi = - \frac{q}{\epsilon_0}
+\label{eq:electrostatic_poisson}
+\end{equation}
 
-\hspace{10pt}
+where $\phi$ is the electrostatic potential, $q$ is the charge density and
+$\epsilon_0$ is the permittivity of free space. It can therefore be seen that
+the \gls{FMM} is actually solving the Poisson problem by formulating it as an
+integral equation. The ubiquity of problems of the form (\ref{eq:n_body_problem})
+in computational science has lead to diverse application of the FMM. For example,
+in the modeling the electrostatic interactions of charged particles in complex
+biological molecules at biologically relevant length scales \cite{Board:1992:CPL}.
+The extension of FMMs to Helmholtz equations \cite{Rokhlin:1990:JCP}, has lead
+to even more applications, such as in seismic and acoustic scattering
+\cite{Hwu:2011:MKP}. Though as the focus of this thesis is on solving the Laplace
+model problem for electrostatics, we mention this only for completeness.
 
-\textbf{Notes from \cite{Greengard:1987:Yale}}
+The key insight that leads to the \gls{FMM}'s asymptotic complexity is the idea
+that if the field created by a distribution of charge (or mass) density is approximated
+to be relatively smooth in the \textbf{\gls{far-field}}, then it should be possible to apply
+some form of compression for the evaluation of contribution to local potentials due
+to particles in the \gls{far-field}. The FMM performs this compression by encoding
+the field contributions of particles in the \gls{far-field} using a multipole
+expansion.
 
-\begin{itemize}
-    \item particle simulation important in many fields: e.g. celestial mechanics
-    \item 2 approaches, (1) solving N2L with given initial conditions and find trajectories as
-    function of time
-    \item or, (2) find equilibrium configuration by solving for potential.
-\end{itemize}
-
-Potential of the form
-
-\begin{flalign}
-    \Phi = \Phi_{\text{near}} + \Phi_{\text{external}} + \Phi_{\text{far}}
-\end{flalign}
-
-\begin{enumerate}
-    \item $\Phi_{\text{external}}$, underlying potential (background).
-    \item $\Phi_{\text{near}}$, rapid decaying (e.g. Van Der Waals)
-    \item $\Phi_{\text{far}}$, far field, e.g Coulombic, Gravitational.
-\end{enumerate}
-
-1 and 2 are $\mathcal{O}(n)$ to evaluate at N points. 3 decays slower,
-so all particles must be accounted for, naively evaluating results
-in $\mathcal{O}(n^2)$
-
-Shows up in celestial mechanics, plasma physics, molecular dynamics etc
-
-\hspace{10pt}
-
-
-\textbf{Notes from \cite{Beatson:1997:SCF}}
-
-Again, reference efficacy in particle simulations for computing pairwise interactions.
-As this is where they are most easily understood. Equally useful in the solution
-of certain partial differential equations by first recasting as integral equations.
-
-`Atomic' problem of many probs in comp. phys. boils down to,
-
-Examples of physical problems,
-
-Gravitational potential 3D
+For simple kernel functions and charge distributions, such as the model problem
+of this thesis, we can easily derive the expression for this multipole expansion.
+In order to generalise the discussion, we consider an arbitrary continuous
+distribution of charge (fig. \ref{fig:1_1_continuous_charge_distribution}),
+for which the potential is evaluated at some other evaluation point outside of
+the distribution. This can be written as follows,
 
 \begin{flalign}
-    \phi(x_j) = \sum_{i = 1, \> i \neq j}^N\frac{m_i}{r_{i,j}}
+    \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0} \int \frac{1}{d}\rho(\mathbf{r}')d\tau'
+    \label{eq:1_1_continuous_integral_formulation}
 \end{flalign}
 
-Gravitational field 3D.
-
-\begin{flalign}
-    \mathbf{E}(\mathbf{x_j}) = \sum_{i = 1, \> i \neq j}^Nm_i \frac{\bf{x_j}-\bf{x_i}}{r_{i,j}^3}
-\end{flalign}
-
-Same as electrostatics, where coulomb's law used instead, mass $\rightarrow$ charge.
-
-Can turn into integral, for continuous distributions of mass/charge. (Biot-Savart law etc)
-
-Acoustic Scattering and diffusion, examples given too. Probably wont write in report.
-
-
-Each physical problem results in integral equation,
-
-\begin{flalign}
-    u(\mathbf{x}) = \int K(\mathbf{x}, \mathbf{y}) w(\mathbf{y})d\mathbf{y}
-\end{flalign}
-
-Discrete case,
-
-\begin{flalign}
-    u(\mathbf{x}) = \sum_{i=1}^N w_i K(\mathbf{x}, \mathbf{y}_i)
-\end{flalign}
-
-Direct evaluations obviously quadratic computational cost. Most famous fast
-summation method FFT $\sum_{k=1}^N e^{\frac{2\pi ijk}{N}}w_k$ in $\mathcal{O}(n \log(n))$.
-FFT different, it's exact method, based on symmetry (algebra) - requires uniform spatial grid (geometry dep).
-FMM are approximate - i.e. based on analytic considerations (vs algebra), insensitive
-to source distribution (geometry).
-
-FMM approach based on the following features
-
-\begin{itemize}
-    \item A specified acceptable accuracy $\epsilon$
-    \item A hierarchical tree division of space
-    \item a far field expansion of the kernel, in which the influence of the
-    source and target points separates
-    \item (optionally) the conversion of far field expansions into local expansions
-\end{itemize}
-
-\textbf{Idea}: Compress field in the far field as it's (relatively) smooth if it's well
-separated from evaluation point. How? Using a `multipole expansion'. What are these?
-
-\hspace{10pt}
-
-\textbf{Notes from \cite{Griffiths:2017:CUP}}
-
-page 152 develops the multipole expansion for the potential of an arbitrary
-charge distribution in 3D.
-
-\begin{flalign}
-    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0} \int \frac{1}{d}\rho(\mathbf{r}')d\tau'
-\end{flalign}
-
-$\mathbf{r}$ - vector from centre of expansion at charge distribution to the point
-of evaluation, $d$ - the  distance from volume element $d\tau'$ to the point of
-evaluation, $\rho(\mathbf{r}')$ - charge density, $\mathbf{r}'$ - the vector
-from the centre of expansion to the volume element. $alpha$ is the angle between
-$r$ and $r'$.
-
+where the symbols take their meanings from figure (\ref{fig:1_1_continuous_charge_distribution}).
 From law of the cosines,
+
+
+\begin{figure}[!h]
+    \centering
+    {\includegraphics[width=0.45\textwidth]{introduction/continuous_charge.png}}
+  \vspace{0pt}
+  \caption{foo bar}
+  \label{fig:1_1_continuous_charge_distribution}
+\end{figure}
+
+
+
 
 \begin{flalign}
     d^2 &= r^2 + (r')^2 - 2rr'\cos \alpha = r^2 \left [ 1 + \left ( \frac{r'}{r} \right)^2 - 2 \left (\frac{r'}{r} \right)\cos \alpha \right]\\
     d &= r \sqrt{1+\epsilon}
+    \label{eq:1_1_law_of_cosines}
 \end{flalign}
 
 Where,
@@ -216,6 +161,33 @@ From addition theorem, Multipole expansion goes to,
 \end{flalign}
 
 This is an exact expansion, can be truncated as reqiured for tunable precision.
+
+
+
+\begin{figure}[!h]
+    \centering
+    {\includegraphics[width=0.45\textwidth]{introduction/multipole_expansion.png}}
+    \hfill
+  {\includegraphics[width=0.28\textwidth]{introduction/local_expansion.png}}
+  \vspace{0pt}
+  \caption{foo bar}
+  \label{fig:1_1_multipole_local_expansions}
+\end{figure}
+
+
+
+\textbf{Notes from \cite{Griffiths:2017:CUP}}
+
+page 152 develops the multipole expansion for the potential of an arbitrary
+charge distribution in 3D.
+
+
+$\mathbf{r}$ - vector from centre of expansion at charge distribution to the point
+of evaluation, $d$ - the  distance from volume element $d\tau'$ to the point of
+evaluation, $\rho(\mathbf{r}')$ - charge density, $\mathbf{r}'$ - the vector
+from the centre of expansion to the volume element. $alpha$ is the angle between
+$r$ and $r'$.
+
 
 If instead expansion taken with centre at targets, at distance from sources, Can
 rewrite as Local Expansion.
@@ -268,6 +240,15 @@ Two basic steps of FMM using tree structure.
     Combined with the `near' interaction by direct computation of potential over all
     source points in near field (within the box itself, and it's direct neighbors).
 \end{enumerate}
+
+
+\begin{figure}[!h]
+    \centering
+    {\includegraphics[width=\textwidth]{introduction/main_loop.png}}
+  \vspace{0pt}
+  \caption{foo bar}
+  \label{fig:1_1_main_loop}
+\end{figure}
 
 
 \subsection{Analysis}
