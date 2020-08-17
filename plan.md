@@ -35,6 +35,8 @@ they are there because it's not the focus of this study.
 in the far field for their near field evaluations. This discussion is very concise
 in GPU Gems, so read this before trying to do this and use as a core reference.
 
+- Explanation of how tree is used, and why
+
 - The analytic expressions for the shift operators, in the appendix, but need more exposition to tie them together.
 
 - Re-emphasise how expansion order can be chosen, resulting in rigorous error bounds.

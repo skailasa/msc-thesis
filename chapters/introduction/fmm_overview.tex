@@ -14,7 +14,7 @@ written in the form of the following sum,
 \end{equation}
 
 Where $i, j \in [1,N]$ and $K(x, y)$ is called the Green's function, or equivalently
-a `kernel function', where we are generally concerned with coordinates of particles in an
+a `kernel function', where one is generally concerned with coordinates of particles in an
 $n=2 \> \> \text{or} \> \> 3$ dimensional Hilbert space taking  $\{(x, y) | \> x, y \in \mathbb{R}^n \}$.
 Additionally, each summand is weighted by $w_i$. For calculating electrostatic
 problems in three dimensions, which is used as a model problem throughout this thesis, this goes to,
@@ -34,17 +34,23 @@ where $q_i$ refers to a charge density with the kernel function,
 the constant $\epsilon_0$ is the permittivity of free space. It's easy to see
 how a naive direct application of this equation over $N$ particles
 results in an algorithm of $O(N^2)$ complexity, therefore it's only practicable
-for systems of moderate size. In realistic systems, we may be interested in
-interactions involving $10^{6}$ to $10^8$ particles, making it impossible to
+for systems of moderate size. In realistic systems, one may be interested in
+interactions involving $10^{6}$ to $10^8$ particles, making it impractical to
 directly compute all interactions.
 
-The analytic \gls{FMM} represented a sea change for $N$-Body simulation as it manages to
+This chapter introduces the earlier, analytic, \gls{FMM}, with the Kernel-Independent
+\gls{FMM} which is the main focus of this thesis presented later.
+Though substantially different in implementation, the analytic FMM will provide the opportunity to exposit many of the key ideas
+behind all FMM-based algorithms, and provides a good starting point for understanding
+and developing upon these algorithms. The analytic
+\gls{FMM} represented a sea change for $N$-Body simulation as it manages to
 trade off computations for error to achieve an asymptotic complexity of just $O(N)$.
 First presented by Greengard \cite{Greengard:1987:Yale}, the analytic \gls{FMM} comes
-equipped with rigorous error bounds, making accurate massive $N$-Body simulations
-feasible on available computing hardware.
+equipped with rigorous error bounds, making fast and accurate massive $N$-Body simulations
+feasible on available computing hardware. It's success has been such that it is
+regarded as one of the key developments in numerical algorithms in the twentieth century \cite{Cipra:2000:SN}.
 
-The original analytic FMM developed by Greengard, solves the electrostatic problem
+The original analytic FMM solves the electrostatic problem
 in two and three dimensions, this is equivalently known as the Poisson problem,
 represented by the differential equation,
 
@@ -64,7 +70,7 @@ can be derived from Gauss' law as \cite{Griffiths:2017:CUP},
 
 where $\phi$ is the electrostatic potential, $q$ is the charge density and
 $\epsilon_0$ is the permittivity of free space. It can therefore be seen that
-the \gls{FMM} is actually solving the Poisson problem by formulating it as an
+the \gls{FMM} is actually solving the Poisson problem by reformulating it as an
 integral equation. The ubiquity of problems of the form (\ref{eq:n_body_problem})
 in computational science has lead to diverse application of the FMM. For example,
 in the modeling the electrostatic interactions of charged particles in complex
@@ -72,7 +78,7 @@ biological molecules at biologically relevant length scales \cite{Board:1992:CPL
 The extension of FMMs to Helmholtz equations \cite{Rokhlin:1990:JCP}, has lead
 to even more applications, such as in seismic and acoustic scattering
 \cite{Hwu:2011:MKP}. Though as the focus of this thesis is on solving the Laplace
-model problem for electrostatics, we mention this only for completeness.
+model problem for electrostatics, this is mentioned only for completeness.
 
 The key insight that leads to the \gls{FMM}'s asymptotic complexity is the idea
 that if the field created by a distribution of charge (or mass) density is approximated
@@ -83,9 +89,9 @@ the field contributions of particles in the \gls{far-field} using a multipole
 expansion.
 
 For simple kernel functions and charge distributions, such as the model problem
-of this thesis, we can easily derive the expression for this multipole expansion.
-In order to generalise the discussion, we consider an arbitrary continuous
-distribution of charge (fig. \ref{fig:1_1_continuous_charge_distribution}),
+of this thesis, one can easily derive the expression for this multipole expansion.
+In order to generalise the discussion, an arbitrary continuous
+distribution of charge is considered as shown in figure \ref{fig:1_1_continuous_charge_distribution},
 for which the potential is evaluated at some other evaluation point outside of
 the distribution. This can be written as follows,
 
@@ -94,20 +100,23 @@ the distribution. This can be written as follows,
     \label{eq:1_1_continuous_integral_formulation}
 \end{flalign}
 
-where the symbols take their meanings from figure (\ref{fig:1_1_continuous_charge_distribution}).
-From law of the cosines,
+where $\rho(\mathbf{r}')$ is a charge density, and the other symbols take their
+meanings from figure (\ref{fig:1_1_continuous_charge_distribution}).
 
 
 \begin{figure}[!h]
     \centering
     {\includegraphics[width=0.45\textwidth]{introduction/continuous_charge.png}}
   \vspace{0pt}
-  \caption{foo bar}
+  \caption{An arbitrary charge distribution, with an orange point to mark a point
+  where the potential is being evaluated. Here, $\mathbf{r}$ is the the vector
+  between the centre of the multipole expansion and the evaluation point, $\mathbf{r}'$
+  is the vector between the centre of expansion and a given volume element $d\tau'$, and
+  $d$ is a vector between the volume element $d\tau'$ and the evaluation point.}
   \label{fig:1_1_continuous_charge_distribution}
 \end{figure}
 
-
-
+From law of the cosines,
 
 \begin{flalign}
     d^2 &= r^2 + (r')^2 - 2rr'\cos \alpha = r^2 \left [ 1 + \left ( \frac{r'}{r} \right)^2 - 2 \left (\frac{r'}{r} \right)\cos \alpha \right]\\
@@ -121,91 +130,83 @@ Where,
     \epsilon \equiv \left ( \frac{r'}{r} \right) \left (\frac{r'}{r} - 2 \cos \alpha \right)
 \end{flalign}
 
-$\epsilon$ is small far away from charge dist. so can expand $1/d$ binomially
+As $\epsilon$ is small far away from charge distribution one can expand $1/d$ binomially,
 
 \begin{flalign}
     \frac{1}{d} &= \frac{1}{r}(1+\epsilon)^{-1/2} = \frac{1}{r}\left (1 - \frac{1}{2}\epsilon + \frac{3}{8}\epsilon^2 - ... \right) \\
     \frac{1}{d} &= \frac{1}{r} \sum_{n=0}^{\infty} \left(\frac{r'}{r} \right)^n P_n(\cos \alpha)
 \end{flalign}
 
-So can write multipole expansion in terms of legendre polynomials coefficients
-exactly in 3D,
+Using this, the exact multipole expansion for this charge distribution is,
 
 \begin{flalign}
-    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
+    \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
 \end{flalign}
-
-Again from \cite{Greengard:1987:Yale},
 
 For discrete distributions of $N$ charges $q_i$ this goes to,
 
 \begin{flalign}
-    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)
+    \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)
 \end{flalign}
 
-Addition theorem for Legendre polynomials,
+Using the addition theorem for Legendre polynomials \cite{Greengard:1987:Yale},
 
 \begin{flalign}
     P_n(\cos \gamma) = \sum_{m=-n}^n Y_n^{-m}(\alpha, \beta) Y_n^m(\theta, \phi)
 \end{flalign}
 
-where two points P and Q with sph. coords. $(r, \theta, \phi)$ and $(\rho, \alpha, \beta)$
-$\gamma$ is angle subtended between them,
-
-From addition theorem, Multipole expansion goes to,
+Where we have written the Legendre polynomial in terms of spherical harmonics,
+for two points with spherical coords. $(r, \theta, \phi)$ and
+$(\rho, \alpha, \beta)$ respectively, and $\gamma$ is the angle subtended between them.
+Therefore, the multipole expansion goes to,
 
 \begin{flalign}
-    V(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
+    \Phi(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
     & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r')^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{r^{n+1}}Y_n^m(\theta, \phi)\\
     & = \sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n\frac{M_n^m}{r^{n+1}} \cdot Y_n^m(\theta, \phi)
 \end{flalign}
 
-This is an exact expansion, can be truncated as reqiured for tunable precision.
+This is an exact expansion, and it converges for $\frac{r'}{r} < 1$. This convergence
+condition means that the estimate of the potential at a given evaluation point
+calculated using the multipole expansion is only valid in the far-field, which is
+often tuned empirically for different systems as it's user defined.
+If instead the expansion is taken with centre at the evaluation point,
+one can rewrite as the multipole expansion as a `local' expansion,
 
+\begin{flalign}
+    \Phi(\mathbf{r}) & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r)^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{r'^{n+1}}Y_n^m(\theta, \phi)\\
+    & = \frac{1}{4 \pi \epsilon_0} \sum_{i=1}^N \sum_{n=0}^{\infty} \sum_{m=-j}^n L_m^n \cdot  Y_m^n(\theta, \phi) \cdot r^j
+\end{flalign}
 
+which converges when $\frac{r}{r'} < 1$. The region of convergence for both types
+of expansions are shown in figure (\ref{fig:1_1_multipole_local_expansions}).
+
+The key point to note is that the multipole and local expansions are exact, and
+can be truncated as required to ensure that the asymptotic complexity of evaluating
+a multipole or local expansion at an analytic point is bound by $O(N)$, where
+there are $N$ points taken into account by the expansion.
 
 \begin{figure}[!h]
     \centering
-    {\includegraphics[width=0.45\textwidth]{introduction/multipole_expansion.png}}
+    {\includegraphics[width=0.33\textwidth]{introduction/multipole_expansion.png}}
     \hfill
-  {\includegraphics[width=0.28\textwidth]{introduction/local_expansion.png}}
+  {\includegraphics[width=0.4\textwidth]{introduction/local_expansion.png}}
   \vspace{0pt}
-  \caption{foo bar}
+  \caption{(A) A multipole expansion centered on charge distribution. (B) A local
+  expansion, centered around a point of evaluation. Regions in which the expansions
+  converge are shaded in grey. For the multipole expansion this is the entire domain
+  outside of the region for $r>r'$, and for the local expansion this is the region
+  for which $r < r'$}
+
   \label{fig:1_1_multipole_local_expansions}
 \end{figure}
-
-
-
-\textbf{Notes from \cite{Griffiths:2017:CUP}}
-
-page 152 develops the multipole expansion for the potential of an arbitrary
-charge distribution in 3D.
-
-
-$\mathbf{r}$ - vector from centre of expansion at charge distribution to the point
-of evaluation, $d$ - the  distance from volume element $d\tau'$ to the point of
-evaluation, $\rho(\mathbf{r}')$ - charge density, $\mathbf{r}'$ - the vector
-from the centre of expansion to the volume element. $alpha$ is the angle between
-$r$ and $r'$.
-
-
-If instead expansion taken with centre at targets, at distance from sources, Can
-rewrite as Local Expansion.
-
-\begin{flalign}
-    V(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0} \sum_{i=1}^N \sum_{j=0}^{\infty} \sum_{k=-j}^j L_j^k \cdot  Y_j^k(\theta, \phi) \cdot r^j
-\end{flalign}
-
-Where the coefficients of the local expansion can be derived from the coefficients
-of the the multipole expansion.
-
-Analytic expressions for shifting multipole and local expansions explained. Should
-probably specify shift operators in appendix for completeness...
-These shifts are exact.
 
 \hspace{10pt}
 
 \subsection{Algorithm structure}
+
+The region of convergence for ... is limited ... therefore we need to use a
+tree structure.
 
 \textbf{Notes from \cite{Ying:2004:JCP}}
 
@@ -244,8 +245,7 @@ Two basic steps of FMM using tree structure.
 
 \begin{figure}[!h]
     \centering
-    {\includegraphics[width=\textwidth]{introduction/main_loop.png}}
-  \vspace{0pt}
+    {\includegraphics[width=1.1\textwidth]{introduction/main_loop.png}}
   \caption{foo bar}
   \label{fig:1_1_main_loop}
 \end{figure}
