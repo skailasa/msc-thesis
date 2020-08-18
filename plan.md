@@ -94,22 +94,23 @@ Figures required:
 - Approximately the same algorithmic structure, the same algorithmic complexity + ease of implementation in comparison to the AFMM.
 
 Figures required:
-None
+
+- [DIAGRAM] of surfaces for three main operators in 3D.
 
 
-### Algorithm structure
+### Algorithm structure and analysis
+
+- Get same computational complexity (Justify from L Ying), but doesn't even have to be super long - just the specific reasons as to why it's bounded by the same complexity i.e. something based on how the kernel evaluations are of lower/same complexity as calculating the coefficient products in analytic FMM.
 
 - Introduction to the least squares problem following Ying. i.e. including concept of surfaces and how they're used. including computation of matrix inverse.
 
-- [DIAGRAM] of surfaces for three main operators in 3D.
 
 Figures required:
 
 - Figures demonstrating the concept of check/equivalent surface for the three main operators. 3D is preferable.
 
-### Analysis
+### Summary
 
-- Get same computational complexity (Justify from L Ying), but doesn't even have to be super long - just the specific reasons as to why it's bounded by the same complexity i.e. something based on how the kernel evaluations are of lower/same complexity as calculating the coefficient products in analytic FMM.
 
 - Some differing practical bottlenecks.
     - Inversion of ill-conditioned kernel matrix required for each step.
@@ -119,6 +120,9 @@ Figures required:
 - solved via a singular value decomposition and filtering out sing vecs with low sing vals. and calculation re-used in order to calculate all operators at all levels and just scaled for different positions and stored.
 
 - commment on how the m2l can be accellerated because of the structure of its surfaces and how we do it different to the original paper
+
+- Comment on existing software implementations, specifically exafmm
+and pvfmm and how this complements those implementations.
 
 Figures required:
 - None

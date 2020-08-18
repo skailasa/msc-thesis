@@ -37,6 +37,8 @@
 \glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{9}
 \glossaryentry{CUDA?\glossentry{CUDA}|setentrycounter[]{page}\glsnumberformat}{9}
 \glossaryentry{high level interpreted language?\glossentry{high-level-interpreted-language}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{far field?\glossentry{far-field}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{near field?\glossentry{near-field}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{far field?\glossentry{far-field}|setentrycounter[]{page}\glsnumberformat}{10}
@@ -44,5 +46,18 @@
 \glossaryentry{far field?\glossentry{far-field}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{source densities?\glossentry{source-densities}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{16}
-\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{16}
+\glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{target particles?\glossentry{target-particles}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{equivalent density?\glossentry{equivalent-density}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{PDE?\glossentry{PDE}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{check surface?\glossentry{check-surface}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{check potential?\glossentry{check-potential}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{equivalent density?\glossentry{equivalent-density}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{check surface?\glossentry{check-surface}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{far field?\glossentry{far-field}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{18}
+\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{18}
