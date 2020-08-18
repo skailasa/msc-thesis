@@ -31,17 +31,18 @@ far field. Usefully, this approach doesn't require multipole expansions of the
 Green's functions of a system, and therefore can be programmed in an agnostic way,
 hence the origin of it's name.
 
-This thesis presents a Python implementation of
-the KIFMM, with investigations made into both mathematical and computational
-techniques for the acceleration of the algorithm. Python is chosen as it has emerged as a standard
+This thesis presents a well tested and extensible Python implementation of the KIFMM,
+with investigations made into both mathematical and computational
+techniques for the acceleration of the software, using the $N$-Body electrostatic
+problem as model on which to test the implementation. Python is chosen as it has emerged as a standard
 for scientific and data intensive computing in recent years, with a huge increase
 in adoption, and a well supported ecosystem of libraries and tools available for
 accelerating numerical codes. The wider context of this thesis
-is an ongoing collaboration with the ExaFMM Project \cite{exafmm} to produce a Pythonic
+is an ongoing collaboration with the ExaFMM Project \cite{exafmm} to produce a Python
 implementation of the KIFMM that sacrifices as little performance as possible.
 This thesis introduces the relevant theoretical background, before
 proceeding to discuss the strategies used in the practical implementation of the
 software. Key bottlenecks in the implementation are examined and addressed, with the speed
-and accuracy of the software benchmarked for the Laplace kernel for electrostatic problems.
+and accuracy of the software benchmarked with the Laplace kernel for electrostatic problems.
 Finally, future avenues of investigation and software development are discussed, in the context
 of the wider literature.

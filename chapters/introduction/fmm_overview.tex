@@ -15,9 +15,10 @@ written in the form of the following sum,
 
 Where $i, j \in [1,N]$ and $K(x, y)$ is called the Green's function, or equivalently
 a `kernel function', where one is generally concerned with coordinates of particles in an
-$n=2 \> \> \text{or} \> \> 3$ dimensional Hilbert space taking  $\{(x, y) | \> x, y \in \mathbb{R}^n \}$.
-Additionally, each summand is weighted by $w_i$. For calculating electrostatic
-problems in three dimensions, which is used as a model problem throughout this thesis, this goes to,
+$n=2 \> \> \text{or} \> \> 3$ dimensional Hilbert space taking  $\ x_i \in \mathbb{R}^n$.
+Additionally, each summand is weighted by $w_i$. For solving for electrostatic
+potential in three dimensions, which is used as the model problem throughout this
+thesis, this goes to,
 
 \begin{equation}
 \Phi(x_j) = \sum_{i=1}^N q_iK(x_i, x_j)
@@ -34,21 +35,20 @@ where $q_i$ refers to a charge density with the kernel function,
 the constant $\epsilon_0$ is the permittivity of free space. It's easy to see
 how a naive direct application of this equation over $N$ particles
 results in an algorithm of $O(N^2)$ complexity, therefore it's only practicable
-for systems of moderate size. In realistic systems, one may be interested in
-interactions involving $10^{6}$ to $10^8$ particles, making it impractical to
-directly compute all interactions.
+for systems of moderate size, whereas realistic systems, one may be interested in
+interactions involving $10^{6}$ to $10^8$ particles.
 
-This chapter introduces the earlier, analytic, \gls{FMM}, with the Kernel-Independent
-\gls{FMM} which is the main focus of this thesis presented later.
+This chapter introduces the analytic, \gls{FMM}, the kernel-independent
+version, which is the main focus of this thesis, is presented later.
 Though substantially different in implementation, the analytic FMM will provide the opportunity to exposit many of the key ideas
 behind all FMM-based algorithms, and provides a good starting point for understanding
-and developing upon these algorithms. The analytic
-\gls{FMM} represented a sea change for $N$-Body simulation as it manages to
-trade off computations for error to achieve an asymptotic complexity of just $O(N)$.
-First presented by Greengard \cite{Greengard:1987:Yale}, the analytic \gls{FMM} comes
-equipped with rigorous error bounds, making fast and accurate massive $N$-Body simulations
-feasible on available computing hardware. It's success has been such that it is
-regarded as one of the key developments in numerical algorithms in the twentieth century \cite{Cipra:2000:SN}.
+and developing upon these algorithms. First presented by Greengard \cite{Greengard:1987:Yale},
+the analytic \gls{FMM} represented a sea change for $N$-Body simulation. By
+trading off computations for error, it manages to achieve an asymptotic complexity
+ of just $O(N)$. Additionally, it comes equipped with rigorous error bounds,
+making fast and accurate massive $N$-Body simulations feasible on available
+computing hardware. It's success has been such that it is regarded as one of
+the key developments in numerical algorithms in the twentieth century \cite{Cipra:2000:SN}.
 
 The original analytic FMM solves the electrostatic problem
 in two and three dimensions, this is equivalently known as the Poisson problem,
@@ -89,7 +89,8 @@ the field contributions of particles in the \gls{far-field} using a multipole
 expansion.
 
 For simple kernel functions and charge distributions, such as the model problem
-of this thesis, one can easily derive the expression for this multipole expansion.
+of this thesis, one can easily derive the expression for this multipole expansion
+by finding an series expansion of the system's Green's function.
 In order to generalise the discussion, an arbitrary continuous
 distribution of charge is considered as shown in figure \ref{fig:1_1_continuous_charge_distribution},
 for which the potential is evaluated at some other evaluation point outside of
@@ -143,7 +144,7 @@ Using this, the exact multipole expansion for this charge distribution is,
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
 \end{flalign}
 
-For discrete distributions of $N$ charges $q_i$ this goes to,
+If instead we consider composed of $N$ charges $q_i$ this goes to,
 
 \begin{flalign}
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)
@@ -156,9 +157,8 @@ Using the addition theorem for Legendre polynomials \cite{Greengard:1987:Yale},
 \end{flalign}
 
 Where we have written the Legendre polynomial in terms of spherical harmonics,
-for two points with spherical coords. $(r, \theta, \phi)$ and
-$(\rho, \alpha, \beta)$ respectively, and $\gamma$ is the angle subtended between them.
-Therefore, the multipole expansion goes to,
+where $(r, \theta, \phi)$ and $(\rho, \alpha, \beta)$ define two spherical coordinates,
+and $\gamma$ is the angle subtended between them. Therefore, the multipole expansion goes to,
 
 \begin{flalign}
     \Phi(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
@@ -167,10 +167,10 @@ Therefore, the multipole expansion goes to,
 \end{flalign}
 
 This is an exact expansion, and it converges for $\frac{r'}{r} < 1$. This convergence
-condition means that the estimate of the potential at a given evaluation point
-calculated using the multipole expansion is only valid in the far-field, which is
-often tuned empirically for different systems as it's user defined.
-If instead the expansion is taken with centre at the evaluation point,
+condition means estimating of the potential at a given evaluation point
+calculated using the multipole expansion is only possible in the far-field, the
+boundary of which is often tuned empirically for different systems as it's user
+defined. If instead the expansion is taken with centre at the evaluation point,
 one can rewrite as the multipole expansion as a `local' expansion,
 
 \begin{flalign}
@@ -183,8 +183,7 @@ of expansions are shown in figure (\ref{fig:1_1_multipole_local_expansions}).
 
 The key point to note is that the multipole and local expansions are exact, and
 can be truncated as required to ensure that the asymptotic complexity of evaluating
-a multipole or local expansion at an analytic point is bound by $O(N)$, where
-there are $N$ points taken into account by the expansion.
+a multipole or local expansion at an evaluation point is bounded by $O(N)$.
 
 \begin{figure}[!h]
     \centering
@@ -203,10 +202,27 @@ there are $N$ points taken into account by the expansion.
 
 \hspace{10pt}
 
-\subsection{Algorithm structure}
+\subsection{Algorithm structure and analysis}
 
-The region of convergence for ... is limited ... therefore we need to use a
-tree structure.
+The convergence condition of the multipole expansion prohibits the compression
+of charges from particles in the \textbf{\gls{near-field}}. Therefore the FMM
+makes use of a tree structure in a recursive algorithm, known as an Octree in
+three dimensions and a Quadtree in two dimensions. This structure hierarchically
+partitions space such that each level, $l$, of the tree is equally partioned into
+$(2^n)^l$ boxes over the domain of the tree, where $n$ is the dimension,
+i.e. $n=3$ in three dimensions. If one were to simply traverse the tree from
+the coarsest level to the finest, or `leaf', level and find the multipole expansion of source
+particles in each box of each level, one could then evaluate these multipole expansions
+at each particle to solve the $N$-Body problem. As there are $O(\log(N))$
+boxes in the tree, and $N$ particles this results in a $O(N\log(N))$ asymptotic
+complexity.
+
+However the FMM reduces computational complexity further by making use of local
+expansions. There are analytic expressions to shift the multipole expansion
+coefficients $M_n^m$ to local expansion coefficients $L_n^m$ \footnote{see
+appendix \ref{app:3d_laplace} for expressions for these shift operators in three
+dimensions.}
+
 
 \textbf{Notes from \cite{Ying:2004:JCP}}
 
