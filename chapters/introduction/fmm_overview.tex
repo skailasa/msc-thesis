@@ -40,9 +40,10 @@ interactions involving $10^{6}$ to $10^8$ particles.
 
 This chapter introduces the analytic, \gls{FMM}, the kernel-independent
 version, which is the main focus of this thesis, is presented later.
-Though substantially different in implementation, the analytic FMM will provide the opportunity to exposit many of the key ideas
-behind all FMM-based algorithms, and provides a good starting point for understanding
-and developing upon these algorithms. First presented by Greengard \cite{Greengard:1987:Yale},
+Though substantially different in implementation, the analytic FMM will provide the opportunity
+to exposit many of the key ideas behind all FMM-based algorithms, and provides
+a good starting point for understanding and developing upon these algorithms.
+First presented by Greengard \cite{Greengard:1987:Yale},
 the analytic \gls{FMM} represented a sea change for $N$-Body simulation. By
 trading off computations for error, it manages to achieve an asymptotic complexity
  of just $O(N)$. Additionally, it comes equipped with rigorous error bounds,
@@ -184,6 +185,11 @@ of expansions are shown in figure (\ref{fig:1_1_multipole_local_expansions}).
 The key point to note is that the multipole and local expansions are exact, and
 can be truncated as required to ensure that the asymptotic complexity of evaluating
 a multipole or local expansion at an evaluation point is bounded by $O(N)$.
+Futrhermore, exact operations exist for shifting the center of these expansions,
+which are crucial in providing the improvements to asymptotic complexity\footnote{
+    Expressions for these shift operators for the three dimensional Laplace kernel
+    considered as our model problem are provided in Appendix \ref{app:3d_laplace}.
+}.
 
 \begin{figure}[!h]
     \centering
@@ -202,7 +208,7 @@ a multipole or local expansion at an evaluation point is bounded by $O(N)$.
 
 \hspace{10pt}
 
-\subsection{Algorithm structure and analysis}
+\subsection{Algorithm Structure \& Analysis}
 
 The convergence condition of the multipole expansion prohibits the compression
 of charges from particles in the \textbf{\gls{near-field}}. Therefore the FMM
@@ -218,10 +224,70 @@ boxes in the tree, and $N$ particles this results in a $O(N\log(N))$ asymptotic
 complexity.
 
 However the FMM reduces computational complexity further by making use of local
-expansions. There are analytic expressions to shift the multipole expansion
-coefficients $M_n^m$ to local expansion coefficients $L_n^m$ \footnote{see
-appendix \ref{app:3d_laplace} for expressions for these shift operators in three
-dimensions.}
+expansions. Using the analytic expressions to shift the multipole expansion
+coefficients\footnote{Expressions for these shift operators for the three dimensional
+Laplace kernel considered as our model problem are provided in Appendix \ref{app:3d_laplace}.}
+$M_n^m$ to local expansion coefficients $L_n^m$ we can approximate the the interaction
+between two boxes in the tree. Roughly speaking, because of the hierarchical
+nature of the tree, each box only needs to consider the interaction with a
+constant number of neighbouring boxes. Because the number of boxes $O(N)$,
+the FMM is bound by an $O(N)$ asymptotic complexity \cite{Hwu:2011:MKP}.
+
+Using the above analysis, we can then describe the FMM algorithm in terms of
+two basic steps,
+
+\begin{enumerate}
+    \item \textbf{\textit{Upward Pass}}: The tree is traversed, \textbf{\gls{post-order}}.
+    Beginning at the leaf boxes, we compute a multipole expansion for each box
+    due to \textbf{\gls{source-particles}} it contains. This is also referred to as the particle-to-multipole
+    operation, or \textbf{\gls{P2M}}. Then as we move up the tree hierarchy, we
+    compute the multipole expansions of a each box's parent box by shifting the
+    expansion centers of the multipole expansion of a given child box, to the center
+    of the parent box, in a multipole-to-multipole operation or \textbf{\gls{M2M}},
+    and summing together all the contributions. Following the upward pass, one
+    obtains the multipole expansion for each box containing source particles at
+    all levels of the hierarchical tree.
+    \item \textbf{\textit{Downward Pass}}: The tree is now traversed in
+    \textbf{\gls{pre-order}}, and the local expansion of each box is computed.
+    This local expansion is the sum of two parts: (1) the local expansion of the
+    parent box of a given box, if it exists, which is a compression the effect of boxes
+    non-adjacent to the current box's parent. This is also known as the local-to-local
+    operation or \textbf{\gls{L2L}}. (2) The multipole expansion of boxes which
+    are the children of the \textbf{\gls{near-neighbours}} of the current box's
+    parent but are not adjacent to the current box itself. This is also known as
+    the multipole-to-multipole operation, or \textbf{\gls{M2L}}. At the end of
+    the downward pass, when the algorithm reaches the leaf level, the local expansion
+    of each leaf box is evaluated at all \textbf{\gls{target-particles}}. This
+    local-to-particle, or \textbf{\gls{L2P}}, operation encodes the \gls{far-field}
+    interaction of the target particles in this leaf. This is then combined with
+    a \gls{near-field} interaction, due to the source particles in the leaf box,
+    as well as in the \gls{near-neighbours}, which is computed directly.
+\end{enumerate}
+
+
+
+With this specification, a more detailed analysis of the algorithm is possible.
+
+Beginning with upward pass, at leaf level each particle contributes to one expansion
+so P2M of the order $Np^2$ - $p^2$ is the order of operations for the multipole
+expansion, can see this from the equation. M2M/L2L/M2L shifts require $p^4$
+operations, so all are bounded by $O(Np^4)$ (consider last level), precise bound
+dictated by number of boxes in interaction list. Evaluating the $p^th$ degree
+local expansions at each target particle (L2T) bounded by $O(Np^2)$, small constant
+$\kappa$ particles enforced at leaf level leads to $O(\kappa N)$ complexity for
+direct calculations at leaf level. We see that the whole algorithm is bounded by
+$O(N)$.
+
+Begin with $O(N\log(N))$ algorithm variant; here post order traversal (from
+coarsest to finest level), compute multipole expansion for each box at each level,
+this has the $Np^2$ bound, at finest level assume $O(1)$ number of particles, so
+direct computation with nearest neighbour particles leads to $O(N)$ bound.
+
+Full analysis defer to \cite{Greengard:1987:Yale}. Enough to understand that the
+translation operators are what lead to the $\mathcal{O}(n)$ complexity.
+
+
+
 
 
 \textbf{Notes from \cite{Ying:2004:JCP}}
@@ -241,23 +307,6 @@ The trucation error has rigorous bounds.
 The availability of analytic translations enable the $\mathcal{O}(n)$ algorithm.
 In particular the following translations; M2M, L2L, M2L.
 
-Two basic steps of FMM using tree structure.
-
-\begin{enumerate}
-    \item \textit{Upward Pass} The tree is traversed, post-order. S2M at leaves
-    - compute multipole expansion of leaf sources at leaf node. Shift multipole
-    expansion to parent node, and sum together.
-    \item \textit{Downward Pass} The tree is traversed pre-order. The local expansion
-    for each box is the sum of two parts: (1) the L2L transformation collects the local
-    expansion of B's parent (compressing the information for boxes non-adjacent to B's parent)
-    (2) the M2l translation, for each multipole expansion of boxes which are the children of
-    the neighbors of B's parent but not adjacent to B itself.At the end of the
-    Downward Pass, the `far' interaction which is evaluated
-    using the local expansion at this box (L2T operation) at each target particle.
-    Combined with the `near' interaction by direct computation of potential over all
-    source points in near field (within the box itself, and it's direct neighbors).
-\end{enumerate}
-
 
 \begin{figure}[!h]
     \centering
@@ -269,21 +318,6 @@ Two basic steps of FMM using tree structure.
 
 \subsection{Analysis}
 
-Begin with $O(N\log(N))$ algorithm variant; here post order traversal (from
-coarsest to finest level), compute multipole expansion for each box at each level,
-this has the $Np^2$ bound, at finest level assume $O(1)$ number of particles, so
-direct computation with nearest neighbour particles leads to $O(N)$ bound.
 
-Full analysis defer to \cite{Greengard:1987:Yale}. Enough to understand that the
-translation operators are what lead to the $\mathcal{O}(n)$ complexity. Beginning
-with upward pass, at leaf level each particle contributes to one expansion so
-S2M of the order $Np^2$ - $p^2$ is the order of operations for the multipole
-expansion, can see this from the equation. M2M/L2L/M2L shifts require $p^4$
-operations, so all are bounded by $O(Np^4)$ (consider last level), precise bound
-dictated by number of boxes in interaction list. Evaluating the $p^th$ degree
-local expansions at each target particle (L2T) bounded by $O(Np^2)$, small constant
-$\kappa$ particles enforced at leaf level leads to $O(\kappa N)$ complexity for
-direct calculations at leaf level. We see that the whole algorithm is bounded by
-$O(N)$.
 
 \hspace{10pt}

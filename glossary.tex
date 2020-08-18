@@ -61,3 +61,78 @@
         The `Kernel Independent' Fast Multipole Method.
     }
 }
+
+\newglossaryentry{post-order}{
+    name={post-order},
+    description={
+        In reference to the traversal of heirarchical trees, post-order traversal
+        is moving from the finest (leaf) level to the coarsest (root) level.
+    }
+}
+
+\newglossaryentry{pre-order}{
+    name={pre-order},
+    description={
+        In reference to the traversal of heirarchical trees, pre-order traversal
+        is moving from the coarsest (root) level to the finest (leaf) level.
+    }
+}
+
+\newglossaryentry{P2M}{
+    name={P2M},
+    description={Particle to multipole expasion operation.}
+}
+
+\newglossaryentry{M2M}{
+    name={M2M},
+    description={Translate from multipole of child box to multipole expansion
+    of parent box.}
+}
+
+\newglossaryentry{M2L}{
+    name={M2L},
+    description={Translate from multipole of box $A$ to local expansion
+    of box $B$.}
+}
+
+\newglossaryentry{L2L}{
+    name={L2L},
+    description={Translate from local of parent box to local expansion
+    of child box.}
+}
+
+\newglossaryentry{L2P}{
+    name={L2P},
+    description={Evaluate local of leaf box at each target particle in a leaf
+    box.}
+}
+
+\newglossaryentry{P2P}{
+    name={P2P},
+    description={
+        Evaluate particle to particle interactions directly.
+    }
+}
+
+\newglossaryentry{target-particles}{
+    name={target particles},
+    description={
+        Particles are described as targets if the potential due to a source field
+        is being evaluated at these particle's positions, but they themselves are
+        not being considered as a source for the field being evaluated. They may
+        or may not refer to the same set of particles as the source particles,
+        for example in the classic $N$-Body problem, the target particles and
+        the source particles are the same set.
+    }
+}
+
+\newglossaryentry{source-particles}{
+    name={source particles},
+    description={
+        Particles are described as sources if they are consifered to contribute
+        to the source field being evaluated at the target particles. They may
+        or may not refer to the same set of particles as the target particles,
+        for example in the classic $N$-Body problem, the target particles and
+        the source particles are the same set.
+    }
+}
