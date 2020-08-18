@@ -137,3 +137,66 @@
     }
 }
 
+\newglossaryentry{task-level-parallelism}{
+    name={task-level parallelism},
+    description={
+        Task-level parallelism is achieved when multiple threads or processes,
+        running the same, or differing, code, in a multiprocessing system are
+        executed with the same, or differing, data.
+    }
+}
+
+\newglossaryentry{instruction-level-parallelism}{
+    name={instruction-level-parallelism},
+    description={
+        Instruction-level parallelism refers to the parallel execution of different
+        instructions on a specific thread or process in a multiprocessing system.
+    }
+}
+
+\newglossaryentry{data-level-parallelism}{
+    name={data-level parallelism},
+    description={
+        In a multiprocessor system, data level parallelism is achieved by
+        distributing data amongst different compute nodes to be executed upon
+        in parallel. See \textbf{CUDA}
+    }
+}
+
+\newglossaryentry{CUDA}{
+    name={CUDA},
+    description={
+        `Compute Unified Device Architecture', is a parallel computing API
+        designed for the development of programs for \textbf{GPU}s
+    }
+}
+
+\newglossaryentry{GPU}{
+    name={GPU},
+    description={
+        `Graphics Processing Unit', are specialised processors specifically
+        designed for rapid parallel execution across large blocks of data.
+    }
+}
+
+\newglossaryentry{SIMD}{
+    name={SIMD},
+    description={
+        Single Instruction, Multiple Data.
+    }
+}
+
+\newglossaryentry{high-level-interpreted-language}{
+    name={high level interpreted language},
+    description={
+        A High-Level language is one that offers an API and primitive data
+        structures that strongly abstract from the details of the computer on
+        which it is being run. An interpreted language is one in which codes
+        are run directly via an \textit{interpreter}, rather than first being
+        compiled. In reality interpreted languages run in a `virtual machine',
+        which takes input code, transforms it to byte-code which is then translated
+        into machine level instructions. This approach allows for greater portability
+        of code, and developer productivity, at the expense of space and time overhead
+        in running software.
+    }
+}

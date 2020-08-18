@@ -95,7 +95,7 @@ by finding an series expansion of the system's Green's function.
 In order to generalise the discussion, an arbitrary continuous
 distribution of charge is considered as shown in figure \ref{fig:1_1_continuous_charge_distribution},
 for which the potential is evaluated at some other evaluation point outside of
-the distribution. This can be written as follows,
+the distribution. This can be written as follows \cite{Griffiths:2017:CUP},
 
 \begin{flalign}
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0} \int \frac{1}{d}\rho(\mathbf{r}')d\tau'
@@ -241,7 +241,7 @@ two basic steps,
 \begin{enumerate}
     \item \textbf{\textit{Upward Pass}}: The tree is traversed \textbf{\gls{post-order}}.
     Beginning at the leaf boxes, we compute a multipole expansion for each box
-    due to \textbf{\gls{source-particles}} it contains. This is also referred to as the particle-to-multipole
+    due to the \textbf{\gls{source-particles}} it contains. This is also referred to as the particle-to-multipole
     operation, or \textbf{\gls{P2M}}. Then as we move up the tree hierarchy, we
     compute the multipole expansions of a each box's parent box by shifting the
     expansion centers of the multipole expansion of a given child box, to the center
@@ -271,7 +271,7 @@ two basic steps,
 
 
 With this specification, a more detailed analysis of the algorithm is possible,
-though we defer to \cite{Greengard:1987:Yale} for a more rigorous discussion.
+though we defer to \cite{Greengard:1987:Yale} for a rigorous discussion.
 Beginning with upward pass, at the leaf level each particle contributes to one
 multipole expansion. If we truncate this expansion to contain $p$ terms, the
 \gls{P2M} operation has a complexity of $O(Np^2)$, which can be seen from
@@ -285,15 +285,15 @@ bound depends on the size of a given box's \gls{interaction-list}.} $O(Np^4)$. F
 evaluating the $p^{th}$ degree local expansions at each target particle in the
 \gls{L2P} operation, is bounded by $O(Np^2)$, where the level of refinement is
 chosen such that there is a small constant number of $\kappa$ particles at each
-leaf box, this leads to $O(\kappa N)$ complexity for direct calculations at leaf level. We therefore
-see that the whole algorithm is bounded by $O(N)$. In practice, the number of
-expansion terms $p$ is chosen for a prescribed relative error $\epsilon$, using
+leaf box, this leads to $O(\kappa N)$ complexity for direct calculations at the
+leaf level. We therefore see that the whole algorithm is bounded by $O(N)$.
+In practice, the number of expansion terms $p$ is chosen for a prescribed relative error $\epsilon$, using
 \footnote{There are optimal choices for $c$, with the authors of \cite{Ying:2004:JCP}
 specifying $c=\frac{4-\sqrt{3}}{\sqrt{3}}$ for three dimensional problems.}
 $p=\log_c \epsilon$. The algorithm is illustrated in figure (\ref{fig:1_1_main_loop})
 in the two dimensional case, which is direct analogue of the three dimensional case
 which is the focus of this thesis. A full pseudo-code is provided in Appendix
-\ref{app:analytic_fmm}
+\ref{app:analytic_fmm}.
 
 \begin{figure}[!h]
     \centering
@@ -312,12 +312,44 @@ which is the focus of this thesis. A full pseudo-code is provided in Appendix
   \label{fig:1_1_main_loop}
 \end{figure}
 
-\subsection{Implementation Issues}
+\subsection{Summary}
 
-- Practical Challenges in implementation
-- new kernels need new solvers
-    - maintainence issues, productivity issues
-- efficient data structure needed for vectorisation
-- many of the computations are parallelisable
+The main practical challenge in implementing software to solve the analytic FMM
+is the requirement of kernel-specific code to calculate the expansion coefficients of
+(\ref{eq:1_1_multipole_expansion}) and (\ref{eq:1_1_local_expansion}). For example,
+multiple different implementations already exist for Poison problems alone \cite{Greengard:1996:JCP, Etheridge:2001:SIAM}.
+In software engineering terms this is inconvenient as it leads to the requirement to implement
+problem-specific codes for each kernel one may encounter. This leads to a
+productivity overhead in either designing a single, extensible
+library, which by definition will be complex to design. Or to otherwise
+maintain multiple problem-specific libraries.
 
-\hspace{10pt}
+The algorithm thus far described referred to as the analytic FMM is more correctly
+called the non-adaptive analytic FMM. The non-adaptivity refers to the assumption that
+all boxes at the leaf level are refined to the same degree, however as mentioned
+in the above analysis of the algorithm, the degree of refinement is chosen such
+that the number of particles in a leaf box is \textit{constant}. Therefore, If
+the distribution of the particles of interest is not uniform over the computational
+domain, one may be needlessly refining the boxes in some regions, and calculating expansion
+coefficients for empty boxes. Therefore, although the asymptotic complexity of
+the FMM is $O(N)$, it is clear that practical implementations will suffer unless
+care is taken to use efficient vectorised data structures for the creation of
+appropriate hierarchical tree required by the algorithm.
+
+Additionally, there is significant scope for multiple levels of
+parallelism in practical implementations. Specifically, the computations
+for the local and multipole coefficients as well as the application of M2L, L2L
+and M2M operators at a given level, are candidates for an implementation of
+\textbf{\gls{task-level-parallelism}}. In addition to calculating the operators
+using multiprocessing, there is scope for implementing
+\textbf{\gls{data-level-parallelism}} to find these coefficients. For example,
+Yokota and Barba \cite{Hwu:2011:MKP} demonstrate how the calculation of the P2P,
+and M2L operators can be transferred to \textbf{\gls{GPU}}s using \textbf{\gls{CUDA}}.
+
+In summary, we see that implementing the analytical FMM is complicated by the
+fact that it is problem specific - which will also apply to any parallel
+optimisation code. This in itself provides the main motivation for developing
+an implementation that does not rely on explicit kernel expansions. Furthermore,
+the desire for developer productivity, at the expense of hyper-optimised
+implementations, is realised in this thesis by making use of Python,
+a \textbf{\gls{high-level-interpreted-language}}, for our software implementation.
