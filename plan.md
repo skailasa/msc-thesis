@@ -76,10 +76,13 @@ Figures required:
 
 #### Other tasks
 
-- Build a cursory understanding of analysis of KIFMM from Ying to demonstrate
-that the computational complexity is the same as analytic FMM.
+- Build a cursory understanding of analysis of KIFMM from Ying to demonstrate that the computational complexity is the same as analytic FMM.
+
+    - They don't derive rigorous error bounds show that it's comparable to afmm empiriclly
+    - they confirm O(N) by inspection. But similarity is expected from the form of the algorithm. Though, they notice that it's slightly off ~1.5x slower. They have some justifications for this.
 
 - Find justification for ill-conditioning of this integral equation formulation
+
     - from that Cambridge integral equation textbook ... The Numerical Solution of Integral Equations of the Second Kind
 
 ### Motivation
@@ -102,8 +105,7 @@ None
 
 Figures required:
 
-- Figures demonstrating the concept of check/equivalent surface for the three
-main operators. 3D is preferable.
+- Figures demonstrating the concept of check/equivalent surface for the three main operators. 3D is preferable.
 
 ### Analysis
 
@@ -247,6 +249,7 @@ Figures required:
 
 - open-close
     - crucial for extensiblity of functionality.
+    - strategy pattern used for kernels
 
 - OOP in general crucial for offering a few heavyweight objects for testing.
     - requirement for safety objects for unit testing.
