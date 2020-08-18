@@ -1,5 +1,4 @@
 \subsection{Motivation}
-
 The paradigmatic problem of Fast Multipole Methods (\textbf{\gls{FMM}})
 \footnote{The first usage of a technical term or abbreviation listed in the
 glossary is highlighted throughout the text for ease of reference.} is the so
@@ -145,7 +144,8 @@ Using this, the exact multipole expansion for this charge distribution is,
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
 \end{flalign}
 
-If instead we consider composed of $N$ charges $q_i$ this goes to,
+If instead we consider a charge distribution composed of $N$ discrete charges
+$q_i$ this goes to,
 
 \begin{flalign}
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)
@@ -186,7 +186,9 @@ of expansions are shown in figure (\ref{fig:1_1_multipole_local_expansions}).
 
 The key point to note is that the multipole and local expansions are exact, and
 can be truncated as required to ensure that the asymptotic complexity of evaluating
-a multipole or local expansion at an evaluation point is bounded by $O(N)$.
+a multipole or local expansion at an evaluation point is bounded by $O(N)$. A
+rigorous error analysis of the analytic FMM is outside the scope of this thesis, however
+we refer to the literature for exact expressions for these truncation \cite{Greengard:1987:Yale},
 Furthermore, exact operations exist for shifting the center of these expansions,
 which are crucial in providing the improvements to asymptotic complexity\footnote{
     Expressions for these shift operators for the three dimensional Laplace kernel
@@ -226,7 +228,7 @@ boxes in the tree, and $N$ particles this results in a $O(N\log(N))$ asymptotic
 complexity.
 
 However the FMM reduces computational complexity further by making use of local
-expansions. Using the analytic expressions to shift the multipole expansion
+expansions. Using the exact expressions to shift the multipole expansion
 coefficients\footnote{Expressions for these shift operators for the three dimensional
 Laplace kernel considered as our model problem are provided in Appendix \ref{app:3d_laplace}.}
 $M_n^m$ to local expansion coefficients $L_n^m$ we can approximate the the interaction
@@ -292,8 +294,8 @@ In practice, the number of expansion terms $p$ is chosen for a prescribed relati
 specifying $c=\frac{4-\sqrt{3}}{\sqrt{3}}$ for three dimensional problems.}
 $p=\log_c \epsilon$. The algorithm is illustrated in figure (\ref{fig:1_1_main_loop})
 in the two dimensional case, which is direct analogue of the three dimensional case
-which is the focus of this thesis. A full pseudo-code is provided in Appendix
-\ref{app:analytic_fmm}.
+which is the focus of this thesis, and a full pseudo-code specification is
+provided in Appendix \ref{app:analytic_fmm}.
 
 \begin{figure}[!h]
     \centering
@@ -330,8 +332,8 @@ all boxes at the leaf level are refined to the same degree, however as mentioned
 in the above analysis of the algorithm, the degree of refinement is chosen such
 that the number of particles in a leaf box is \textit{constant}. Therefore, If
 the distribution of the particles of interest is not uniform over the computational
-domain, one may be needlessly refining the boxes in some regions, and calculating expansion
-coefficients for empty boxes. Therefore, although the asymptotic complexity of
+domain, one may be needlessly refining the boxes in some regions which may even be
+empty. Therefore, although the asymptotic complexity of
 the FMM is $O(N)$, it is clear that practical implementations will suffer unless
 care is taken to use efficient vectorised data structures for the creation of
 appropriate hierarchical tree required by the algorithm.
@@ -340,9 +342,9 @@ Additionally, there is significant scope for multiple levels of
 parallelism in practical implementations. Specifically, the computations
 for the local and multipole coefficients as well as the application of M2L, L2L
 and M2M operators at a given level, are candidates for an implementation of
-\textbf{\gls{task-level-parallelism}}. In addition to calculating the operators
-using multiprocessing, there is scope for implementing
-\textbf{\gls{data-level-parallelism}} to find these coefficients. For example,
+\textbf{\gls{task-level-parallelism}}. In addition to parallelising of each operator
+application as a task, there is scope for implementing
+\textbf{\gls{data-level-parallelism}} to find the expansion coefficients. For example,
 Yokota and Barba \cite{Hwu:2011:MKP} demonstrate how the calculation of the P2P,
 and M2L operators can be transferred to \textbf{\gls{GPU}}s using \textbf{\gls{CUDA}}.
 

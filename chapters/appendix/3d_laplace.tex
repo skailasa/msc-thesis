@@ -1,25 +1,24 @@
 \label{app:3d_laplace}
-Expressions derived in \cite{Greengard:1987:Yale}\\
+The expressions presented here are first derived in \cite{Greengard:1987:Yale}\\
 
 For $l$ charges of strengths $q_1,..., q_l$ located inside
 sphere $D$ of radius $a$ center at $Q=(\rho, \alpha, \beta)$, and that for points
-$P=(r, \theta, \phi)$ outside $D$ potential given by multipole expansion
-
-Multipole Expansion,
+$P=(r, \theta, \phi)$ outside $D$ potential given by the following \textbf{Multipole Expansion},
 
 \begin{flalign}
     \Phi(P) = \sum_{n=0}^\infty \sum_{m=-n}^n \frac{O_n^m}{r'^{n+1}} \cdot Y_n^m(\theta', \phi'))
 \end{flalign}
 
-$P-Q = (r', \theta', \phi')$. Then for any point $P$ outside sphere $D_1$ of radius
-$a+\rho$, M2M shifted\\
+Where the points $P$ and $Q$ are defined such that $P-Q = (r', \theta', \phi')$.
+Then for any point $P$ outside sphere $D_1$ of radius $a+\rho$, The multipole
+expansion can shifted with the following \textbf{M2M operation},\\
 
 \begin{flalign}
     \Phi(P) = \sum_{j=0}^\infty \sum_{k=-j}^j \frac{M_j^k}{r^{j+1}} \cdot Y_j^k(\theta, \phi)
 \end{flalign}
 
 
-Defined,
+Where,
 
 \begin{flalign}
     M_j^k = \sum_{n=0}^j\sum_{m=-n}^n \frac{O_{j-n}^{k-m} \cdot J_m^{k-m} \cdot A_n^m \cdot A_{j-n}^{k-m} \cdot \rho^n \cdot Y_n^{-m}(\alpha, \beta)}{A_j^k}
@@ -39,8 +38,6 @@ and,
     A_n^m = \frac{(-1)^n}{\sqrt{(n-m)! \cdot (n+1)!}}
 \end{flalign} \\
 
-
-M2L shifted \\
 
 For $l$ charges of strengths $q_1,..., q_l$ located inside
 sphere $D_Q$ of radius $a$ center at $Q=(\rho, \alpha, \beta)$, and that
@@ -74,10 +71,8 @@ but,
 $n'$ refers to $j$, $m'$ refers to $k$
 
 and that for points
-$P=(r, \theta, \phi)$ outside $D$ potential given by multipole expansion\\
-
-
-L2L shifted \\
+$P=(r, \theta, \phi)$ outside $D$ potential given by multipole expansion. This is
+also known as the multipole to local, or \textbf{M2L Operation}.\\
 
 Let $Q=(\rho, \alpha, \beta)$ be the origin of a local expansion,
 
@@ -107,3 +102,5 @@ where $A_n^m$ same as above,
         (-1)^n & \text{otherwise}
       \end{cases}
 \end{equation}
+
+This operation defines the local to local, or \textbf{L2L Operation}.

@@ -96,7 +96,7 @@ None
 
 ### Algorithm structure
 
-- Introduction to the least squares problem following Ying. i.e. including concept of surfaces and how they're used.
+- Introduction to the least squares problem following Ying. i.e. including concept of surfaces and how they're used. including computation of matrix inverse.
 
 - [DIAGRAM] of surfaces for three main operators in 3D.
 
