@@ -1,6 +1,6 @@
 \subsection{Motivation}
 
-First introduced by Ying and coworkers \cite{Ying:2004:JCP}, the kernel-independent FMM (\textbf{\gls{KIFMM}})
+First introduced by Ying et. al \cite{Ying:2004:JCP}, the kernel-independent FMM (\textbf{\gls{KIFMM}})
 provides an algorithm that maintains the basic recursive structure and $O(N)$
 asymptotic complexity of the analytic FMM, but without the requirement for the
 implementation of analytic expansions of the kernel function for each kernel.
@@ -187,8 +187,8 @@ ways. The authors of \cite{Ying:2004:JCP} make use of a Nystroem method, and ind
 the possibility of using either Galerkin or Collocation methods. For ease of
 implementation, a simpler approach is to instead approximate the solution using a pseudoinverse
 estimated using from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This
-approach is adapted from the current C++ implementation of the \gls{KIFMM}, exafmm-t,
-by the ExaFMM project \cite{exafmm}.
+approach is adapted from the current C++ implementation of the \gls{KIFMM}, ExaFMM-t,
+from the ExaFMM project \cite{exafmm}.
 
 Consider the SVD of a matrix $A$, with $m$ rows and $n$ columns,
 
@@ -210,7 +210,7 @@ numerical stability for this reciprocal calculation, one can choose to filter
 out components of $V$ and $U^*$ if their singular values smaller than a specified
 tolerance. The justification of the choices for the regularisation parameter
 $\alpha$ and the tolerance for the pseudoinverse are discussed in detail in
-Chapter 2, Section \ref{sec:2_3_operator_caching}. In terms of asymptotic complexity,
+Chapter 2, Section \ref{sec:2_3_operator_caching}. In terms of the asymptotic complexity of the \gls{SVD},
 as the singular values/vectors are iterated through once in a straightforward
 manner to find the pseudoinverse, the complexity of this operation is at most $O(N)$,
 where $N$ is the number of singlar values of $A$.
@@ -234,12 +234,18 @@ kernel matrices evaluated at two adjacent Octree levels, $l$, is $K^{l+1} = 2K^l
 Similarly, the required matrix inverse for the L2L and M2L operations exactly coincide
 except for a scaling factor. Therefore, practical implementations
 need to compute at most one matrix inversion which can be cached. This can then
-be scaled and applied as required at each step of the algorithm. The computation of this
-inverse is bound by a term proportional to the number of singular values of the kernel
+be scaled and applied as required at each step of the algorithm. Furthermore,
+for the Laplace kernel specifically, the scaling factors are present on both sides
+of the equations (\ref{eq:1_2_m2m}) and (\ref{eq:1_2_l2l}), cancelling each other out.
+This means that the M2M and L2L operations can also be calculated between just one
+parent box and its respective child boxes, and cached for later use.
+
+Considering the asymptotic complexity of the inverse, its calculation is bound
+by a term proportional to the number of singular values of the kernel
 matrix, which in turn is dependent on the number of quadrature points chosen for
 the check and equivalent surfaces. Therefore as long as this number of quadrature
 points is kept small, the pseudoinverse does not effect the asymptotic complexity
-of the \gls{KIFMM}. The remainder of the M2M/M2L/L2L operations are bound by
+of the \gls{KIFMM}. The remainder of the M2M, M2L and L2L operations are bound by
 the complexity of computing a matrix vector product between the calculated inverse
 matrix and the check potentials, which is resultantly also not impactful on the
 algorithm's asymptotic complexity as long as the requirement on the number of
@@ -249,20 +255,86 @@ the $O(N)$ complexity is maintained for the \gls{KIFMM}.
 
 \subsection{Summary}
 
-The differing approach of the \gls{KIFMM} leads to some differing practical
-challenges in comparison to the \gls{FMM}.
-    - Inversion of matrix
+The different approach of the \gls{KIFMM} leads to some different implementation
+challenges in comparison to the \gls{FMM}. The key difficulty arises from the
+instability in computing the matrix inverse of the kernel matrix between the
+check and equivalent matrices. As mentioned, choices for the
+regularisation parameter $\alpha$ as well as the tolerance for singular values
+taken in the pseudoinverse are discussed with this in mind in Chapter 2, Section
+\ref{sec:2_3_operator_caching}.
 
-- Similarities to FMM
+The ability to cache the M2M and L2L operators, after calculation for a single
+parent box and its respective child boxes, leaves the main bottleneck to
+pre-computing all the required operators as the matrix-vector products required
+to compute the M2L operators. The original authors of the \gls{KIFMM}
+accelerate the calculation of the M2L operation using a Fast Fourier Transform,
+or \textbf{\gls{FFT}} \cite{Ying:2004:JCP}. To see why this can be done, consider
+the surfaces describing the M2L operation illustrated in figure (\ref{fig:1_2_m2l}),
+if the downward \gls{check-surface} of the target box, and the upward
+\gls{equivalent-surface} are chosen to be equivalent and lie on a regular Cartesian
+grid, then the component of the M2L operation that evaluates the action of a
+kernel function between these two surfaces can be considered as a convolution
+between the kernel function and the equivalent density. Mathematically, if the
+kernel function $K(x, y)$ depends only the difference between $x$ and $y$ as it
+does for these choices of surfaces for the M2L operation, the left hand side of
+(\ref{eq:1_2_m2l}) goes to,
 
-- M2L accelleration and compression opportunities
-- opportunities for multprocessing
-- opportunities for gpu offloading of m2l
+\begin{equation}
+    \int_{\mathbf{y}^{A,u}} K(\mathbf{x} - \mathbf{y})\phi^{A, u} d\mathbf{y} = q^{B, d}\> \> \text{for any} \> \> \mathbf{x} \in \mathbf{x}^{B, d}
+\end{equation}
 
-- Existing software approaches
-    - pvfmm
-    - exafmm-t
+Padding the empty nodes with zeros allows us to apply the Fourier convolution theorem,
+and solve for equivalent density as,
 
-- Benefits
-    - ease of: design, implementation
-    - mention ying's application to multiple kernels
+\begin{flalign}
+    \phi^{A, u}(\mathbf{y}) = \mathcal{F}^{-1} \left [ \frac{\mathcal{F}(q^{B, d}(\mathbf{x}))}{\mathcal{F}(K(\mathbf{x}))} \right]
+\end{flalign}
+
+The currently available major \gls{KIFMM} implementations use this to accelerate the calculation of the
+M2L operator including ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}. Though
+discussed in more detail in Chapter 2, Section \ref{sec:2_3_operator_caching}, we state for
+the present that the expansion order $p$ is by definition proportional to the
+number of quadrature points used to discretise the surface of the check and
+equivalent surfaces. Specifically, PyeExaFMM follows the example of ExaFMM-T and
+PVFMM, taking the relationship between $p$ and number of quadrature points, $n_q$,
+to be,
+
+\begin{equation}
+    n_q = 6(p-1)^2 + 2
+\end{equation}
+
+Meaning that each surface has $O(p^2)$ points, and therefore the M2L operation
+(\ref{eq:1_2_m2l}) is of $O(p^4)$ between a given target box and source box.
+This FFT based method accelerates the M2L calculation between a given target box
+and a given source box to $O(p^3 \log(p))$. In PyExaFMM we use an alternative
+acceleration scheme, based on low rank SVD approximations, discussed further in
+Chapter 2, Section \ref{sec:2_4_svd_compression}. Therefore we defer to the
+literature for further details on FFT based acceleration methods \cite{Malhotra:2015:CCP}.
+
+The \gls{KIFMM} presents many of the same opportunities for parallel implementation
+as the \gls{FMM}. In terms of \gls{task-level-parallelism}, PyExaFMM implements
+parallel processing, via Python's native multiprocessing tools, for the calculation
+of the M2L operations. As these calculations involve dense matrix-vector products, and are also ideal candidates to be transferred
+to a \gls{GPU} for rapid parallel evaluation in the future. PVFMM implements
+\gls{task-level-parallelism} for the calculation of the M2M, L2L, and M2L
+operators with \textbf{\gls{MPI}} as well as an interface with \gls{CUDA} for
+processing the dense matrix-vector products. ExaFMM-T makes use of
+\textbf{\gls{OpenMP}} for a similar purpose.
+
+In summary, the key benefits of the \gls{KIFMM} lie in the ability to write
+an implementation that is compatible with a wide class of kernel functions,
+without evaluating the expansion coefficients. This greatly reduces the complexity
+of the software design to support multiple applications of the FMM across
+different problem settings. Furthermore, the formulation of the key FMM operations
+as dense matrix-vector products makes it easy to map portions of the \gls{KIFMM}
+to dedicated parallel hardware such as \gls{GPU}s. The fact that KIFMM logic
+is not dependent on the form of the kernel function expansion, and just on kernel
+function evaluations,  makes it trivial to separate the concerns of a software
+implementation, and write optimisation libraries for the KIFMM independently of
+the main loop (fig. \ref{fig:1_1_main_loop}) itself. The impact on software design
+and architecture is signficant, and is explored further in Chapter 2 Section
+\ref{sec:2_5_software_design}. This design is the key benefit of PyExaFMM
+in comparison to existing \gls{KIFMM} implementations, as PyExaFMM is already
+sacrificing a degree of performance via the choice of implementation language,
+we are able to implement some more effective software engineering principles
+to ease the burden on a user in terms of debugging and expanding upon PyExaFMM.

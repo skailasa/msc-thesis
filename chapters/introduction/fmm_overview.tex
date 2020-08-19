@@ -77,7 +77,7 @@ in the modeling the electrostatic interactions of charged particles in complex
 biological molecules at biologically relevant length scales \cite{Board:1992:CPL}.
 The extension of FMMs to Helmholtz equations \cite{Rokhlin:1990:JCP}, has lead
 to even more applications, such as in seismic and acoustic scattering
-\cite{Hwu:2011:MKP}. Though as the focus of this thesis is on solving the Laplace
+\cite{Hwu:2011:MKP}. Though as the focus of this thesis is on solving the Poisson
 model problem for electrostatics, this is mentioned only for completeness.
 
 The key insight that leads to the \gls{FMM}'s asymptotic complexity is the idea
@@ -362,6 +362,13 @@ application as a task, there is scope for implementing
 \textbf{\gls{data-level-parallelism}} to find the expansion coefficients. For example,
 Yokota and Barba \cite{Hwu:2011:MKP} demonstrate how the calculation of the P2P,
 and M2L operators can be transferred to \textbf{\gls{GPU}}s using \textbf{\gls{CUDA}}.
+The M2L, and P2P operators represent the largest computational bottlenecks due to
+the number of such interactions in the FMM algorithm, therefore are a priority for
+acceleration. For example, in three dimensions each target box has potentially
+up to 189 source boxes in its \gls{interaction-list} with which to compute the
+M2L operation, and for any particularly deep tree there will be roughly $O(N)$
+leaf boxes, for which interactions are calculated directly. This leads to both of
+these operations dominating the run-time of any \gls{FMM} implementation.
 
 In summary, the implementation of the analytical FMM is complicated by the
 fact that it is problem specific - which will also apply to any parallel
