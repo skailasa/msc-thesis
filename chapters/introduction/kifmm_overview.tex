@@ -166,10 +166,15 @@ K \phi = q
 \label{eq:1_2_first_kind_fredholm}
 \end{equation}
 
-One can use Tikhonov regularisation to write the solution,
+This expression reflects the fact that in practical implementations these continuous
+integrals are discretised as matrix-vector products. Here $K$ refers to a
+`kernel matrix', which can be found via numerical quadrature, $\phi$ is a vector
+of equivalent density to be found, and $q$ is a known vector containing the check
+potential. One can use Tikhonov regularisation to write the solution,
 
 \begin{equation}
 \phi = (\alpha I + K^*K)^{-1}q
+\label{eq:1_2_tikhonov}
 \end{equation}
 
 where $\alpha$ is an appropriate regularisation parameter, and $I$ is the identity
@@ -177,7 +182,9 @@ matrix. This equation, a second-kind Fredholm equation, can be solved in numerou
 ways. The authors of \cite{Ying:2004:JCP} make use of a Nystroem method, and indicate
 the possibility of using either Galerkin or Collocation methods. For ease of
 implementation, a simpler approach is to instead approximate the solution using a pseudoinverse
-estimated using from a Singular Value Decomposition, or \textbf{\gls{SVD}}.
+estimated using from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This
+approach is adapted from the current C++ implementation of the \gls{KIFMM}, exafmm-t,
+by the ExaFMM project \cite{exafmm}.
 
 Consider the SVD of a matrix $A$, with $m$ rows and $n$ columns,
 
@@ -199,9 +206,43 @@ numerical stability for this reciprocal calculation, one can choose to filter
 out components of $V$ and $U^*$ if their singular values smaller than a specified
 tolerance. The justification of the choices for the regularisation parameter
 $\alpha$ and the tolerance for the pseudoinverse are discussed in detail in
-Chapter 2, Section \ref{sec:2_3_operator_caching}.
+Chapter 2, Section \ref{sec:2_3_operator_caching}. In terms of asymptotic complexity,
+as the singular values/vectors are iterated through once in a straightforward
+manner to find the pseudoinverse, the complexity of this operation is at most $O(N)$,
+where $N$ is the number of singlar values of $A$.
 
-In order to justify the stated $O(N)$ asymptotic complexity of the FMM \dots
+The \gls{KIFMM} algorithm shares almost all of its algorithmic steps with the analytic \gls{FMM}, the
+main novelties are the least-squares solves (\ref{eq:1_2_tikhonov}) to compute
+the required expansions of each box at each step of the algorithm. In turn
+these solves require the computation of the check and equivalent surfaces involved,
+as well as the numerical quadrature over the equivalent/source densities to compute
+the required check potentials. However, the the matrix to be inverted
+in the M2M operation as well as the L2L operation are very similar, which can
+be seen from figure (\ref{fig:1_2_m2m_l2l}). In fact, if
+the upward \gls{check-surface} is chosen to coincide with the downward
+\gls{equivalent-surface}, and the upward \gls{equivalent-surface} is chosen to
+coincide with the downward \gls{check-surface}, the matrix to be inverted for the M2M
+operation is the transpose of the matrix to be inverted for the L2L operation,
+except for a scaling factor dependent on the level of the Octree the surfaces
+are created in. This scaling factor is easy to identify, and for the model problem of
+three dimensional electrostatics with a Laplace kernel, the scaling factor between
+kernel matrices evaluated at two adjacent Octree levels, $l$, is $K^{l+1} = 2K^l$.
+Similarly, the required matrix inverse for the L2L and M2L operations exactly coincide
+except for a scaling factor. Therefore, practical implementations
+need to compute at most one matrix inversion which can be cached. This can then
+be scaled and applied as required at each step of the algorithm. The computation of this
+inverse is bound by a term proportional to the number of singular values of the kernel
+matrix, which in turn is dependent on the number of quadrature points chosen for
+the check and equivalent surfaces. Therefore as long as this number of quadrature
+points is kept small, the pseudoinverse does not effect the asymptotic complexity
+of the \gls{KIFMM}. The remainder of the M2M/M2L/L2L operations are bound by
+the complexity of computing a matrix vector product between the calculated inverse
+matrix and the check potentials, which is resultantly also not impactful on the
+algorithm's asymptotic complexity as long as the requirement on the number of
+quadrature points is satisfied. As the other algorithmic analysis from
+Section \ref{sec:1_1_fmm_overview} remains the same, we can see approximately how
+the $O(N)$ complexity is maintained for the \gls{KIFMM}.
+
 
 \subsection{Summary}
 
