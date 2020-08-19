@@ -144,7 +144,7 @@ Using this, the exact multipole expansion for this charge distribution is,
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
 \end{flalign}
 
-If instead we consider a charge distribution composed of $N$ discrete charges
+If instead one considers a charge distribution composed of $N$ discrete charges
 $q_i$ this goes to,
 
 \begin{flalign}
@@ -157,7 +157,7 @@ Using the addition theorem for Legendre polynomials \cite{Greengard:1987:Yale},
     P_n(\cos \gamma) = \sum_{m=-n}^n Y_n^{-m}(\alpha, \beta) Y_n^m(\theta, \phi)
 \end{flalign}
 
-Where we have written the Legendre polynomial in terms of spherical harmonics,
+Where the Legendre polynomial is written in terms of spherical harmonics,
 where $(r, \theta, \phi)$ and $(\rho, \alpha, \beta)$ define two spherical coordinates,
 and $\gamma$ is the angle subtended between them. Therefore, the multipole expansion goes to,
 
@@ -187,8 +187,8 @@ of expansions are shown in figure (\ref{fig:1_1_multipole_local_expansions}).
 The key point to note is that the multipole and local expansions are exact, and
 can be truncated as required to ensure that the asymptotic complexity of evaluating
 a multipole or local expansion at an evaluation point is bounded by $O(N)$. A
-rigorous error analysis of the analytic FMM is outside the scope of this thesis, however
-we refer to the literature for exact expressions for these truncation \cite{Greengard:1987:Yale},
+rigorous error analysis of the analytic FMM is outside the scope of this thesis, and
+we defer to the literature for exact expressions for these truncation errors \cite{Greengard:1987:Yale},
 Furthermore, exact operations exist for shifting the center of these expansions,
 as well as translating multipole expansion coefficients into equivalent local expansion
 coefficients,
@@ -237,21 +237,21 @@ However the FMM reduces computational complexity further by making use of local
 expansions. Using the exact expressions to shift the multipole expansion
 coefficients\footnote{Expressions for these shift operators for the three dimensional
 Laplace kernel considered as our model problem are provided in Appendix \ref{app:3d_laplace}.}
-$M_n^m$ to local expansion coefficients $L_n^m$ we can approximate the the interaction
+$M_n^m$ to local expansion coefficients $L_n^m$ one can approximate the the interaction
 between two boxes in the tree. Roughly speaking, because of the hierarchical
 nature of the tree, each box only needs to consider the interaction with a
 constant number of neighbouring boxes. Because the number of boxes $O(N)$,
 the FMM is bound by an $O(N)$ asymptotic complexity \cite{Hwu:2011:MKP}.
 
-Using the above analysis, we can then describe the FMM algorithm in terms of
+Using the above analysis, one can then describe the FMM algorithm in terms of
 two basic steps,
 
 \begin{enumerate}
     \item \textbf{\textit{Upward Pass}}: The tree is traversed \textbf{\gls{post-order}}.
-    Beginning at the leaf boxes, we compute a multipole expansion for each box
+    Beginning at the leaf boxes, a multipole expansion is computed for each box
     due to the \textbf{\gls{source-particles}} it contains. This is also referred to as the particle-to-multipole
-    operation, or \textbf{\gls{P2M}}. Then as we move up the tree hierarchy, we
-    compute the multipole expansions of a each box's parent box by shifting the
+    operation, or \textbf{\gls{P2M}}. Then as one moves up the tree hierarchy, the
+    multipole expansions of a each box's parent box is computed by shifting the
     expansion centers of the multipole expansion of a given child box, to the center
     of the parent box a, in a multipole-to-multipole operation or \textbf{\gls{M2M}},
     and summing together all the coefficients. Following the upward pass, one
@@ -290,7 +290,7 @@ Firstly, as mentioned above, the tree must be refined such that the leaf boxes
 contain only a small constant number of particles, $\kappa$. The level of refinement $n$
 is therefore approximately taken to be $n \approx \log(N)$, where $N$ is the number
 of \gls{source-particles} in the tree. Beginning with upward pass, at the leaf level each particle contributes to one
-multipole expansion. If we truncate this expansion to contain $p$ multipole terms, the
+multipole expansion. If this expansion is truncated to contain $p$ multipole terms, the
 \gls{P2M} operation has a complexity of $O(Np^2)$, which can be seen from
 (\ref{eq:1_1_multipole_expansion}), as well as the fact that the nature of a
 hierarchical tree means that are $O(N)$ boxes at the leaf level. The shift operators\footnote{
@@ -302,7 +302,7 @@ bound depends on the size of a given box's \gls{interaction-list}.} $O(Np^4)$. F
 evaluating the $p^{th}$ degree local expansions at each target particle in the
 \gls{L2P} operation, is bounded by $O(Np^2)$. The choice for level of refinement
 $n$, leads to $O(\kappa N)$ complexity for direct calculations at the
-leaf level. We therefore see that the whole algorithm is bounded by $O(N)$.
+leaf level. The whole algorithm is therefore bounded by $O(N)$.
 In practice, the number of expansion terms $p$ is chosen for a prescribed relative error $\epsilon$, using
 \footnote{There are optimal choices for $c$, with the authors of \cite{Ying:2004:JCP}
 specifying $c=\frac{4-\sqrt{3}}{\sqrt{3}}$ for three dimensional problems.}
@@ -363,7 +363,7 @@ application as a task, there is scope for implementing
 Yokota and Barba \cite{Hwu:2011:MKP} demonstrate how the calculation of the P2P,
 and M2L operators can be transferred to \textbf{\gls{GPU}}s using \textbf{\gls{CUDA}}.
 
-In summary, we see that implementing the analytical FMM is complicated by the
+In summary, the implementation of the analytical FMM is complicated by the
 fact that it is problem specific - which will also apply to any parallel
 optimisation code. This in itself provides the main motivation for developing
 an implementation that does not rely on explicit kernel expansions. Furthermore,
