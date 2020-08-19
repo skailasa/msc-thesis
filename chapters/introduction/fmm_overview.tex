@@ -4,7 +4,7 @@ The paradigmatic problem of Fast Multipole Methods (\textbf{\gls{FMM}})
 glossary is highlighted throughout the text for ease of reference.} is the so
 called $N$-Body problem. This classic problem refers to the calculation of the pairwise
 interactions between $N$ particles over a potentially long-range, for example in
-gravitational or electrostatic systems. The straightforward calculation can be
+gravitational or electrostatic problems. The straightforward calculation can be
 written in the form of the following sum,
 
 \begin{equation}
@@ -34,7 +34,7 @@ where $q_i$ refers to a charge density with the kernel function,
 the constant $\epsilon_0$ is the permittivity of free space. It's easy to see
 how a naive direct application of this equation over $N$ particles
 results in an algorithm of $O(N^2)$ complexity, therefore it's only practicable
-for systems of moderate size, whereas realistic systems, one may be interested in
+for systems of moderate size, whereas in realistic systems, one may be interested in
 interactions involving $10^{6}$ to $10^8$ particles.
 
 This chapter introduces the analytic \gls{FMM}, the kernel-independent
@@ -169,7 +169,7 @@ and $\gamma$ is the angle subtended between them. Therefore, the multipole expan
 \end{flalign}
 
 This is an exact expansion, and it converges for $\frac{r'}{r} < 1$. This convergence
-condition means estimating of the potential at a given evaluation point
+condition means that estimating of the potential at a given evaluation point
 calculated using the multipole expansion is only possible in the far-field, the
 boundary of which is often tuned empirically for different systems as it's user
 defined. If instead the expansion is taken with centre at the evaluation point,
@@ -190,6 +190,8 @@ a multipole or local expansion at an evaluation point is bounded by $O(N)$. A
 rigorous error analysis of the analytic FMM is outside the scope of this thesis, however
 we refer to the literature for exact expressions for these truncation \cite{Greengard:1987:Yale},
 Furthermore, exact operations exist for shifting the center of these expansions,
+as well as translating multipole expansion coefficients into equivalent local expansion
+coefficients,
 which are crucial in providing the improvements to asymptotic complexity\footnote{
     Expressions for these shift operators for the three dimensional Laplace kernel
     considered as our model problem are provided in Appendix \ref{app:3d_laplace}.
@@ -216,12 +218,16 @@ which are crucial in providing the improvements to asymptotic complexity\footnot
 
 The convergence condition of the multipole expansion prohibits the compression
 of charges from particles in the \textbf{\gls{near-field}}. Therefore the FMM
-makes use of a tree structure in a recursive algorithm, known as an Octree in
-three dimensions and a Quadtree in two dimensions. This structure hierarchically
-partitions space such that each level, $l$, of the tree is equally partioned into
-$(2^n)^l$ boxes over the domain of the tree, where $n$ is the dimension,
-i.e. $n=3$ in three dimensions. If one were to simply traverse the tree from
-the coarsest level to the finest, or `leaf', level and find the multipole expansion of source
+makes use of a tree structure in a recursive algorithm, this structure is known
+as an Octree in three dimensions and a Quadtree in two dimensions\footnote{The usage
+of trees naturally leads to biological adjectives to describe it's structure, for example
+the coarsest level of a tree is referred to as the `root' level, and the finest
+level as the `leaf' level.}. This structure
+hierarchically partitions space such that each level, $l$, of the tree is equally partioned into
+$(2^d)^l$ boxes\footnote{Regardless of the spatial dimension, partitions of a domain are invariably
+referred to as boxes.} over the domain of the tree, where $d$ is the dimension,
+i.e. $d=3$ in three dimensions. If one were to simply traverse the tree from
+the coarsest, or `root', level to the finest, or `leaf', level and find the multipole expansion of source
 particles in each box of each level, one could then evaluate these multipole expansions
 at each particle to solve the $N$-Body problem. As there are $O(\log(N))$
 boxes in the tree, and $N$ particles this results in a $O(N\log(N))$ asymptotic
@@ -247,37 +253,46 @@ two basic steps,
     operation, or \textbf{\gls{P2M}}. Then as we move up the tree hierarchy, we
     compute the multipole expansions of a each box's parent box by shifting the
     expansion centers of the multipole expansion of a given child box, to the center
-    of the parent box, in a multipole-to-multipole operation or \textbf{\gls{M2M}},
-    and summing together all the contributions. Following the upward pass, one
+    of the parent box a, in a multipole-to-multipole operation or \textbf{\gls{M2M}},
+    and summing together all the coefficients. Following the upward pass, one
     obtains the multipole expansion for each box containing source particles at
     all levels of the hierarchical tree.
     \item \textbf{\textit{Downward Pass}}: The tree is now traversed in
     \textbf{\gls{pre-order}}, and the local expansion of each box is computed.
     This local expansion is the sum of two parts: (1) the local expansion of the
-    parent box of a given box, if it exists, which is a compression the effect of boxes
-    non-adjacent to the current box's parent. This is also known as the local-to-local
+    parent box of a given box, if it exists, which is a compression of the potential due to boxes
+    non-adjacent to a given box's parent. The parent box's local expansion centre
+    is shifted to the center of the child box, this is also known as the local-to-local
     operation or \textbf{\gls{L2L}}. (2) The multipole expansion of boxes which
-    are the children of the \textbf{\gls{near-neighbours}} of the current box's
-    parent but are not adjacent to the current box itself. Such boxes are described
-    as being in the \textbf{\gls{interaction-list}} of a given box. This is also known as
+    are the children of the \textbf{\gls{near-neighbours}} of a given box's
+    parent but are not adjacent to the box itself. Such `source' boxes are described
+    as being in the \textbf{\gls{interaction-list}} of a given box. These multipole
+    expansions for each source box in a given box's interaction list are translated into local expansions centered at
+    the given box, this is also known as
     the multipole-to-local operation, or \textbf{\gls{M2L}}. Notice that the
     \gls{M2L} operation is only available from $l=2$ of the tree, as in coarser
-    levels the \gls{interaction-list} for all boxes is empty. At the end of
-    the downward pass, when the algorithm reaches the leaf level, the local expansion
-    of each leaf box is evaluated at all \textbf{\gls{target-particles}}. This
-    local-to-particle, or \textbf{\gls{L2P}}, operation encodes the \gls{far-field}
-    interaction of the target particles in this leaf. This is then combined with
+    levels the \gls{interaction-list} for all boxes is empty. The coefficients found
+    from (1) and (2) are summed for each box. Steps (1) and (2) are repeated for each
+    box until the leaf level. At this point, the local expansion
+    of each leaf box is evaluated at all the \textbf{\gls{target-particles}} it contains.
+    This local-to-particle, or \textbf{\gls{L2P}}, operation encodes all the \gls{far-field}
+    interaction of the target particles in this leaf box. This is then combined with
     a \gls{near-field} interaction, due to the source particles in the leaf box,
-    as well as in the \gls{near-neighbours}, and is computed directly.
+    as well as in the \gls{near-neighbours}, which are computed directly. As the
+    tree is refined to the point where the leaf levels contain only a small constant
+    number of particles, this final direct computation is of low cost.
 \end{enumerate}
 
 
 With this specification, a more detailed analysis of the algorithm is possible,
 though we defer to \cite{Greengard:1987:Yale} for a rigorous discussion.
-Beginning with upward pass, at the leaf level each particle contributes to one
-multipole expansion. If we truncate this expansion to contain $p$ terms, the
+Firstly, as mentioned above, the tree must be refined such that the leaf boxes
+contain only a small constant number of particles, $\kappa$. The level of refinement $n$
+is therefore approximately taken to be $n \approx \log(N)$, where $N$ is the number
+of \gls{source-particles} in the tree. Beginning with upward pass, at the leaf level each particle contributes to one
+multipole expansion. If we truncate this expansion to contain $p$ multipole terms, the
 \gls{P2M} operation has a complexity of $O(Np^2)$, which can be seen from
-\ref{eq:1_1_multipole_expansion}, as well as the fact that the nature of a
+(\ref{eq:1_1_multipole_expansion}), as well as the fact that the nature of a
 hierarchical tree means that are $O(N)$ boxes at the leaf level. The shift operators\footnote{
     Expressions for these shift operators for the three dimensional Laplace kernel
     considered as our model problem are provided in Appendix \ref{app:3d_laplace}
@@ -285,9 +300,8 @@ hierarchical tree means that are $O(N)$ boxes at the leaf level. The shift opera
 so the computation of all of these are bounded by\footnote{A more precise
 bound depends on the size of a given box's \gls{interaction-list}.} $O(Np^4)$. Finally,
 evaluating the $p^{th}$ degree local expansions at each target particle in the
-\gls{L2P} operation, is bounded by $O(Np^2)$, where the level of refinement is
-chosen such that there is a small constant number of $\kappa$ particles at each
-leaf box, this leads to $O(\kappa N)$ complexity for direct calculations at the
+\gls{L2P} operation, is bounded by $O(Np^2)$. The choice for level of refinement
+$n$, leads to $O(\kappa N)$ complexity for direct calculations at the
 leaf level. We therefore see that the whole algorithm is bounded by $O(N)$.
 In practice, the number of expansion terms $p$ is chosen for a prescribed relative error $\epsilon$, using
 \footnote{There are optimal choices for $c$, with the authors of \cite{Ying:2004:JCP}
@@ -320,9 +334,10 @@ The main practical challenge in implementing software to solve the analytic FMM
 is the requirement of kernel-specific code to calculate the expansion coefficients of
 (\ref{eq:1_1_multipole_expansion}) and (\ref{eq:1_1_local_expansion}). For example,
 multiple different implementations already exist for Poison problems alone \cite{Greengard:1996:JCP, Etheridge:2001:SIAM}.
-In software engineering terms this is inconvenient as it leads to the requirement to implement
-problem-specific codes for each kernel one may encounter. This leads to a
-productivity overhead in either designing a single, extensible
+In software engineering terms this is inconvenient for the purposes of studying
+the applications of the FMM in multiple different problem settings, as it leads to the requirement
+to implement problem-specific solvers for each kernel one may encounter. This
+leads to a productivity overhead in either designing a single, extensible
 library, which by definition will be complex to design. Or to otherwise
 maintain multiple problem-specific libraries.
 
@@ -339,7 +354,7 @@ care is taken to use efficient vectorised data structures for the creation of
 appropriate hierarchical tree required by the algorithm.
 
 Additionally, there is significant scope for multiple levels of
-parallelism in practical implementations. Specifically, the computations
+parallelism in practical implementations. For example, the computations
 for the local and multipole coefficients as well as the application of M2L, L2L
 and M2M operators at a given level, are candidates for an implementation of
 \textbf{\gls{task-level-parallelism}}. In addition to parallelising of each operator

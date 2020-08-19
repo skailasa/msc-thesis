@@ -1,7 +1,7 @@
 \subsection{Motivation}
 
 First introduced by Ying and coworkers \cite{Ying:2004:JCP}, the kernel-independent FMM (\textbf{\gls{KIFMM}})
-provides an algorithm, that maintains the basic recursive structure and $O(N)$
+provides an algorithm that maintains the basic recursive structure and $O(N)$
 asymptotic complexity of the analytic FMM, but without the requirement for the
 implementation of analytic expansions of the kernel function for each kernel.
 Instead the method relies only on kernel function evaluations. This allows
@@ -57,8 +57,8 @@ can be stated mathematically as follows,
   \vspace{0pt}
   \caption{Cross section of three dimensional cubic upward/downward equivalent and
     check surfaces. Source points are denoted by green circles. Red solid lines
-    denote equivalent surfaces, and blue checked lines denote check surfaces. This
-    figure is adapted directly from \cite{Ying:2004:JCP}.}
+    denote equivalent surfaces, and blue checked lines denote check surfaces.
+    The black solid line defines the box $B$. This figure is adapted directly from \cite{Ying:2004:JCP}.}
   \label{fig:1_2_upward_downward_surfaces}
 \end{figure}
 
@@ -134,8 +134,8 @@ for a box $A$ and it's child $B$, which can be written as,
   {\includegraphics[width=0.4\textwidth]{introduction/kifmm_l2l.png}}
   \vspace{0pt}
   \caption{Cross section of three dimensional cubic surfaces. The (A) M2M operation and (B) L2L operation. Red solid lines
-  denote equivalent surfaces, and blue checked lines denote check surfaces. This
-  figure is adapted directly from \cite{Ying:2004:JCP}.}
+  denote equivalent surfaces, and blue checked lines denote check surfaces.
+  The black solid line defines the box $B$. This figure is adapted directly from \cite{Ying:2004:JCP}.}
   \label{fig:1_2_m2m_l2l}
 \end{figure}
 
@@ -147,13 +147,15 @@ grid.
 \begin{figure}[!h]
     \centering
     {\includegraphics[width=\textwidth]{introduction/kifmm_m2l.png}}
-    \caption{Cross section of three dimensional cubic surfaces for the M2L operation.}
+    \caption{Cross section of three dimensional cubic surfaces for the M2L operation.
+    Red solid lines denote equivalent surfaces, and blue checked lines denote check surfaces.
+    The black solid line defines the box $B$.}
   \label{fig:1_2_m2l}
 \end{figure}
 
 In principle, it is now possible to replace the kernel function expansions with
 the appropriate solutions of the integral equations (\ref{eq:1_2_p2m}),
-(\ref{eq:1_2_m2m}), (\ref{eq:1_2_l2l}) and (\ref{eq:1_2_m2l}). However all of
+(\ref{eq:1_2_m2m}), (\ref{eq:1_2_m2l}) and (\ref{eq:1_2_l2l}). However all of
 the above equations are ill-conditioned, as they are ill-posed and in general infinite
 dimensional problems, and therefore require appropriate regularisation in order to solve.
 Consider the following general statement of the first-kind Fredholm equation
