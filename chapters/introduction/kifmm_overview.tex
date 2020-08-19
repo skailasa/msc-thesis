@@ -170,7 +170,11 @@ This expression reflects the fact that in practical implementations these contin
 integrals are discretised as matrix-vector products. Here $K$ refers to a
 `kernel matrix', which can be found via numerical quadrature, $\phi$ is a vector
 of equivalent density to be found, and $q$ is a known vector containing the check
-potential. One can use Tikhonov regularisation to write the solution,
+potential. The reason for using cubic surfaces is the availability of simple
+quadrature rules to integrate over the faces of each surface. The specifics of
+the surfaces used in PyExaFMM is discussed in greater detail in Chapter 2,
+Section \ref{sec:2_3_operator_caching}. One can use Tikhonov regularisation to
+write the solution,
 
 \begin{equation}
 \phi = (\alpha I + K^*K)^{-1}q
@@ -243,6 +247,22 @@ quadrature points is satisfied. As the other algorithmic analysis from
 Section \ref{sec:1_1_fmm_overview} remains the same, we can see approximately how
 the $O(N)$ complexity is maintained for the \gls{KIFMM}.
 
-
 \subsection{Summary}
 
+The differing approach of the \gls{KIFMM} leads to some differing practical
+challenges in comparison to the \gls{FMM}.
+    - Inversion of matrix
+
+- Similarities to FMM
+
+- M2L accelleration and compression opportunities
+- opportunities for multprocessing
+- opportunities for gpu offloading of m2l
+
+- Existing software approaches
+    - pvfmm
+    - exafmm-t
+
+- Benefits
+    - ease of: design, implementation
+    - mention ying's application to multiple kernels
