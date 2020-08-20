@@ -1,4 +1,15 @@
+Practical implementations of the \gls{KIFMM} rely on the creation of (1) efficient
+surfaces used in the calculation of kernel matrices, and (2) a stable method for
+computing the inverse of these kernel matrices. The former problem naturally leads
+to the implementation of caching code to cache, re-use, and scale operator matrices
+as appropriate. Whereas the latter requires the implementation of a stable method to
+solve the system of linear equations for each \gls{KIFMM} operator. As mentioned
+in Chapter \ref{chpt:1_introduction} Section \ref{sec:1_2_kifmm_overview}, \gls{PyExaFMM} uses
+a pseudoinverse computed via an SVD to solve this linear system. This section
+provides detail on the implementation specifics used to address both of these issues.
 
+
+Surfaces:
 
 - Formation of surfaces
     - Cartesian grid
@@ -10,18 +21,17 @@
 - Real values used for surface construction, from PVFMM
     - short comment on why these are found to be good
 
+- Comment on current software choices
+    - HDF5 vs pickle
+    - python multiprocessing, task-level parallelism for M2L computation
+
+Pseudoinverse
 - Real values used for regularisation parameter in pseudoinverse
     - method used to get these in my work.
     - Real values used for the tolerance essentially derived from the above.
 
-- Comment on current software choices
-    - HDF5 vs pickle
-    - python multiprocessing, task-level parallelism
-
-- More detailed discussion of how to transfer of M2L and P2P to GPUs.
-
 - Comment on PVFMM and ExaFMM-T approach which represents state of the art.
-    - Brief discussion on the optimisations they pursue and how these could
-    be implemented in PyExaFMM
+    - Brief discussion on the optimisations, specifically PVFMM,
+    they pursue and how these could be implemented in PyExaFMM
     - Brief comment on potential stability improvements using Barnett+Betcke
     paper.
