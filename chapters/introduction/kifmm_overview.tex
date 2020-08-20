@@ -172,7 +172,7 @@ integrals are discretised as matrix-vector products. Here $K$ refers to a
 of equivalent density to be found, and $q$ is a known vector containing the check
 potential. The reason for using cubic surfaces is the availability of simple
 quadrature rules to integrate over the faces of each surface. The specifics of
-the surfaces used in PyExaFMM is discussed in greater detail in Chapter 2,
+the surfaces used in PyExaFMM is discussed in greater detail in Chapter \ref{chpt:2_strategy_for_practical_implementation},
 Section \ref{sec:2_3_operator_caching}. One can use Tikhonov regularisation to
 write the solution,
 
@@ -210,7 +210,7 @@ numerical stability for this reciprocal calculation, one can choose to filter
 out components of $V$ and $U^*$ if their singular values smaller than a specified
 tolerance. The justification of the choices for the regularisation parameter
 $\alpha$ and the tolerance for the pseudoinverse are discussed in detail in
-Chapter 2, Section \ref{sec:2_3_operator_caching}. In terms of the asymptotic complexity of the \gls{SVD},
+Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_3_operator_caching}. In terms of the asymptotic complexity of the \gls{SVD},
 as the singular values/vectors are iterated through once in a straightforward
 manner to find the pseudoinverse, the complexity of this operation is at most $O(N)$,
 where $N$ is the number of singlar values of $A$.
@@ -260,7 +260,7 @@ challenges in comparison to the \gls{FMM}. The key difficulty arises from the
 instability in computing the matrix inverse of the kernel matrix between the
 check and equivalent matrices. As mentioned, choices for the
 regularisation parameter $\alpha$ as well as the tolerance for singular values
-taken in the pseudoinverse are discussed with this in mind in Chapter 2, Section
+taken in the pseudoinverse are discussed with this in mind in Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section
 \ref{sec:2_3_operator_caching}.
 
 The ability to cache the \gls{M2M} and \gls{L2L} operators, after calculation for a single
@@ -292,7 +292,7 @@ and solve for equivalent density as,
 
 The currently available major \gls{KIFMM} implementations use this to accelerate the calculation of the
 \gls{M2L} operator including ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}.  Though
-reasoned in more detail in Chapter 2, Section \ref{sec:2_3_operator_caching}, we state for
+reasoned in more detail in Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_3_operator_caching}, we state for
 the present that the expansion order $p$ is by definition proportional to the
 number of quadrature points used to discretise the surface of the check and
 equivalent surfaces. Specifically, PyeExaFMM follows the example of ExaFMM-T and
@@ -308,7 +308,7 @@ Meaning that each surface has $O(p^2)$ points, and therefore the \gls{M2L} opera
 This FFT based method to find equivalent densities, accelerates the \gls{M2L} calculation between a given target box
 and a given source box to $O(p^3 \log(p))$. In PyExaFMM we use an alternative
 acceleration scheme, based on low rank SVD approximations, discussed further in
-Chapter 2, Section \ref{sec:2_4_svd_compression}. Therefore we defer to the
+Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_4_svd_compression}. Therefore we defer to the
 literature for further details on FFT based acceleration methods \cite{Malhotra:2015:CCP}.
 
 The \gls{KIFMM} presents many of the same opportunities for parallel implementation
@@ -333,7 +333,7 @@ is not dependent on the form of the kernel function expansion, and just on kerne
 function evaluations,  makes it trivial to separate the concerns of a software
 implementation, and write optimisation libraries for the KIFMM independently of
 the main loop (fig. \ref{fig:1_1_main_loop}) itself. The impact on software design
-and architecture is signficant, and is explored further in Chapter 2 Section
+and architecture is signficant, and is explored further in Chapter \ref{chpt:2_strategy_for_practical_implementation} Section
 \ref{sec:2_5_software_design}. This design is the key benefit of \gls{PyExaFMM}
 in comparison to existing \gls{KIFMM} implementations, as \gls{PyExaFMM} is already
 sacrificing a degree of performance via the choice of implementation language,
