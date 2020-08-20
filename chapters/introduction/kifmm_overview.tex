@@ -186,7 +186,7 @@ matrix. This equation, a second-kind Fredholm equation, can be solved in numerou
 ways. The authors of \cite{Ying:2004:JCP} make use of a Nystroem method, and indicate
 the possibility of using either Galerkin or Collocation methods. For ease of
 implementation, a simpler approach is to instead approximate the solution using a pseudoinverse
-estimated using from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This
+estimated from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This
 approach is adapted from the current C++ implementation of the \gls{KIFMM}, ExaFMM-t,
 from the ExaFMM project \cite{exafmm}.
 
@@ -198,7 +198,7 @@ Consider the SVD of a matrix $A$, with $m$ rows and $n$ columns,
 
 where as usual $U$ is the left singular matrix, $V$ is the right singular matrix
 and $\Sigma$ is a diagonal matrix whose elements are the singular values of $A$.
-We can write an approximate pseudo-inverse of $A$ as \cite{Trefethen:1997:SIAM},
+We can write an approximate pseudoinverse of $A$ as \cite{Trefethen:1997:SIAM},
 
 \begin{equation}
     A^\dagger = V \Sigma^\dagger U^*
@@ -291,8 +291,8 @@ and solve for equivalent density as,
 \end{flalign}
 
 The currently available major \gls{KIFMM} implementations use this to accelerate the calculation of the
-M2L operator including ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}. Though
-discussed in more detail in Chapter 2, Section \ref{sec:2_3_operator_caching}, we state for
+M2L operator including ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}.  Though
+reasoned in more detail in Chapter 2, Section \ref{sec:2_3_operator_caching}, we state for
 the present that the expansion order $p$ is by definition proportional to the
 number of quadrature points used to discretise the surface of the check and
 equivalent surfaces. Specifically, PyeExaFMM follows the example of ExaFMM-T and
@@ -305,7 +305,7 @@ to be,
 
 Meaning that each surface has $O(p^2)$ points, and therefore the M2L operation
 (\ref{eq:1_2_m2l}) is of $O(p^4)$ between a given target box and source box.
-This FFT based method accelerates the M2L calculation between a given target box
+This FFT based method to find equivalent densities, accelerates the M2L calculation between a given target box
 and a given source box to $O(p^3 \log(p))$. In PyExaFMM we use an alternative
 acceleration scheme, based on low rank SVD approximations, discussed further in
 Chapter 2, Section \ref{sec:2_4_svd_compression}. Therefore we defer to the
@@ -314,7 +314,8 @@ literature for further details on FFT based acceleration methods \cite{Malhotra:
 The \gls{KIFMM} presents many of the same opportunities for parallel implementation
 as the \gls{FMM}. In terms of \gls{task-level-parallelism}, PyExaFMM implements
 parallel processing, via Python's native multiprocessing tools, for the calculation
-of the M2L operations. As these calculations involve dense matrix-vector products, and are also ideal candidates to be transferred
+of the M2L operations. As these calculations involve dense matrix-vector products,
+they are also ideal candidates to be transferred
 to a \gls{GPU} for rapid parallel evaluation in the future. PVFMM implements
 \gls{task-level-parallelism} for the calculation of the M2M, L2L, and M2L
 operators with \textbf{\gls{MPI}} as well as an interface with \gls{CUDA} for
@@ -336,5 +337,5 @@ and architecture is signficant, and is explored further in Chapter 2 Section
 \ref{sec:2_5_software_design}. This design is the key benefit of PyExaFMM
 in comparison to existing \gls{KIFMM} implementations, as PyExaFMM is already
 sacrificing a degree of performance via the choice of implementation language,
-we are able to implement some more effective software engineering principles
+we are able to implement some effective software engineering principles
 to ease the burden on a user in terms of debugging and expanding upon PyExaFMM.
