@@ -60,7 +60,8 @@ a given box at a given level of the octree.
 The power of encoding the domain of the octree lie in the optimisation opportunities
 that arise. \gls{PyExaFMM} works entirely in terms of encoded Morton keys, using
 them to lookup the correct operators, and store computational results against.
-This makes it possible to use Numba's \gls{JIT} functionality to precompile the bitwise
+The ability to store an Morton encoding in Numpy vectors makes it possible to use
+Numba's \gls{JIT} functionality to precompile the bitwise
 operations, which are used heavily in \gls{PyExaFMM}'s implementation of the \gls{KIFMM}
 main loop, mainly to assign computed multipole/local coefficients. This implementation
 detail represents the first step towards optimising tree construction, with the

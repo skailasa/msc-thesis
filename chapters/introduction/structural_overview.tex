@@ -1,0 +1,29 @@
+The major contribution of the work underlying this thesis, is a well-tested and
+extensible Python implementation of the \gls{KIFMM} algorithm, \gls{PyExaFMM}. The \gls{KIFMM}
+algorithm is chosen for its relative simplicity in comparison to the \gls{FMM},
+and the ability to trivially extend an implementation to study new kernels, and
+apply the \gls{FMM} in new problem settings. As mentioned briefly,
+the decision to use Python as the implementation language arises from the desire
+to produce an \gls{KIFMM} implementation that sacrifices some computational
+performance for developer productivity, via the usage of object oriented design
+principles that ensure future the extensibility, as well as testability.
+
+The remainder of this thesis develops on the mathematical background of Chapter
+\ref{chpt:1_introduction}, to document the implementation strategies undertaken, in
+Chapter \ref{chpt:2_strategy_for_practical_implementation}, and to benchmark
+PyExaFMM's performance, in Chapter \ref{chpt:3}, against the model problem of
+three dimensional electrostatics. Chapter \ref{chpt:2_strategy_for_practical_implementation}, granularly examines
+the mathematical and software techniques taken to optimise the implementation of
+\gls{PyExaFMM}. Specifically, the analysis of key bottlenecks in Section \ref{sec:2_1_bottleneck_analysis},
+the efficient construction of trees in Section \ref{sec:2_2_efficient_trees}, the implementation
+of multiprocessing to distribute and cache the computation of the \gls{KIFMM}
+operators in Section \ref{sec:2_3_operator_caching}, the low-rank SVD based
+approximations applied to compress the \gls{M2L} matrices in Section \ref{sec:2_4_svd_compression},
+and finally the software design choices that were influenced by the desire to
+make \gls{PyExaFMM} extensibile and testable, while leaving room to optimise
+performance in Section \ref{sec:2_5_software_design}. Chapter \ref{chpt:3} begins
+by benchmarking the performance of \gls{PyExaFMM} in Section \ref{sec:3_1_benchmarking},
+on the model problem, before proceeding to examine optimum parameters for the
+low-rank SVD approximation of the \gls{M2L} operation in Section \ref{sec:3_2_svd_params}.
+We conclude with a discussion of the wider research context of \gls{PyExaFMM},
+as well as avenues for future study in Chapter \ref{chpt:conclusion}.
