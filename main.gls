@@ -104,7 +104,7 @@
 		\setentrycounter[]{page}\glsnumberformat{7}}}%
 \glossentry{PyExaFMM}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{1}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{16\delimR 20}}}\glsgroupskip
+		\setentrycounter[]{page}\glsnumberformat{16\delimR 21}}}\glsgroupskip
 \glsgroupheading{S}\relax \glsresetentrylist %
 \glossentry{source-densities}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{10}}}%
