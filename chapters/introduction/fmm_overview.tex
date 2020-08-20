@@ -220,9 +220,13 @@ The convergence condition of the multipole expansion prohibits the compression
 of charges from particles in the \textbf{\gls{near-field}}. Therefore the FMM
 makes use of a tree structure in a recursive algorithm, this structure is known
 as an Octree in three dimensions and a Quadtree in two dimensions\footnote{The usage
-of trees naturally leads to biological adjectives to describe it's structure, for example
+of trees naturally leads to biological adjectives to describe their structure, for example
 the coarsest level of a tree is referred to as the `root' level, and the finest
-level as the `leaf' level.}. This structure
+level as the `leaf' level. Confusingly these are often combined with familial adjectives
+to describe the relationship between tree nodes, for example parent and child nodes to describe
+the relationship between a given node and the nodes that occupy the same domain
+a level deeper in the tree. Each node has exactly one parent, except the root node which
+has no parents.}. This structure
 hierarchically partitions space such that each level, $l$, of the tree is equally partioned into
 $(2^d)^l$ boxes\footnote{Regardless of the spatial dimension, partitions of a domain are invariably
 referred to as boxes.} over the domain of the tree, where $d$ is the dimension,

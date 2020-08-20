@@ -15,8 +15,8 @@
 \glossaryentry{P2M?\glossentry{P2M}|setentrycounter[]{page}\glsnumberformat}{7}
 \glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{7}
 \glossaryentry{pre-order?\glossentry{pre-order}|setentrycounter[]{page}\glsnumberformat}{7}
-\glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{7}
-\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{8}
 \glossaryentry{interaction list?\glossentry{interaction-list}|setentrycounter[]{page}\glsnumberformat}{8}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{8}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{8}
@@ -54,10 +54,10 @@
 \glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{source densities?\glossentry{source-densities}|setentrycounter[]{page}\glsnumberformat}{10}
 \glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{target particles?\glossentry{target-particles}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{equivalent density?\glossentry{equivalent-density}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{target particles?\glossentry{target-particles}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{equivalent density?\glossentry{equivalent-density}|setentrycounter[]{page}\glsnumberformat}{11}
 \glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{11}
 \glossaryentry{PDE?\glossentry{PDE}|setentrycounter[]{page}\glsnumberformat}{11}
 \glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{11}
@@ -65,7 +65,7 @@
 \glossaryentry{check potential?\glossentry{check-potential}|setentrycounter[]{page}\glsnumberformat}{11}
 \glossaryentry{equivalent density?\glossentry{equivalent-density}|setentrycounter[]{page}\glsnumberformat}{11}
 \glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{11}
-\glossaryentry{check surface?\glossentry{check-surface}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{check surface?\glossentry{check-surface}|setentrycounter[]{page}\glsnumberformat}{12}
 \glossaryentry{far field?\glossentry{far-field}|setentrycounter[]{page}\glsnumberformat}{12}
 \glossaryentry{check potential?\glossentry{check-potential}|setentrycounter[]{page}\glsnumberformat}{12}
 \glossaryentry{source particles?\glossentry{source-particles}|setentrycounter[]{page}\glsnumberformat}{12}
@@ -83,8 +83,8 @@
 \glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{13}
 \glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{13}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{13}
-\glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{13}
-\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{14}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{14}
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{14}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{14}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{14}
@@ -100,10 +100,10 @@
 \glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{14}
 \glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{14}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{14}
-\glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{14}
-\glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{14}
-\glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{14}
-\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{14}
+\glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{15}
+\glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{15}
+\glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{15}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{15}
@@ -121,10 +121,10 @@
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{15}
-\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{15}
-\glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{15}
-\glossaryentry{task-level parallelism?\glossentry{task-level-parallelism}|setentrycounter[]{page}\glsnumberformat}{15}
-\glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{15}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{16}
+\glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{16}
+\glossaryentry{task-level parallelism?\glossentry{task-level-parallelism}|setentrycounter[]{page}\glsnumberformat}{16}
+\glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{16}
 \glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{16}
 \glossaryentry{task-level parallelism?\glossentry{task-level-parallelism}|setentrycounter[]{page}\glsnumberformat}{16}
 \glossaryentry{MPI?\glossentry{MPI}|setentrycounter[]{page}\glsnumberformat}{16}
@@ -155,5 +155,8 @@
 \glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{18}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{18}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{18}
-\glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{22}
-\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{22}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{18}
+\glossaryentry{key?\glossentry{key}|setentrycounter[]{page}\glsnumberformat}{18}
+\glossaryentry{key?\glossentry{key}|setentrycounter[]{page}\glsnumberformat}{18}
+\glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{23}
+\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{23}
