@@ -35,24 +35,45 @@ coordinates simply contain three bits, for the $xyz$ octant of a given cube
 in the octree, and the displacement mechanism is entirely analogous with the
 two dimensional case.
 
-The binary coordinates of Morton encoded octant box make it easy to perform simple
-bit shifts to find the parent box of a given box. To find a box's parent, all
-one needs to do is subtract the displacement due to the number of boxes thus
-far encoded, and perform a three bit shift to the 'right', removing the bits
-corresponding to the encoded
+The binary coordinates of Morton encoded octants make it easy to perform simple
+bitwise shift and comparison operations, to assign source and \gls{target-particles} the Morton key
+that encodes the octant they lie in for each level of a given octree, as well as traverse the levels of
+the octree. Specifically, \gls{PyExaFMM} makes use of a \textit{linear} Morton encoding, meaning that it assigns
+all particles to the keys of boxes they occupy at a which has been refined to a
+pre-defined leaf level of the desired octree. It does so by assuming that the
+leaf level of the octree describing the domain of interest is partitioned into equal
+sized leaf boxes, and checking the relative coordinates position of each particle
+with respect to the expected indices of the leaf boxes. Furthermore, this operation only provides
+a set of keys at the leaf-level which are non-empty, allowing \gls{PyExaFMM} to
+ignore the remainder of the space covered by the domain of the octree. Once this
+linear representation has been found, and the non-empty boxes containing
+source and \gls{target-particles} identified, it's easy to traverse the octree
+to find the ancestor boxes which particles lie in by simply subtracting the appropriate
+offset due to the box's position on the encoded line, and adding a new offset at
+at level of the ancestor box. The inverse operation can be done to provide the set
+of keys corresponding to the descendent boxes for a given box. In terms of the
+\gls{FMM} and \gls{KIFMM} algorithms, the above operations can be extended trivially
+in simple combination to pre-compute \gls{interaction-list}s for each box, containing
+only source boxes which aren't empty, as well as to find \gls{near-neighbours} of
+a given box at a given level of the octree.
 
-- How PyExaFMM finds non-empty nodes (hilbert get keys from points)
-
-- how to find children and parents
-
-- how expansions are stored against keys
-
-- Numba jitting
-
-- Extensions work
-    - parallel tree construction
-    - adaptive trees
-
+The power of encoding the domain of the octree lie in the optimisation opportunities
+that arise. \gls{PyExaFMM} works entirely in terms of encoded Morton keys, using
+them to lookup the correct operators, and store computational results against.
+This makes it possible to use Numba's \gls{JIT} functionality to precompile the bitwise
+operations, which are used heavily in \gls{PyExaFMM}'s implementation of the \gls{KIFMM}
+main loop, mainly to assign computed multipole/local coefficients. This implementation
+detail represents the first step towards optimising tree construction, with the
+field of optimising highly-parallel tree constructions for octrees potentially containing
+$10^9$ or more octree boxes, being an active field of research \cite{Sundar:2008:SIAM,Malhotra:2015:CCP}.
+For example, the authors of PVFMM, one of the major C++ \gls{KIFMM} implementations,
+evenly distribute the load of encoding particles for particularly deep trees across
+multiple processes using \gls{MPI} \cite{Malhotra:2015:CCP}. For highly non-uniform
+data distributions the non-adaptive implementation of \gls{PyExaFMM} currently
+will wastefully refine regions of the octree with a low density of particles, major
+open source \gls{KIFMM} implementations thus implement adaptive tree refinement,
+with different sized leaf boxes in different regions of the domain decsribed by
+the octree \cite{Ying:2004:JCP, Malhotra:2015:CCP, exafmm}.
 
 \begin{figure}[!h]
     \centering
