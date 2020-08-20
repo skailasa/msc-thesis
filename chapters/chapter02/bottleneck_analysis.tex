@@ -13,7 +13,7 @@ The twin goals in designing \gls{PyExaFMM} were ensuring the extensibility and
 testability of the software. Building easily extensible and testable numerical
 codes is inherently challenging, the complexity of the algorithms and continuous
 nature of their results making it hard to separate the logic from application
-specific implementations. As \gls{PyExaFMM} is implemented in Python, an
+specific implementation details. As \gls{PyExaFMM} is implemented in Python, an
 \textbf{\gls{interpreted}} and inherently \textbf{\gls{object-oriented-language}}, we are able to use some common and powerful
 object oriented design principles to ensure extensibility. Concerns about the
 overhead of using the object oriented design principles, in comparison to directly manipulating
@@ -31,7 +31,7 @@ is then compiled. This additional interpreter layer is the source of Pythonic ov
 rather than the object abstraction in itself. Therefore, once the decision has
 been made to use Python, there isn't a significant overhead from using object
 oriented design principles, with the added benefit of increasing programmer
-productivity, and easier testability. Secondly, the vast Python ecosystem of
+productivity, and increasing testability. Secondly, the vast Python ecosystem of
 optimised libraries for numerical computation allow for the manipulation and
 allocation of primitives in memory in a manner closer to a compiled language.
 Specifically, \gls{PyExaFMM} implements all of its containers with NumPy, which
@@ -44,7 +44,8 @@ for repetitive operations which would benefit from compilation and caching, ther
 combining the speed benefits of compiled languages, with the flexibility of interpreted
 languages. Software design choices in light of the above analysis is considered
 in detail in Section \ref{sec:2_5_software_design}, and the result of code
-optimisation is benchmarked in Chapter \ref{chpt:3}, section \ref{sec:3_1_benchmarking}.
+optimisation is benchmarked in Chapter \ref{chpt:3}, section \ref{sec:3_1_benchmarking},
+alongside end-to-end testing of the entire algorithm implementation.
 
 As with all optimised numeric codes, \gls{PyExaFMM} relies on an efficient
 vectorised data structures, specifically an efficient representation of the tree
