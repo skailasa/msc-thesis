@@ -1,0 +1,41 @@
+Some of the key bottlenecks in implementing the \gls{FMM} and \gls{KIFMM}, and potential
+optimisation strategies in the computation of these algorithms, have already been
+discussed. This chapter adds detail to the approaches used by \gls{PyExaFMM} to tackle
+the issues raised. Namely, the approach to multiprocessing and caching the \gls{M2M},
+\gls{L2L} and \gls{M2L} operators is discussed in Section \ref{sec:2_3_operator_caching}, and
+the acceleration of the \gls{M2L} calculation via a low-rank approximation using the \gls{SVD}
+is discussed in Section \ref{sec:2_4_svd_compression}. The other significant bottlenecks
+and implementation issues addressed thus far in \gls{PyExaFMM} addressed are the
+efficient construction of tree data structure (Section \ref{sec:2_2_efficient_trees}),
+and the software design considerations (Section \ref{sec:2_5_software_design}).
+
+
+- Comment on additional software design considerations. Twin goals of testing
++ extensibility. Challenge of building testable stable numerics codes due to
+continuous rather than discrete results.
+    - Testing
+        - separate logic from numerical code from optimisation code.
+            - allows for clearer tests for loop logic
+        - Introduce safety between return objects.
+    - extensibility
+        - oop and its importance for organising code in complex projects
+            - comment on the additional overhead and why this isn't an issue.
+        - design patterns for separation of concerns.
+            - strategy pattern for different kernels
+            - dependency injection via config file of data and kernel
+
+- Comment on the overhead introduced by Python vs C++, and why this is ok to take
+    - Introduce the capabilities of numpy.
+    - Introduce JIT compilation as a concept, and numba.
+    - Mention where these are used in PyExaFMM
+    - influence on simple but secure design - few objects
+    - Mention where in the report they are benchmarked
+    - Short discussion on overhead due to the python objects, and where this
+    overhead comes from - tradeoff vs developer productivity - classic tradeoff.
+    - Discussion on utility of PyExaFMM as a testing base for new algorithms,
+    and new applications of the FMM as it provides a simple API for researchers
+    from non-specialist backgrounds due to Python.
+
+- Introduce concept of tree construction.
+    - how this is vectorised with hilbert encoding, and where this is discussed
+    - Mention the state of the art parallel construction algorithms

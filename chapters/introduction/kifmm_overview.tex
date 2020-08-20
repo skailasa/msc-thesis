@@ -8,7 +8,7 @@ Instead the method relies only on kernel function evaluations. This allows
 software implementations to be written in an easily extensible manner for different
 kernels. The main difference to the analytic FMM of Section \ref{sec:1_1_fmm_overview},
 lies in the the way that source and target densities are represented, and how
-the M2M, L2L and M2L operators are computed.
+the \gls{M2M}, \gls{L2L} and \gls{M2L} operators are computed.
 
 \subsection{Algorithm Structure \& Analysis}
 
@@ -95,8 +95,8 @@ a set of linear equations to find equivalents of the multipole and local expansi
 does not depend on finding a series expansion of a kernel function, and just on its evaluation.
 
 Using this language of equivalent densities and check surfaces, one is also able to
-write operations equivalent to the M2M, L2L and M2L operations. For a box $A$
-and it's parent box $B$, the M2M operation can be written as,
+write operations equivalent to the \gls{M2M}, \gls{L2L} and \gls{M2L} operations. For a box $A$
+and it's parent box $B$, the \gls{M2M} operation can be written as,
 
 \begin{equation}
     \int_{\mathbf{y}^{A,u}} K(\mathbf{x}, \mathbf{y})\phi^{A, u} d\mathbf{y} =   \int_{\mathbf{y}^{B,u}} K(\mathbf{x}, \mathbf{y})\phi^{B, u} d\mathbf{y}, \> \> \text{for any} \> \> \mathbf{x} \in \mathbf{x}^{B, u}
@@ -106,10 +106,10 @@ and it's parent box $B$, the M2M operation can be written as,
 Once $\phi^{A, u}$ has been calculated for boxes at the leaf level of the tree,
 one can apply (\ref{eq:1_2_m2m}) to evaluate the multipole expansions for all
 the boxes containing \gls{source-particles} in the tree in a manner equivalent
-to the upward pass of Section \ref{sec:1_1_fmm_overview}. The M2M operation is
+to the upward pass of Section \ref{sec:1_1_fmm_overview}. The \gls{M2M} operation is
 illustrated in figure (\ref{fig:1_2_m2m_l2l}A).
 
-For the downward pass, the M2L operation, between a box $B$ and a box $A$ in its
+For the downward pass, the \gls{M2L} operation, between a box $B$ and a box $A$ in its
 interaction list can be written as,
 
 \begin{equation}
@@ -133,13 +133,13 @@ for a box $A$ and it's child $B$, which can be written as,
     \hfill
   {\includegraphics[width=0.4\textwidth]{introduction/kifmm_l2l.png}}
   \vspace{0pt}
-  \caption{Cross section of three dimensional cubic surfaces. The (A) M2M operation and (B) L2L operation. Red solid lines
+  \caption{Cross section of three dimensional cubic surfaces. The (A) \gls{M2M} operation and (B) \gls{L2L} operation. Red solid lines
   denote equivalent surfaces, and blue checked lines denote check surfaces.
   The black solid line defines the box $B$. This figure is adapted directly from \cite{Ying:2004:JCP}.}
   \label{fig:1_2_m2m_l2l}
 \end{figure}
 
-The M2M, L2L and M2L operations are illustrated using cubic surfaces in figure (\ref{fig:1_2_m2m_l2l})
+The \gls{M2M}, \gls{L2L} and \gls{M2L} operations are illustrated using cubic surfaces in figure (\ref{fig:1_2_m2m_l2l})
 The reason for using cubic check and equivalent surfaces are for ease of integration
 in the case where the discretisation points chosen are from a regular Cartesian
 grid.
@@ -147,7 +147,7 @@ grid.
 \begin{figure}[!h]
     \centering
     {\includegraphics[width=\textwidth]{introduction/kifmm_m2l.png}}
-    \caption{Cross section of three dimensional cubic surfaces for the M2L operation.
+    \caption{Cross section of three dimensional cubic surfaces for the \gls{M2L} operation.
     Red solid lines denote equivalent surfaces, and blue checked lines denote check surfaces.
     The black solid line defines the box $B$.}
   \label{fig:1_2_m2l}
@@ -221,23 +221,23 @@ the required expansions of each box at each step of the algorithm. In turn
 these solves require the computation of the check and equivalent surfaces involved,
 as well as the numerical quadrature over the equivalent/source densities to compute
 the required check potentials. However, the the matrix to be inverted
-in the M2M operation as well as the L2L operation are very similar, which can
+in the \gls{M2M} operation as well as the \gls{L2L} operation are very similar, which can
 be seen from figure (\ref{fig:1_2_m2m_l2l}). In fact, if
 the upward \gls{check-surface} is chosen to coincide with the downward
 \gls{equivalent-surface}, and the upward \gls{equivalent-surface} is chosen to
 coincide with the downward \gls{check-surface}, the matrix to be inverted for the M2M
-operation is the transpose of the matrix to be inverted for the L2L operation,
+operation is the transpose of the matrix to be inverted for the \gls{L2L} operation,
 except for a scaling factor dependent on the level of the Octree the surfaces
 are created in. This scaling factor is easy to identify, and for the model problem of
 three dimensional electrostatics with a Laplace kernel, the scaling factor between
 kernel matrices evaluated at two adjacent Octree levels, $l$, is $K^{l+1} = 2K^l$.
-Similarly, the required matrix inverse for the L2L and M2L operations exactly coincide
+Similarly, the required matrix inverse for the \gls{L2L} and \gls{M2L} operations exactly coincide
 except for a scaling factor. Therefore, practical implementations
 need to compute at most one matrix inversion which can be cached. This can then
 be scaled and applied as required at each step of the algorithm. Furthermore,
 for the Laplace kernel specifically, the scaling factors are present on both sides
 of the equations (\ref{eq:1_2_m2m}) and (\ref{eq:1_2_l2l}), cancelling each other out.
-This means that the M2M and L2L operations can also be calculated between just one
+This means that the \gls{M2M} and \gls{L2L} operations can also be calculated between just one
 parent box and its respective child boxes, and cached for later use.
 
 Considering the asymptotic complexity of the inverse, its calculation is bound
@@ -245,7 +245,7 @@ by a term proportional to the number of singular values of the kernel
 matrix, which in turn is dependent on the number of quadrature points chosen for
 the check and equivalent surfaces. Therefore as long as this number of quadrature
 points is kept small, the pseudoinverse does not effect the asymptotic complexity
-of the \gls{KIFMM}. The remainder of the M2M, M2L and L2L operations are bound by
+of the \gls{KIFMM}. The remainder of the \gls{M2M}, \gls{M2L} and \gls{L2L} operations are bound by
 the complexity of computing a matrix vector product between the calculated inverse
 matrix and the check potentials, which is resultantly also not impactful on the
 algorithm's asymptotic complexity as long as the requirement on the number of
@@ -263,20 +263,20 @@ regularisation parameter $\alpha$ as well as the tolerance for singular values
 taken in the pseudoinverse are discussed with this in mind in Chapter 2, Section
 \ref{sec:2_3_operator_caching}.
 
-The ability to cache the M2M and L2L operators, after calculation for a single
+The ability to cache the \gls{M2M} and \gls{L2L} operators, after calculation for a single
 parent box and its respective child boxes, leaves the main bottleneck to
 pre-computing all the required operators as the matrix-vector products required
-to compute the M2L operators. The original authors of the \gls{KIFMM}
-accelerate the calculation of the M2L operation using a Fast Fourier Transform,
+to compute the \gls{M2L} operators. The original authors of the \gls{KIFMM}
+accelerate the calculation of the \gls{M2L} operation using a Fast Fourier Transform,
 or \textbf{\gls{FFT}} \cite{Ying:2004:JCP}. To see why this can be done, consider
-the surfaces describing the M2L operation illustrated in figure (\ref{fig:1_2_m2l}),
+the surfaces describing the \gls{M2L} operation illustrated in figure (\ref{fig:1_2_m2l}),
 if the downward \gls{check-surface} of the target box, and the upward
 \gls{equivalent-surface} are chosen to be equivalent and lie on a regular Cartesian
-grid, then the component of the M2L operation that evaluates the action of a
+grid, then the component of the \gls{M2L} operation that evaluates the action of a
 kernel function between these two surfaces can be considered as a convolution
 between the kernel function and the equivalent density. Mathematically, if the
 kernel function $K(x, y)$ depends only the difference between $x$ and $y$ as it
-does for these choices of surfaces for the M2L operation, the left hand side of
+does for these choices of surfaces for the \gls{M2L} operation, the left hand side of
 (\ref{eq:1_2_m2l}) goes to,
 
 \begin{equation}
@@ -291,7 +291,7 @@ and solve for equivalent density as,
 \end{flalign}
 
 The currently available major \gls{KIFMM} implementations use this to accelerate the calculation of the
-M2L operator including ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}.  Though
+\gls{M2L} operator including ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}.  Though
 reasoned in more detail in Chapter 2, Section \ref{sec:2_3_operator_caching}, we state for
 the present that the expansion order $p$ is by definition proportional to the
 number of quadrature points used to discretise the surface of the check and
@@ -303,9 +303,9 @@ to be,
     n_q = 6(p-1)^2 + 2
 \end{equation}
 
-Meaning that each surface has $O(p^2)$ points, and therefore the M2L operation
+Meaning that each surface has $O(p^2)$ points, and therefore the \gls{M2L} operation
 (\ref{eq:1_2_m2l}) is of $O(p^4)$ between a given target box and source box.
-This FFT based method to find equivalent densities, accelerates the M2L calculation between a given target box
+This FFT based method to find equivalent densities, accelerates the \gls{M2L} calculation between a given target box
 and a given source box to $O(p^3 \log(p))$. In PyExaFMM we use an alternative
 acceleration scheme, based on low rank SVD approximations, discussed further in
 Chapter 2, Section \ref{sec:2_4_svd_compression}. Therefore we defer to the
@@ -314,7 +314,7 @@ literature for further details on FFT based acceleration methods \cite{Malhotra:
 The \gls{KIFMM} presents many of the same opportunities for parallel implementation
 as the \gls{FMM}. In terms of \gls{task-level-parallelism}, PyExaFMM implements
 parallel processing, via Python's native multiprocessing tools, for the calculation
-of the M2L operations. As these calculations involve dense matrix-vector products,
+of the \gls{M2L} operations. As these calculations involve dense matrix-vector products,
 they are also ideal candidates to be transferred
 to a \gls{GPU} for rapid parallel evaluation in the future. PVFMM implements
 \gls{task-level-parallelism} for the calculation of the M2M, L2L, and M2L
@@ -334,8 +334,8 @@ function evaluations,  makes it trivial to separate the concerns of a software
 implementation, and write optimisation libraries for the KIFMM independently of
 the main loop (fig. \ref{fig:1_1_main_loop}) itself. The impact on software design
 and architecture is signficant, and is explored further in Chapter 2 Section
-\ref{sec:2_5_software_design}. This design is the key benefit of PyExaFMM
-in comparison to existing \gls{KIFMM} implementations, as PyExaFMM is already
+\ref{sec:2_5_software_design}. This design is the key benefit of \gls{PyExaFMM}
+in comparison to existing \gls{KIFMM} implementations, as \gls{PyExaFMM} is already
 sacrificing a degree of performance via the choice of implementation language,
 we are able to implement some effective software engineering principles
-to ease the burden on a user in terms of debugging and expanding upon PyExaFMM.
+to ease the burden on a user in terms of debugging and expanding upon \gls{PyExaFMM}.
