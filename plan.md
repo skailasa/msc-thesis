@@ -111,7 +111,6 @@ Figures required:
 
 ### Summary
 
-
 - Some differing practical bottlenecks.
     - Inversion of ill-conditioned kernel matrix required for each step.
 

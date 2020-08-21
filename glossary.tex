@@ -176,6 +176,8 @@
     description={
         `Graphics Processing Unit', are specialised processors specifically
         designed for rapid parallel execution across large blocks of data.
+        Generally consist of $O(10^3)$ cores, and are suited to handling
+        \textbf{SIMD} type instructions, such as matrix vector products.
     }
 }
 
@@ -321,5 +323,14 @@
     description={
         In the context of space filling curves, refers to the encoded position
         along the length of a curve.
+    }
+}
+
+\newglossaryentry{operator-matrix}{
+    name={operator matrix},
+    description={
+        In the context of the cached \textbf{KIFMM} operators, refers to the
+        matrix applied to a known source density in order to calculate an unknown
+        source density.
     }
 }

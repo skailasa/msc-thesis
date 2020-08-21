@@ -27,25 +27,108 @@ of the cube, as well as being placed evenly along each edge of the cube. Similar
 interior of each face of the cube is discretised to have quadrature points that form
 a uniform Cartesian grid with the points at the edges and corners. Therefore,
 by over-counting the nodes on the edge the 6 sides of the cube lead to $6p^2$ quadrature
-points, however each corner point is overcounted three times, and the quadrature points
-in the interior of a edge are overcounted twice. This leads to $6p^2 - 12(p-2) - 16$,
+points, however each corner point is over-counted three times, and the quadrature points
+in the interior of a edge are over-counted twice. This leads to $6p^2 - 12(p-2) - 16$,
 which is equivalent to (\ref{eq:2_2_quadrature_points}), however computed with more operations.
 Therefore even for an order $p=9$ expansion, which can be employed to compute
-potentials to 9 degrees of precision with respect to a direct computation
+potentials to 9 digits of accuracy with respect to a direct computation
 \cite{Malhotra:2015:CCP}, there are just 386 quadrature points on a given check
 or equivalent surface.
 
-- Formation of surfaces
+The operators associated with the \gls{KIFMM}, described by equations
+(\ref{eq:1_2_m2m}), (\ref{eq:1_2_m2l}) and (\ref{eq:1_2_l2l}) are of the general
+form,
 
-- Re-use of surfaces, and translation
-    - Comment on how particle distribution effects the operator computation
+\begin{equation}
+    K^A\phi^A = K^B\phi^B
+\end{equation}
 
-- Real values used for surface construction, from PVFMM
-    - short comment on why these are found to be good
+where $K^A$ and $K^B$ are integral operators describing the action of the kernel
+between two surfaces describing their given box, and can be discretised into
+matrices by performing numerical quadrature but storing the element-wise results
+as matrix elements; and $\phi^A$ and $\phi^B$ are equivalent densities, one of
+which is generally unknown and sought. This can be reformulated as,
 
-- Comment on current software choices
-    - HDF5 vs pickle
-    - python multiprocessing, task-level parallelism for M2L computation
+\begin{equation}
+    \phi^A = (K^A)^{-1}K^B\phi^B
+    \label{eq:2_3_general_operator}
+\end{equation}
+
+in the case $\phi^B$ is known and $\phi^A$ is sought. For the remainder of this
+thesis, the quantity $(K^A)^{-1}K^B$ will be referred to as an \textbf{\gls{operator-matrix}},
+for example the `M2L operator matrix', and so forth. This is a useful quantity
+to cache, in comparison to just storing the inverse and the kernel matrices separately,
+as we can just apply the M2L operator matrix to the known source density in order
+to calculate the unknown source density in a single matrix-vector product.
+
+As described in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview}, one
+can take advantage of the similarities between the nature of the calculation of
+(\ref{eq:2_3_general_operator}) for the \gls{M2M} and \gls{L2L} operator matrices, if
+the check and equivalent surfaces in both cases are chosen correctly. Specifically,
+if the upward check surface is chosen to coincide with the downward equivalent
+surface, and the upward equivalent surface is chosen to coincide with the
+downward check surface, the matrix $K^A$ in for both cases are the transpose of
+of one another, with the addition of a scaling factor to account for the fact
+that $K^A$ describes the surfaces at the child level for a the \gls{L2L} operation,
+versus at the parent level for the \gls{M2M} operation. Furthermore as each of these
+operations is only relative between a parent box and its respective children, one
+can just compute all M2L and L2L operator matrices for a given parent and its
+respective children and re-use at any level of an octree. \gls{PyExaFMM} therefore
+computes, and caches, the M2M and L2L operators and saves them alongside the
+corresponding child Morton \gls{key} of the child box involved in their calcualtion,
+ this can be looked up as needed during the \gls{KIFMM} main loop. For the M2L
+ matrices, an alternative approach is taken, \gls{PyExaFMM} computes
+and caches all M2L operator matrices for all source boxes in a given target box's
+interaction list for all in all target boxes
+interaction list at all levels. Presently, this computation is distributed across
+the available processors of multicore machine
+with Python's native multiprocessing utilities. However, dense matrix-vector
+product operations, such as those required to find the \gls{M2L} operator
+matrices, are good candidates for offloading to \gls{GPU}s. Modern \gls{GPU}s
+consist of $O(10^3)$ processor cores at the higher end,
+in comparison to $O(10)$ on an average desktop work work station's CPU
+\cite{Hwu:2011:MKP}. Roughly speaking, this number of cores allows for massive task level parallelism,
+and works especially well for single-instruction multiple-data type tasks, in which
+a single instruction is passed to each process alongside the data on which it
+is required to operate. A dense matrix vector product is therefore an ideal
+candidate for GPU acceleration. As there are up to 189 M2L operator matrices for a given
+target box, corresponding to the potential length of a target box's interaction
+list in three dimensions \cite{Ying:2004:JCP}, this problem can be reformulated
+as a linear system involving the matrix vector products of M2L matrix operators
+with their respective source equivalent densities,
+
+\begin{equation}
+    \left [ A_1 | A_2 | ... | A_I \right] \begin{bmatrix} \phi_1 \\ \phi_2 \\  ... \\  \phi_I \end{bmatrix} = \begin{bmatrix} q_1\\ q_2\\  ... \\  q_I \end{bmatrix}
+\end{equation}
+
+where $\{A_i | i \in [1, I]\}$, are the M2L operator matrices and $I$ is the size of a given
+target box's interaction list. Additionally, $\{\phi_i | i \in [1, I]\}$ and $\{q_i | i \in [1, I]\}$
+are the source box's equivalent density and the corresponding check potential vectors
+respectively. The concatenated operator matrix for this system can be compressed, and still
+provide accurate results. This is the focus of Section \ref{sec:2_4_svd_compression},
+where it's shown how \gls{PyExaFMM} uses a low-rank estimate of this matrix using
+an \gls{SVD}. This compression has the potential to offer a large saving in terms
+of the size of the cached M2L operator, and the time complexity of its application
+on source densities. Therefore, the decision to compute the \gls{M2L} operators for
+all target boxes is taken with the potential for future GPU acceleration and
+compression techniques in in mind.
+
+The values chosen for the size of the for the size of the upward/downward
+check and equivalent matrices are taken with reference to \cite{Malhotra:2015:CCP},
+as the authors empirically found find them to achieve good results. Specifically,
+the radius\footnote{It's conventional in FMM literature to refer to the half-side
+length of a box as the `radius'}, of the upward check surface/downward equivalent
+surface of a given is set to be 2.95 times the radius of the box, and the radius of
+upward equivalent surface and downward check surface are set to be 1.05 times the radius
+of the given box. This parameter choice is common to both major implementations of
+of the \gls{KIFMM} \cite{exafmm,Malhotra:2015:CCP}.
+
+As mentioned, at run-time the required operators matrices are loaded from disk, ready to
+be used by \gls{PyExaFMM}. Currently, objects corresponding to cached \gls{M2L}
+matrices are simple serialised to be loaded at run time by \gls{PyExaFMM}. However,
+the translation of the cache to HDF5 based storage is an area of future future
+extension for \gls{PyExaFMM}, and has been implemented for the storage of the
+\gls{M2M} and \gls{L2L} operator matrices. HDF5 offers ...
 
 Pseudoinverse
 - Real values used for regularisation parameter in pseudoinverse
