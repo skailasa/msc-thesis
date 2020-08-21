@@ -13,7 +13,7 @@ to the same degree, this follows the precedent set by the original authors \cite
 allows for the application of simple quadrature rules to calculate the various
 operator integrals such as those in equations (\ref{eq:1_2_m2m}), (\ref{eq:1_2_m2l})
 and (\ref{eq:1_2_l2l}). In fact, as the number of quadrature points is generally
-chosen to be relatively low \gls{PyExaFMM} just computes a direct computation to
+chosen to be relatively low \gls{PyExaFMM} uses a direct computation to
 compute the required integrals. Specifically, an order $p$ expansion results in,
 
 \begin{equation}
@@ -25,17 +25,17 @@ where $n_q$ is the number of quadrature points on a given surface. This equation
 justified from the enforcement of the fact $p$ quadrature points are placed on the corners
 of the cube, as well as being placed evenly along each edge of the cube. Similarly the
 interior of each face of the cube is discretised to have quadrature points that form
-a uniform Cartesian grid with the quadrature points on the edges and corners. Therefore,
+a uniform Cartesian grid with the points at the edges and corners. Therefore,
 by over-counting the nodes on the edge the 6 sides of the cube lead to $6p^2$ quadrature
 points, however each corner point is overcounted three times, and the quadrature points
 in the interior of a edge are overcounted twice. This leads to $6p^2 - 12(p-2) - 16$,
-which is equivalent to (\ref{eq:2_2_quadrature_points}). Therefore even for an order $p=9$
-expansion, which can be employed to compute potentials to 9 degrees of precision
+which is equivalent to (\ref{eq:2_2_quadrature_points}), however computed with more operations.
+Therefore even for an order $p=9$ expansion, which can be employed to compute
+potentials to 9 degrees of precision with respect to a direct computation
 \cite{Malhotra:2015:CCP}, there are just 386 quadrature points on a given check
 or equivalent surface.
 
 - Formation of surfaces
-    - relationship between expansion order and number of surface points
 
 - Re-use of surfaces, and translation
     - Comment on how particle distribution effects the operator computation
