@@ -40,22 +40,22 @@ The operators associated with the \gls{KIFMM}, described by equations
 form,
 
 \begin{equation}
-    K^A\phi^A = K^B\phi^B
+    K_A\phi^A = K_B\phi^B
 \end{equation}
 
-where $K^A$ and $K^B$ are integral operators describing the action of the kernel
+where $K_A$ and $K_B$ are integral operators describing the action of the kernel
 between two surfaces describing their given box, and can be discretised into
 matrices by performing numerical quadrature but storing the element-wise results
 as matrix elements; and $\phi^A$ and $\phi^B$ are equivalent densities, one of
 which is generally unknown and sought. This can be reformulated as,
 
 \begin{equation}
-    \phi^A = (K^A)^{-1}K^B\phi^B
+    \phi^A = (K_A)^{-1}K_B\phi^B
     \label{eq:2_3_general_operator}
 \end{equation}
 
 in the case $\phi^B$ is known and $\phi^A$ is sought. For the remainder of this
-thesis, the quantity $(K^A)^{-1}K^B$ will be referred to as an \textbf{\gls{operator-matrix}},
+thesis, the quantity $(K_A)^{-1}K_B$ will be referred to as an \textbf{\gls{operator-matrix}},
 for example the `M2L operator matrix', and so forth. This is a useful quantity
 to cache, in comparison to just storing the inverse and the kernel matrices separately,
 as we can just apply the M2L operator matrix to the known source density in order
@@ -67,9 +67,9 @@ can take advantage of the similarities between the nature of the calculation of
 the check and equivalent surfaces in both cases are chosen correctly. Specifically,
 if the upward check surface is chosen to coincide with the downward equivalent
 surface, and the upward equivalent surface is chosen to coincide with the
-downward check surface, the matrix $K^A$ in for both cases are the transpose of
+downward check surface, the matrix $K_A$ in for both cases are the transpose of
 of one another, with the addition of a scaling factor to account for the fact
-that $K^A$ describes the surfaces at the child level for a the \gls{L2L} operation,
+that $K_A$ describes the surfaces at the child level for a the \gls{L2L} operation,
 versus at the parent level for the \gls{M2M} operation. Furthermore as each of these
 operations is only relative between a parent box and its respective children, one
 can just compute all M2L and L2L operator matrices for a given parent and its
@@ -88,10 +88,12 @@ matrices, are good candidates for offloading to \gls{GPU}s. Modern \gls{GPU}s
 consist of $O(10^3)$ processor cores at the higher end,
 in comparison to $O(10)$ on an average desktop work work station's CPU
 \cite{Hwu:2011:MKP}. Roughly speaking, this number of cores allows for massive task level parallelism,
-and works especially well for single-instruction multiple-data type tasks, in which
-a single instruction is passed to each process alongside the data on which it
+and works especially well for single-instruction multiple-data (\gls{SIMD}) type tasks, in which
+a single instruction is passed to each process alongside a small amount of data on which it
 is required to operate. A dense matrix vector product is therefore an ideal
-candidate for GPU acceleration. As there are up to 189 M2L operator matrices for a given
+candidate for GPU acceleration, due to the independence of the calculation between each row
+of the matrix and the vector, each of which can be broken up again into independent element-wise
+products. As there are up to 189 M2L operator matrices for a given
 target box, corresponding to the potential length of a target box's interaction
 list in three dimensions \cite{Ying:2004:JCP}, this problem can be reformulated
 as a linear system involving the matrix vector products of M2L matrix operators
@@ -111,7 +113,7 @@ an \gls{SVD}. This compression has the potential to offer a large saving in term
 of the size of the cached M2L operator, and the time complexity of its application
 on source densities. Therefore, the decision to compute the \gls{M2L} operators for
 all target boxes is taken with the potential for future GPU acceleration and
-compression techniques in in mind.
+compression techniques in mind.
 
 The values chosen for the size of the for the size of the upward/downward
 check and equivalent matrices are taken with reference to \cite{Malhotra:2015:CCP},
@@ -123,20 +125,45 @@ upward equivalent surface and downward check surface are set to be 1.05 times th
 of the given box. This parameter choice is common to both major implementations of
 of the \gls{KIFMM} \cite{exafmm,Malhotra:2015:CCP}.
 
-As mentioned, at run-time the required operators matrices are loaded from disk, ready to
+As mentioned, the required operator matrices are loaded from disk at run-time, ready to
 be used by \gls{PyExaFMM}. Currently, objects corresponding to cached \gls{M2L}
-matrices are simple serialised to be loaded at run time by \gls{PyExaFMM}. However,
-the translation of the cache to HDF5 based storage is an area of future future
-extension for \gls{PyExaFMM}, and has been implemented for the storage of the
-\gls{M2M} and \gls{L2L} operator matrices. HDF5 offers ...
+matrices are simple serialised to be loaded in their entirety at run time by
+\gls{PyExaFMM}. However, the translation of the cache to HDF5 based storage is
+an area of future future extension for \gls{PyExaFMM}, and has been implemented
+for the storage of the \gls{M2M} and \gls{L2L} operator matrices. HDF5 offers an
+interface for loading slices of large datasets that may be stored on disks, allowing
+for rapid read times for subsets of a data, even if the underlying dataset
+is of the order of gigabytes \cite{Wasser:NSF}. Furthermore, HDF5 allows for the
+hierarchical storage of numeric arrays, this amounts to creating
+a database like structure on disk which can store numeric arrays of different
+size.
+
+The  benchmark figures for the potential speedup offered by the above optimisations
+implemented in \gls{PyExaFMM}, namely multiprocessing for the \gls{M2L} operators
+and the usage of HDF5 vs object serialisation for large datasets are given
+in Chapter \ref{chpt:3}, Section \ref{sec:3_1_benchmarking}.
+
+As discussed in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview},
+the calculation of (\ref{eq:2_3_general_operator}) is ill-conditioned, therefore
+\gls{PyExaFMM} uses a Tikhonov regularisation scheme in order to calculate the
+operator matrices,
+
+\begin{equation}
+    \phi^A = (\alpha I + K_A^*K_A)^{-1}K_B\phi^B
+    \label{eq:2_4_regularised_general_operator}
+\end{equation}
+
+a pseudoinverse using an \gls{SVD} is then calculated for this matrix, in which
+singular vectors corresponding to `small' singular values less than a specified
+tolerance are filtered out of the final approximation in order to maintain
+numerical stability. This tolerance value is in practice set to be a number close
+to machine precision, and in \gls{PyExaFMM} we follow the convention from ExaFMM-T
+and use a value of $4*\text{EPS}*\max(a)$, where EPS is machine precision and
+$\text{max}(a)$ refers to the largest entry in the regularised operator matrix
+(\ref{eq:2_4_regularised_general_operator}).
 
 Pseudoinverse
 - Real values used for regularisation parameter in pseudoinverse
     - method used to get these in my work.
     - Real values used for the tolerance essentially derived from the above.
 
-- Comment on PVFMM and ExaFMM-T approach which represents state of the art.
-    - Brief discussion on the optimisations, specifically PVFMM,
-    they pursue and how these could be implemented in PyExaFMM
-    - Brief comment on potential stability improvements using Barnett+Betcke
-    paper.

@@ -148,6 +148,7 @@
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{18}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{18}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{18}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{18}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{19}
@@ -190,7 +191,7 @@
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{21}
-\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{21}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{22}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{22}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{23}
 \glossaryentry{operator matrix?\glossentry{operator-matrix}|setentrycounter[]{page}\glsnumberformat}{23}
@@ -203,8 +204,9 @@
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{23}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{23}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{23}
-\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{23}
-\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{23}
+\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{24}
+\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{24}
+\glossaryentry{SIMD?\glossentry{SIMD}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{24}
@@ -215,5 +217,10 @@
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{24}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{24}
+\glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{24}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{25}
 \glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{28}
 \glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{28}

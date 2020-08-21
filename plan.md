@@ -272,6 +272,7 @@ testing as numerical testing is not very accurate.
     - Multiproc
     - SVD compression
     - numba
+    - hdf5 vs pickle
 
 - Compare experimental results for FMM vs Direct computation as a function of number of particles for the LAPLACE KERNEL!!!!. Justify usage of laplace kernel (paradigm, easy etc.)
 

@@ -74,7 +74,9 @@ data distributions the non-adaptive implementation of \gls{PyExaFMM} currently
 will wastefully refine regions of the octree with a low density of particles, major
 open source \gls{KIFMM} implementations thus implement adaptive tree refinement,
 with different sized leaf boxes in different regions of the domain decsribed by
-the octree \cite{Ying:2004:JCP, Malhotra:2015:CCP, exafmm}.
+the octree \cite{Ying:2004:JCP, Malhotra:2015:CCP, exafmm}. The speedup offered
+by just-in-time compilation is benchmarked in Chapter \ref{chpt:3}, Section
+\ref{sec:3_1_benchmarking}.
 
 \begin{figure}[!h]
     \centering
