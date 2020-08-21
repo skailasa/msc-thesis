@@ -168,7 +168,7 @@ K \phi = q
 
 This expression reflects the fact that in practical implementations these continuous
 integrals are discretised as matrix-vector products. Here $K$ refers to a
-`kernel matrix', which can be found via numerical quadrature, $\phi$ is a vector
+`kernel matrix' or operator matrix, which can be found via numerical quadrature, $\phi$ is a vector
 of equivalent density to be found, and $q$ is a known vector containing the check
 potential. The reason for using cubic surfaces is the availability of simple
 quadrature rules to integrate over the faces of each surface. The specifics of
@@ -187,8 +187,8 @@ ways. The authors of \cite{Ying:2004:JCP} make use of a Nystroem method, and ind
 the possibility of using either Galerkin or Collocation methods. For ease of
 implementation, a simpler approach is to instead approximate the solution using a pseudoinverse
 estimated from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This
-approach is adapted from the current C++ implementation of the \gls{KIFMM}, ExaFMM-t,
-from the ExaFMM project \cite{exafmm}.
+approach is adapted from current C++ implementations of the \gls{KIFMM}, ExaFMM-t,
+as well as PVFMM \cite{Malhotra:2015:CCP,exafmm}.
 
 Consider the SVD of a matrix $A$, with $m$ rows and $n$ columns,
 
@@ -202,13 +202,16 @@ We can write an approximate pseudoinverse of $A$ as \cite{Trefethen:1997:SIAM},
 
 \begin{equation}
     A^\dagger = V \Sigma^\dagger U^*
+    \label{eq:1_2_pseudo_inverse}
 \end{equation}
 
 here, $A^\dagger$ has $n$ rows and $m$ columns, and $\Sigma^\dagger$ is formed
 by taking the reciprocal of all the diagonal elements. Furthermore, to ensure
 numerical stability for this reciprocal calculation, one can choose to filter
 out components of $V$ and $U^*$ if their singular values smaller than a specified
-tolerance. The justification of the choices for the regularisation parameter
+tolerance. \gls{PyExaFMM} uses this approach to find the pseudoinverse of the
+diagonal matrix of singular values $\Sigma$, calculating the pseudoinverse of
+the kernel matrix using (\ref{eq:1_2_pseudo_inverse}). The justification of the choices for the regularisation parameter
 $\alpha$ and the tolerance for the pseudoinverse are discussed in detail in
 Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_3_operator_caching}. In terms of the asymptotic complexity of the \gls{SVD},
 as the singular values/vectors are iterated through once in a straightforward
