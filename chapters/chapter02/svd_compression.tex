@@ -30,7 +30,7 @@ However, an even lower rank approximation is possible using an SVD,
 \end{equation}
 
 this can also be rephrased as a weighted sum of rank one matrices, or put simply
-in terms of the products of the left/right singular vectors \cite{Trefethen:1997:SIAM},
+in terms of the products of the left and right singular vectors \cite{Trefethen:1997:SIAM},
 
 \begin{equation}
     A = \sum_{j=1}^{r}\sigma_j u_j v_j^*
@@ -73,17 +73,94 @@ then be written as,
 
 \begin{equation}
     A_\tau = U_k \Sigma_k V_k^*
+    \label{eq:decomposed_approximation_a_tau}
 \end{equation}
 
-where $U_k$ and $V_k$ have $k$ rows and columns respectively.
+where $U_k$ and $V_k$ have $k$ rows and columns respectively. As $k < r$, this
+method is known as a low-rank SVD approximation. The application of
+(\ref{eq:decomposed_approximation_a_tau}) represents a complexity saving in
+comparison to applying $A$ directly. This can be seen by considering the full
+SVD of a generic matrix $B \in \mathbb{C}^{m, n}$,
 
+\begin{equation}
+\begin{pNiceMatrix}[first-row,last-row,first-col,last-col]
+ &    &    &   \leftarrow n \rightarrow  &     & \\
+\uparrow &    &    &   &    &   & \\
+m &    &    & B &    &  &  \\
+\downarrow &    &    &   &    &  &  \\
+ &    &    &   &    &      \\
+\end{pNiceMatrix} = \begin{pNiceMatrix}[first-row, last-row, first-col, last-col]
+&  &  \leftarrow m \rightarrow  &   &  \\
+\uparrow &  &  &   & \\
+m &  & U  &   & \\
+\downarrow &  &   &   & \\
+&  &   &   & \\
+\end{pNiceMatrix} \begin{pNiceMatrix}[first-row, last-row, first-col, last-col]
+&  &  \leftarrow n \rightarrow  &   &  \\
+\uparrow &  &  &   & \\
+m &  & \Sigma  &   & \\
+\downarrow &  &   &   & \\
+&  &   &   & \\
+\end{pNiceMatrix}\begin{pNiceMatrix}[first-row, last-row, first-col, last-col]
+&  &  \leftarrow n \rightarrow  &   &  \\
+\uparrow &  &  &   & \\
+n &  & V^*  &   & \\
+\downarrow &  &   &   & \\
+&  &   &   & \\
+\end{pNiceMatrix}
+\label{eq:2_4_b_svd}
+\end{equation}
 
+where the dimension of each matrix in the \gls{SVD} decomposition has been
+illustrated. For an approximated matrix $B_\tau$, with $\text{rank}(B_\tau) = k$,
+we find by applying (\ref{eq:2_4_sum_svd}),
 
+\begin{equation}
+    \begin{pNiceMatrix}[first-row,last-row,first-col,last-col]
+        &    &    &   \leftarrow n \rightarrow  &     & \\
+       \uparrow &    &    &   &    &   & \\
+       m &    &    & B_\tau &    &  &  \\
+       \downarrow &    &    &   &    &  &  \\
+        &    &    &   &    &      \\
+       \end{pNiceMatrix} = \begin{pNiceMatrix}[first-row, last-row, first-col, last-col]
+       &  &  \leftarrow k \rightarrow  &   &  \\
+       \uparrow &  &  &   & \\
+       m &  & U  &   & \\
+       \downarrow &  &   &   & \\
+       &  &   &   & \\
+       \end{pNiceMatrix} \begin{pNiceMatrix}[first-row, last-row, first-col, last-col]
+       &  &  \leftarrow k \rightarrow  &   &  \\
+       \uparrow &  &  &   & \\
+       k &  & \Sigma  &   & \\
+       \downarrow &  &   &   & \\
+       &  &   &   & \\
+       \end{pNiceMatrix}\begin{pNiceMatrix}[first-row, last-row, first-col, last-col]
+       &  &  \leftarrow n \rightarrow  &   &  \\
+       \uparrow &  &  &   & \\
+       k &  & V^*  &   & \\
+       \downarrow &  &   &   & \\
+       &  &   &   & \\
+       \end{pNiceMatrix}
+\label{eq:2_4_b_tau_svd}
+\end{equation}
+
+If we were to apply the \gls{SVD} decomposition of $B$ to a given vector
+$x \in \mathbb{C}^{1,n}$, this would result in an asymptotic complexity of
+$O(m^2 + n^2)$ from (\ref{eq:2_4_b_svd}). Compared with the application of the
+\gls{SVD} decomposition of $B_\tau$, which results in an asymptotic complexity
+of $O(k(m + n))$. As long as $k < \min (m, n)$, this represents a complexity
+saving and therefore faster matrix-vector products with the approximation
+$B_\tau$.
+
+\gls{PyExaFMM} implements this compression technique in order to accelerate the
+calculation of the \gls{M2L} operation. This is in contrast to most other major
+\gls{KIFMM} implementations. Which, as mentioned in Chapter
+\ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview}, make use of
+an \gls{FFT} based acceleration scheme.
 
 Other tasks:
 - read a little about randomised matrix compression via low
 rank svd.
-
 
 - Derive usage of SVD appx in the context of PyExaFMM
 
