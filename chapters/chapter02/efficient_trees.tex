@@ -39,7 +39,7 @@ The binary coordinates of Morton encoded octants make it easy to perform simple
 bitwise shift and comparison operations, to assign source and \gls{target-particles} the Morton key
 that encodes the octant they lie in for each level of a given octree, as well as traverse the levels of
 the octree. Specifically, \gls{PyExaFMM} makes use of a \textit{linear} Morton encoding, meaning that it assigns
-all particles to the keys of boxes they occupy at a which has been refined to a
+all particles to the keys of boxes they occupy at a maximum depth which has been refined to a
 pre-defined leaf level of the desired octree. It does so by assuming that the
 leaf level of the octree describing the domain of interest is partitioned into equal
 sized leaf boxes, and checking the relative coordinates position of each particle
@@ -48,8 +48,8 @@ a set of keys at the leaf-level which are non-empty, allowing \gls{PyExaFMM} to
 ignore the remainder of the space covered by the domain of the octree. Once this
 linear representation has been found, and the non-empty boxes containing
 source and \gls{target-particles} identified, it's easy to traverse the octree
-to find the ancestor boxes which particles lie in by simply subtracting the appropriate
-offset due to the box's position on the encoded line, and adding a new offset at
+to find which ancestor boxes particles lie in by simply subtracting the appropriate
+offset due to the box's position on the entire Morton encoded line, and adding a new offset at
 at level of the ancestor box. The inverse operation can be done to provide the set
 of keys corresponding to the descendent boxes for a given box. In terms of the
 \gls{FMM} and \gls{KIFMM} algorithms, the above operations can be extended trivially

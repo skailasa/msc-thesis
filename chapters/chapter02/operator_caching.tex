@@ -85,7 +85,7 @@ the available processors of multicore machine
 with Python's native multiprocessing utilities. However, dense matrix-vector
 product operations, such as those required to find the \gls{M2L} operator
 matrices, are good candidates for offloading to \gls{GPU}s. Modern \gls{GPU}s
-consist of $O(10^3)$ processor cores at the higher end,
+consist of up to $O(10^3)$ processor cores at the higher end,
 in comparison to $O(10)$ on an average desktop work work station's CPU
 \cite{Hwu:2011:MKP}. Roughly speaking, this number of cores allows for massive task level parallelism,
 and works especially well for single-instruction multiple-data (\gls{SIMD}) type tasks, in which
@@ -119,24 +119,24 @@ The values chosen for the size of the for the size of the upward/downward
 check and equivalent matrices are taken with reference to \cite{Malhotra:2015:CCP},
 as the authors empirically found find them to achieve good results. Specifically,
 the radius\footnote{It's conventional in FMM literature to refer to the half-side
-length of a box as the `radius'}, of the upward check surface/downward equivalent
+length of a box as the `radius'}, of the upward check surface and downward equivalent
 surface of a given is set to be 2.95 times the radius of the box, and the radius of
 upward equivalent surface and downward check surface are set to be 1.05 times the radius
-of the given box. This parameter choice is common to both major implementations of
+of the given box. This parameter choice is common to both major C++ implementations of
 of the \gls{KIFMM} \cite{exafmm,Malhotra:2015:CCP}.
 
 As mentioned, the required operator matrices are loaded from disk at run-time, ready to
 be used by \gls{PyExaFMM}. Currently, objects corresponding to cached \gls{M2L}
 matrices are simple serialised to be loaded in their entirety at run time by
 \gls{PyExaFMM}. However, the translation of the cache to HDF5 based storage is
-an area of future future extension for \gls{PyExaFMM}, and has been implemented
+an area of future extension for \gls{PyExaFMM}, and has been implemented
 for the storage of the \gls{M2M} and \gls{L2L} operator matrices. HDF5 offers an
 interface for loading slices of large datasets that may be stored on disks, allowing
 for rapid read times for subsets of a data, even if the underlying dataset
 is of the order of gigabytes \cite{Wasser:NSF}. Furthermore, HDF5 allows for the
 hierarchical storage of numeric arrays, this amounts to creating
 a database like structure on disk which can store numeric arrays of different
-size.
+dimensions.
 
 The  benchmark figures for the potential speedup offered by the above optimisations
 implemented in \gls{PyExaFMM}, namely multiprocessing for the \gls{M2L} operators
@@ -164,7 +164,7 @@ with a pseudoinverse of
 the inversion of the diagonal matrix of singular values can be regularised as,
 
 \begin{equation}
-    \Sigma^\dagger = \underbrace{(\alpha I + \Sigma^*\Sigma)^{-1}}_{\Sigma_{\text{reg}}}
+    \Sigma^{-1} = \underbrace{(\alpha I + \Sigma^*\Sigma)^{-1}}_{\Sigma_{\text{reg}}}
     \label{eq:2_4_regularised_general_operator}
 \end{equation}
 
@@ -179,7 +179,7 @@ stable results. The regularisation parameter $\alpha$ is also determined empiric
 and a value proportional to the largest singular value of $K_A$, where
 $\alpha=0.075 \cdot \max(\Sigma)$ is found to provide stable results.\footnote{
     The regularisation parameter $\alpha$ used by the authors of \cite{Malhotra:2015:CCP}
-    is $O(10^{-9})$, which was provided through direct email correspondence. However,
+    is $\alpha \approx  1 \times 10^{-9}$, which was provided through direct email correspondence. However,
     they note that this is an empirical value, reflecting the expansion order of
     the surfaces they used in their simulations.
 }

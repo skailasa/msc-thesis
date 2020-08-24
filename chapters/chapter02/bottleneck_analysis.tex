@@ -6,7 +6,7 @@ the issues raised. Namely, the approach to multiprocessing and caching the \gls{
 via a low-rank approximation using an \gls{SVD}. The other significant bottlenecks
 and implementation issues addressed thus far in the implementation of \gls{PyExaFMM} are the
 efficient construction of tree data structures,
-and the software design considerations.
+and software design considerations.
 
 The twin goals in designing \gls{PyExaFMM} were ensuring the extensibility and
 testability of the software. Building easily extensible and testable numerical
@@ -20,7 +20,7 @@ primitives, such as those available in lower level compiled languages such as C
 or C++, are misplaced for two reasons. Firstly, the implementation of Python objects
 is syntactic sugar, methods and data for a given object are written into
 a simple dictionary structure at run time, with the `class' syntax common to other
-object oriented languages such as C++ or Java, offered for as they are familiar to
+object oriented languages such as C++ or Java, offered as they are familiar to
 the programmer coming from such languages. Resultantly, all `primitives' such as
 integers and strings in Python are actually objects by design, being quite different
 in their construction from C or C++ where the programmer is given the power to
@@ -30,8 +30,8 @@ is then compiled. This additional interpreter layer is the source of Pythonic ov
 rather than the object abstraction in itself. Therefore, once the decision has
 been made to use Python, there isn't a significant overhead from using object
 oriented design principles, with the added benefit of increasing programmer
-productivity, and increasing testability. Secondly, the vast Python ecosystem of
-optimised libraries for numerical computation allow for the manipulation and
+productivity, and increasing testability \cite{Ramalho:2015:Oreilly}. Secondly,
+the vast Python ecosystem of optimised libraries for numerical computation allow for the manipulation and
 allocation of primitives in memory in a manner closer to a compiled language.
 Specifically, \gls{PyExaFMM} implements all of its containers with NumPy, which
 offers an interface for the allocation and access of numerical data with C-like
