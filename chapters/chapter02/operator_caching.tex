@@ -96,14 +96,16 @@ of the matrix and the vector, each of which can be broken up again into independ
 products. As there are up to 189 M2L operator matrices for a given
 target box, corresponding to the potential length of a target box's interaction
 list in three dimensions \cite{Ying:2004:JCP}, this problem can be reformulated
-as a linear system involving the matrix vector products of M2L matrix operators
+as a linear system involving the matrix vector products of M2L operator matrices
 with their respective source equivalent densities,
 
 \begin{equation}
     \left [ A_1 | A_2 | ... | A_I \right] \begin{bmatrix} \phi_1 \\ \phi_2 \\  ... \\  \phi_I \end{bmatrix} = \begin{bmatrix} q_1\\ q_2\\  ... \\  q_I \end{bmatrix}
+    \label{eq:2_3_concatenated_m2l}
 \end{equation}
 
-where $\{A_i | i \in [1, 2, ..., I]\}$, are the M2L operator matrices and $I$ is the size of a given
+where $\{A_i | i \in [1, 2, ..., I]\}$, are the M2L operator matrices for a given
+source and target box pair and $I$ is the size of a given
 target box's interaction list. Additionally, $\{\phi_i | i \in [1,2, ..., I]\}$ and $\{q_i | i \in [1,2, ..., I]\}$
 are the source box's equivalent density and the corresponding check potential vectors
 respectively. The concatenated operator matrix for this system can be compressed, and still

@@ -1,3 +1,90 @@
+As mentioned in Section \ref{sec:2_3_operator_caching}, \gls{PyExaFMM} compresses
+a concatenated version of the \gls{M2L} operator matrices using an \gls{SVD}.
+The utility of using an SVD in comparison to an eigenvalue decomposition lies
+in the fact that it is defined on all matrices, real and complex
+\cite{Trefethen:1997:SIAM}. From equation (\ref{eq:2_3_concatenated_m2l}), the
+concatenated M2L operators,
+
+\begin{equation}
+    A = \left [ A_1 | A_2 | ... | A_I \right]
+\end{equation}
+
+where, as before, $\{A_i | i \in [1, 2, ..., I]\}$ are the M2L operator matrices
+for a given source and target box pair and $I$ is the size of a given target box's
+interaction list, can be written as a single matrix $A$, where generally
+$A \in \mathbb{C}^{T, I \cdot S}$. Here $T$ refers to the number of quadrature
+points on a given target box's surface, and $S$ refers to the number of quadrature
+points on all the source boxes in its interaction list's surfaces. For non-square
+matrices, it is always the case that either the rows or columns (whichever is
+greater in number), are linearly dependent. Therefore,
+
+\begin{equation}
+    \text{rank}(A) \leq \min (T, I \cdot S)
+\end{equation}
+
+using this fact, it's therefore possible to write a lower-rank approximation of $A$.
+However, an even lower rank approximation is possible using an SVD,
+
+\begin{equation}
+    A = U \Sigma V^*
+\end{equation}
+
+this can also be rephrased as a weighted sum of rank one matrices, or put simply
+in terms of the products of the left/right singular vectors \cite{Trefethen:1997:SIAM},
+
+\begin{equation}
+    A = \sum_{j=1}^{r}\sigma_j u_j v_j^*
+\end{equation}
+
+where $r = \text{rank} (A)$, $\{\sigma_j | j \in [1, ..., r] \}$ are the singular
+values and $\{u_j | j \in [1, ..., r] \} $ and $\{v_j | j \in [1, ..., r] \}$
+are the left and right singular vectors respectively.
+
+However, noting that singular values are generally ordered from largest to smallest
+in terms of magnitude, one can say that the $\tau^{th}$ partial sum where
+$\tau \leq r$ captures as much `energy' of $A$ as possible,
+
+\begin{equation}
+    A_\tau = \sum_{j=1}^{\tau}\sigma_j u_j v_j^*
+    \label{eq:2_4_sum_svd}
+\end{equation}
+
+here the `energy' of an operator is defined in terms of either a 2-norm or the
+Frobenius norm as developed in \cite{Trefethen:1997:SIAM}. In fact it can be shown
+that for any $\tau$ with $0 \leq \tau \leq r$, if $\tau = \min \{T, I \cdot S\}$
+and we define $\sigma_{\tau + 1} = 0$ then,
+
+\begin{equation}
+    ||A - A_\tau ||_2 = \sigma_{\tau+1} = 0
+\end{equation}
+
+meaning that $A_\tau$ is the best approximation of $A$, by a matrix of a lower rank
+\cite{Trefethen:1997:SIAM}. However, we can also cut off the sum (\ref{eq:2_4_sum_svd}),
+if the energy of the approximated $A_\tau$ is within some acceptable tolerance,
+
+\begin{equation}
+    ||A - A_\tau ||_2  \leq  \text{tol}
+\end{equation}
+
+such that if the sum is cut off at the $k^{th}$ value, leaving the approximation
+$\text{rank}(A_\tau) = k$, then $\sigma_k > \text{tol}$ and
+$\sigma_{k+1} \leq \text{tol}$. The \gls{SVD} of the approximation $A_\tau$ can
+then be written as,
+
+\begin{equation}
+    A_\tau = U_k \Sigma_k V_k^*
+\end{equation}
+
+where $U_k$ and $V_k$ have $k$ rows and columns respectively.
+
+
+
+
+Other tasks:
+- read a little about randomised matrix compression via low
+rank svd.
+
+
 - Derive usage of SVD appx in the context of PyExaFMM
 
 - derivation from trefethan on how this offers an optimal appx
