@@ -123,7 +123,7 @@ user@Workstation ~ % ci compress-m2l
 \end{verbatim}
 
 These commands are again configured using the \gls{JSON} configuration file
-which specifies the other parameters used in a simulation, such as the order the
+which specifies the parameters used in a simulation, such as the order the
 multipole and local expansions. Following the execution of the above,
 \gls{PyExaFMM} is automatically configured with the required
 operator and particle data, and simulations can be run from within a Python
@@ -169,9 +169,9 @@ and SVD utility modules, which offer wrappers around common interfaces from
 underlying standard Python functionality, specialised for usage in \gls{PyExaFMM}.
 This offers an advantage in that their implementation can also be changed,
 without effecting the logic of the operator computation and compression scripts.
-For example, the planned extension to randomised SVD methods discussed in
+For example, the planned extension to randomised \gls{SVD} methods discussed in
 Section \ref{sec:2_4_svd_compression} can be separately implemented in \gls{PyExaFMM}'s
-SVD module while maintaining the wrapper's interface, allowing for the new
+\gls{SVD} utility module while maintaining the wrapper's interface, allowing for the new
 functionality to propagate into the operator compression script without
 a change of the script's logic. Separation of concerns as a design
 principle naturally leads to extensible code \cite{Gamma:1994:Addison}.

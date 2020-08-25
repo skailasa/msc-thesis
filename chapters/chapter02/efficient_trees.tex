@@ -7,15 +7,24 @@ these infinite-curves are fractal, and by increasing their `order' can be made
 to `fill', or describe, a $d$ dimensional space uniquely simply by their position
 along the length of the curve \cite{Campbell:2003:Williams}. This concept is
 illustrated in figure (\ref{fig:2_2_multi_order}) for the Morton encoding, or a
-`Z-order' encoding, a variant of space-filling curves used in \gls{PyExaFMM}
-that better preserves the proximality of data in the encoded coordinates than
- most other encodings, in addition to being easier to implement as it doesn't
- have the requirement that the encoded line has to be continuous.
- Figure (\ref{fig:2_2_multi_order}) illustrates the fractal nature of a Morton
- encoded line at two adjacent levels of a quadtree in two dimensions. The
- position along the line in each quadrant of a given box can be efficiently represented as a pair of `binary coordinates'
- corresponding to the index of the quadrant the line passes through for a given box.
- For example, the bottom-left quadrant at the coarser level in figure (\ref{fig:2_2_multi_order})
+`Z-order' encoding.  This figure illustrates the fractal nature of a Morton
+encoded line, with two `orders' of line encoding plotted over one another. We see
+how by using a higher order encoding, we are able to to describe each position
+in the domain of the box with a greater degree of precision, by using just
+the length along the encoded line as a coordinate. This variant of space-filling
+curves is used by \gls{PyExaFMM} as it better preserves the proximality of data
+in the encoded coordinates than most other encodings, meaning that distance
+between data points in physical space is preserved to an extent by the encoding. In $N$-Body
+problems that use tree data structures, the encoded line is chosen to pass through
+the centre of each box in the tree, at each level. Usefullly, Morton encodings
+do not have the requirement to be continuous as illustrated by figure
+(\ref{fig:2_2_multi_order}), making them relatively simple to implement.
+
+As the line is chosen to pass through the center of each quadrant of the quadtree,
+ the position along the line in each quadrant of a given box can be efficiently represented
+ as a pair of `binary coordinates' corresponding to the index of the quadrant the line
+ passes through, as the dimensions of the box at each level are pre-defined for a
+ given octree. For example, the bottom-left quadrant at the coarser level in figure (\ref{fig:2_2_multi_order})
  will have a binary coordinate of $00$. This encoding can be made unique for each
  quadrant in each level by adding a displacement corresponding to the number of boxes so far
  encoded at all coarser levels. For example, the first encoded box, which in figure (\ref{fig:2_2_multi_order})
@@ -48,7 +57,7 @@ ignore the remainder of the space covered by the domain of the octree. Once this
 linear representation has been found, and the non-empty boxes containing
 source and \gls{target-particles} identified, it's easy to traverse the octree
 to find which ancestor boxes particles lie in by simply subtracting the appropriate
-offset due to the box's position on the entire Morton encoded line, and adding a new offset at
+offset due to the box's position along the entire Morton encoded line, and adding a new offset at
 at level of the ancestor box. The inverse operation can be done to provide the set
 of keys corresponding to the descendent boxes for a given box. In terms of the
 \gls{FMM} and \gls{KIFMM} algorithms, the above operations can be extended trivially
@@ -58,25 +67,25 @@ a given box at a given level of the octree.
 
 The power of encoding the domain of the octree lie in the optimisation opportunities
 that arise. \gls{PyExaFMM} works entirely in terms of encoded Morton keys, using
-them to lookup the correct operators, and store computational results against.
+them to lookup the correct precomputed operators, and store computational results against.
 The ability to store an Morton encoding in Numpy vectors makes it possible to use
 Numba's \textbf{\gls{JIT}} functionality to precompile the bitwise
 operations, which are used heavily in \gls{PyExaFMM}'s implementation of the \gls{KIFMM}
 main loop, mainly to traverse the octree. Properties of \gls{JIT} compilation are
-elaborated on in Section \ref{sec:2_5_software_design}. This implementation
-detail represents the first step towards optimising tree construction, with the
+elaborated on in Section \ref{sec:2_5_software_design}, and the speedup offered
+by just-in-time compilation is benchmarked in Chapter \ref{chpt:3}, Section
+\ref{sec:3_1_benchmarking}. Most significantly, this implementation detail
+represents the first step towards optimising tree construction, with the
 field of optimising highly-parallel tree constructions for octrees potentially containing
-$10^9$ or more octree boxes, being an active field of research \cite{Sundar:2008:SIAM,Malhotra:2015:CCP}.
+$10^9$ or more octree boxes, being an active area of research \cite{Sundar:2008:SIAM,Malhotra:2015:CCP}.
 For example, the authors of PVFMM, one of the major C++ \gls{KIFMM} implementations,
-evenly distribute the load of encoding particles for particularly deep trees across
+evenly distribute the load of encoding particles for particularly deep octrees across
 multiple processes using \gls{MPI} \cite{Malhotra:2015:CCP}. For highly non-uniform
 data distributions the non-adaptive implementation of \gls{PyExaFMM} currently
 will wastefully refine regions of the octree with a low density of particles, major
 open source \gls{KIFMM} implementations thus implement adaptive tree refinement,
 with different sized leaf boxes in different regions of the domain decsribed by
-the octree \cite{Ying:2004:JCP, Malhotra:2015:CCP, exafmm}. The speedup offered
-by just-in-time compilation is benchmarked in Chapter \ref{chpt:3}, Section
-\ref{sec:3_1_benchmarking}.
+the octree \cite{Ying:2004:JCP, Malhotra:2015:CCP, exafmm}.
 
 \begin{figure}[!h]
     \centering

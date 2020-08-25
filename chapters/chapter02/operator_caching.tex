@@ -22,9 +22,10 @@ compute the required integrals. Specifically, an order $p$ expansion results in,
 \end{equation}
 
 where $n_q$ is the number of quadrature points on a given surface. This equation can be
-justified from the enforcement of the fact $p$ quadrature points are placed on the corners
-of the cube, as well as being placed evenly along each edge of the cube. Similarly the
-interior of each face of the cube is discretised to have quadrature points that form
+justified from the enforcement of quadrature points placed on the corners
+of the cube, as well as being placed evenly along each edge of the cube. Giving
+$p$ quadrature points along a given cube edge. Similarly the interior of each
+face of the cube is discretised to have quadrature points that form
 a uniform Cartesian grid with the points at the edges and corners. Therefore,
 by over-counting the nodes on the edge the 6 sides of the cube lead to $6p^2$ quadrature
 points, however each corner point is over-counted three times, and the quadrature points
@@ -73,11 +74,12 @@ that $K_A$ describes the surfaces at the child level for a the \gls{L2L} operati
 versus at the parent level for the \gls{M2M} operation. Furthermore as each of these
 operations is only relative between a parent box and its respective children, one
 can just compute all M2L and L2L operator matrices for a given parent and its
-respective children and re-use at any level of an octree. \gls{PyExaFMM} therefore
+respective children and re-use them at any level of an octree. \gls{PyExaFMM} therefore
 computes, and caches, the M2M and L2L operators and saves them alongside the
 corresponding child Morton \gls{key} of the child box involved in their calcualtion,
- this can be looked up as needed during the \gls{KIFMM} main loop. For the M2L
- matrices, an alternative approach is taken, \gls{PyExaFMM} computes
+ this can be looked up as needed during the \gls{KIFMM} main loop.
+
+For the M2L matrices, an alternative approach is taken, \gls{PyExaFMM} computes
 and caches all M2L operator matrices for all source boxes in a given target box's
 interaction list for all target boxes at all levels. Presently, this computation is distributed across
 the available processors of multicore machine
@@ -95,8 +97,8 @@ of the matrix and the vector, each of which can be broken up again into independ
 products. As there are up to 189 M2L operator matrices for a given
 target box, corresponding to the potential length of a target box's interaction
 list in three dimensions \cite{Ying:2004:JCP}, this problem can be reformulated
-as a linear system involving the matrix vector products of M2L operator matrices
-with their respective source equivalent densities,
+as a linear system involving the concatenated matrix vector products of M2L
+operator matrices with their respective source equivalent densities,
 
 \begin{equation}
     \left [ A_1 | A_2 | ... | A_I \right] \begin{bmatrix} \phi_1 \\ \phi_2 \\  ... \\  \phi_I \end{bmatrix} = \begin{bmatrix} q_1\\ q_2\\  ... \\  q_I \end{bmatrix}
@@ -141,7 +143,7 @@ dimensions.
 
 The  benchmark figures for the potential speedup offered by the above optimisations
 implemented in \gls{PyExaFMM}, namely multiprocessing for the \gls{M2L} operators
-and the usage of HDF5 vs object serialisation for large datasets are given
+and the usage of HDF5 in comparison to object serialisation for large datasets are given
 in Chapter \ref{chpt:3}, Section \ref{sec:3_1_benchmarking}.
 
 As discussed in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview},
@@ -160,19 +162,21 @@ with a pseudoinverse of
 
 \begin{equation}
     K_A^\dagger = V \Sigma^{-1} U^*
+    \label{eq:2_4_pseudoinv}
 \end{equation}
 
 the inversion of the diagonal matrix of singular values can be regularised as,
 
 \begin{equation}
-    \Sigma^{-1} = \underbrace{(\alpha I + \Sigma^*\Sigma)^{-1}}_{\Sigma_{\text{reg}}}
+    \Sigma^{-1} = (\alpha I + \Sigma^*\Sigma)^{-1} = \Sigma_{\text{reg}}^{-1}
     \label{eq:2_4_regularised_general_operator}
 \end{equation}
 
-a pseudoinverse using an \gls{SVD} is then calculated for this matrix, in which
-singular vectors corresponding to `small' singular values less than a specified
-tolerance are filtered out of the final approximation in order to maintain
-numerical stability. This tolerance value is in practice set to be a number close
+a pseudoinverse using an \gls{SVD} (\ref{eq:2_4_pseudoinv}) is then calculated
+for this matrix $\Sigma_{\text{reg}}$, in which singular vectors corresponding
+to `small' singular values less than a specified tolerance are filtered out of
+the final approximation in order to maintain numerical stability. This tolerance
+value is in practice set to be a number close
 to machine precision, and \gls{PyExaFMM} uses a value of $\text{tol} = 4 \cdot \text{EPS} \cdot \max (\Sigma_{\text{reg}})$,
 where EPS is machine precision, and $\max (\Sigma_{\text{reg}})$ is the largest
 entry in $\Sigma_{\text{reg}}$. This has been determined empirically to provide

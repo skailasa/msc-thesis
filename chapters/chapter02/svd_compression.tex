@@ -164,8 +164,8 @@ in (\ref{eq:2_4_svd_tol}) and the resulting optimum $k$ are explored in
 Chapter \ref{chpt:3} Section \ref{sec:3_2_svd_params}.
 
 Currently, \gls{PyExaFMM} computes the \gls{SVD} using the provided function
-from the SciPy module, which itself calls a fast \textbf{\gls{LAPACK}}
-function. However, this operation is optimised to reduce the number
+from the SciPy module, which itself calls an optimised \textbf{\gls{LAPACK}}
+function. However, this implementation is optimised to reduce the number
 of \textbf{\gls{FLOPS}}, rather than take advantage of advances in modern
 \textbf{\gls{heterogenous}} multicore machines, and
 distributed memory programming paradigms which are more often limited by the
