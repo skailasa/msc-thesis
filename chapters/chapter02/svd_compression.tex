@@ -1,9 +1,9 @@
 As mentioned in Section \ref{sec:2_3_operator_caching}, \gls{PyExaFMM} compresses
 a concatenated version of the \gls{M2L} operator matrices using an \gls{SVD}.
-The utility of using an SVD in comparison to an eigenvalue decomposition lies
+The utility of using an SVD, in comparison to say an eigenvalue decomposition, lies
 in the fact that it is defined on all matrices, real and complex
 \cite{Trefethen:1997:SIAM}. From equation (\ref{eq:2_3_concatenated_m2l}), the
-concatenated M2L operators,
+concatenated M2L operators can be written as,
 
 \begin{equation}
     A = \left [ A_1 | A_2 | ... | A_I \right]
@@ -30,8 +30,8 @@ However, an even lower rank approximation is possible using an SVD,
     A = U \Sigma V^*
 \end{equation}
 
-this can also be rephrased as a weighted sum of rank one matrices, or put simply
-in terms of the products of the left and right singular vectors \cite{Trefethen:1997:SIAM},
+this can also be rephrased as a weighted sum of rank one matrices, or put simply,
+written in terms of the products of the left and right singular vectors \cite{Trefethen:1997:SIAM},
 
 \begin{equation}
     A = \sum_{j=1}^{r}\sigma_j u_j v_j^*
@@ -42,7 +42,13 @@ values and $\{u_j | j \in [1, ..., r] \} $ and $\{v_j | j \in [1, ..., r] \}$
 are the left and right singular vectors respectively.
 
 However, noting that singular values are generally arranged in weakly increasing
-order in terms of magnitude, one can say that the $\tau^{th}$ partial sum where
+order in terms of magnitude such that,
+
+\begin{equation}
+    \sigma_1 \geq \sigma_2 \geq ... \geq \sigma_{r-1} \geq \sigma_r
+\end{equation}
+
+one can say that the $\tau^{th}$ partial sum where
 $\tau \leq r$ captures as much `energy' of $A$ as possible,
 
 \begin{equation}
@@ -152,13 +158,16 @@ $O(m^2 + n^2)$ from (\ref{eq:2_4_b_svd}). Compared with the application of the
 \gls{SVD} decomposition of $B_\tau$, which results in an asymptotic complexity
 of $O(k(m + n))$. As long as $k < \min (m, n)$, this represents a complexity
 saving and therefore faster matrix-vector products with the approximation
-$B_\tau$.
+$B_\tau$. This internal dimension $k$ which represents the amount of compression
+is often referred to as the target rank. Optimum choices of the tolerance set
+in (\ref{eq:2_4_svd_tol}) and the resulting optimum $k$ are explored in
+Chapter \ref{chpt:3} Section \ref{sec:3_2_svd_params}.
 
 Currently, \gls{PyExaFMM} computes the \gls{SVD} using the provided function
 from the SciPy module, which itself calls a fast \textbf{\gls{LAPACK}}
 function. However, this operation is optimised to reduce the number
 of \textbf{\gls{FLOPS}}, rather than take advantage of advances in modern
-\textbf{\gls{heterogenous}} and multicore machines, and
+\textbf{\gls{heterogenous}} multicore machines, and
 distributed memory programming paradigms which are more often limited by the
 communication and data transfer overhead between processes, than by number of
 operations \cite{Halko:2011:SIAM}. Halko et. al introduce new `randomised'
@@ -166,7 +175,11 @@ approaches for generating low-rank approximations of matrices, which can be
 optimised for modern heterogenous and distributed computing environments as they
 consist of processes which can be easily parallelised.
 
-We roughly derive this method here in application to the \gls{SVD}, however guide
+The low-rank approximation implemented in \gls{PyExaFMM} via a truncated
+\gls{SVD} (\ref{eq:2_4_decomposed_approximation_a_tau}) is costly to compute
+for large matrices. This is because a full \gls{SVD} decomposition must be computed, of
+which all but the first $k$ terms are ignored.
+We roughly derive the randomised method in application to the \gls{SVD} below, however guide
 the reader to the literature for further detail \cite{Erichson:2019:JOSS,Halko:2011:SIAM}.
 Consider again the matrix $B \in \mathbb{C}^{m, n}$. Randomised methods consist
 of two logical steps to find low-rank approximations of $B$: Step one, construct
@@ -184,7 +197,7 @@ by which $B$ is restricted to a lower dimensional space spanned by the basis
 $Q$.
 
 Step one is `randomised' by drawing $k$ random vectors $\{ \omega_i \}_{i=1}^k$,
-where the elements are drawn from a normal distribution, and finding the random
+are drawn for example from a standard normal distribution, and finding the random
 resulting projections due to $B$, $y_i = B \omega_i$. In matrix form we can write,
 
 \begin{equation}
@@ -193,8 +206,10 @@ resulting projections due to $B$, $y_i = B \omega_i$. In matrix form we can writ
 
 where $\Omega$ is a matrix with columns formed formed from $\omega_i$.
 Probability theory guarantees a high-chance of each $y_i$ being linearly independent
-\cite{Erichson:2019:JOSS}. This matrix can be orthonormalised via a QR decomposition
-to find,
+\cite{Erichson:2019:JOSS}. This step provides the opportunity to implement
+\gls{task-level-parallelism} by distributing the matrix-vector products over multiple
+processor cores \cite{Halko:2011:SIAM}. The resultant matrix, $Y$, can be
+orthonormalised via a QR decomposition to find,
 
 \begin{equation}
     Y =: QR
@@ -210,12 +225,7 @@ is now computed as,
 \end{equation}
 
 which provides the compressed matrix $C \in \mathbb{C}^{k, n}$.
-
-The low-rank approximation implemented in \gls{PyExaFMM} via a truncated
-\gls{SVD} (\ref{eq:2_4_decomposed_approximation_a_tau}) is costly to compute
-for large matrices. This is because a full \gls{SVD} decomposition must be computed, of
-which all but the first $k$ terms are ignored. However, we can now embed the
-\gls{SVD} into the randomised framework above. Consider a compressed matrix
+We can now embed the \gls{SVD} into the randomised framework above. Consider a compressed matrix
 $C \in \mathbb{C}^{k, n}$ obtained via the two steps detailed above. An
 ordinary deterministic implementation can be used to calculate the
 the \gls{SVD} of $C$ cheaply in comparison to the full SVD of $B$ as long as
@@ -228,8 +238,8 @@ $k \ll n$, such that
 
 here we cheaply obtain the first $k$ right singular vectors of $B$,
 from $V \in \mathbb{C}^{n, k}$, as well as the first $k$ singular values
-$\Sigma \in \mathbb{R}^{k, k}$. To find the entire \gls{SVD} of $B$ we notice
-that,
+$\Sigma \in \mathbb{R}^{k, k}$. To find the entire \gls{SVD} of $B$, including the
+left singular vectors, we notice that,
 
 \begin{equation}
     B \approx Q Q^* B = QC = Q \tilde{U} \Sigma V^* := U\Sigma V^*
@@ -238,11 +248,11 @@ that,
 where we combine (\ref{eq:2_4_step_1_randomised}) and (\ref{eq:2_4_step_2_randomised})
 with the results of the \gls{SVD} of $C$ (\ref{eq:2_4_svd_of_c}), and define the
 left singular vectors as $U = Q \tilde{U}$. In terms of \gls{PyExaFMM}, randomised
-methods for low-rank approximations are attractive candidates for future implementation
-as they represent the state of the art for accelerating the computation of an \gls{SVD}.
+methods for low-rank approximations of the M2L operator matrices are attractive candidates
+for future implementation as they represent the state of the art for accelerating the computation of an \gls{SVD}.
 As noted in Chapter \ref{chpt:1_introduction} Section \ref{sec:1_2_kifmm_overview},
 \gls{PyExaFMM}'s approach differs to other major \gls{KIFMM} implementations \cite{Malhotra:2015:CCP,exafmm}.
-The implementation of randomised low-rank SVD approximations for accelerating the calculation of the \gls{M2L}
-operator matrices will therefore make an interesting point of comparison. Furthermore,
+The differing approach will therefore make an interesting point of comparison. Furthermore,
 an open source \textbf{\gls{apache}} \textbf{software foundation} lead software implementation for
-a stocastic \gls{SVD} based on these methods is readily available \cite{mahout}.
+a randomised \gls{SVD} based on these methods, designed to take advantage
+of \gls{instruction-level-parallelism}, is readily available \cite{mahout}.
