@@ -1,7 +1,6 @@
 Spatial decompositions of a set of $d$ dimensional coordinates into a single
-dimension is widely applied across computational science. The spatial
-decompositions of $d$ dimensional cubes especially finds a wide variety of applications,
-from forming the basis of implementations of finite-element methods, to algorithms
+dimension is widely applied across computational science.
+From forming the basis of implementations of finite-element methods, to algorithms
 for mesh refinement, and importantly in our case, $N$-body simulations
 \cite{Sundar:2008:SIAM}. Spatial decompositions utilise space-filling curves,
 these infinite-curves are fractal, and by increasing their `order' can be made
@@ -36,7 +35,7 @@ in the octree, and the displacement mechanism is entirely analogous with the
 two dimensional case.
 
 The binary coordinates of Morton encoded octants make it easy to perform simple
-bitwise shift and comparison operations, to assign source and \gls{target-particles} the Morton key
+bitwise shift and comparison operations, to assign source and \gls{target-particles} to the Morton key
 that encodes the octant they lie in for each level of a given octree, as well as traverse the levels of
 the octree. Specifically, \gls{PyExaFMM} makes use of a \textit{linear} Morton encoding, meaning that it assigns
 all particles to the keys of boxes they occupy at a maximum depth which has been refined to a
@@ -63,7 +62,8 @@ them to lookup the correct operators, and store computational results against.
 The ability to store an Morton encoding in Numpy vectors makes it possible to use
 Numba's \textbf{\gls{JIT}} functionality to precompile the bitwise
 operations, which are used heavily in \gls{PyExaFMM}'s implementation of the \gls{KIFMM}
-main loop, mainly to assign computed multipole/local coefficients. This implementation
+main loop, mainly to traverse the octree. Properties of \gls{JIT} compilation are
+elaborated on in Section \ref{sec:2_5_software_design}. This implementation
 detail represents the first step towards optimising tree construction, with the
 field of optimising highly-parallel tree constructions for octrees potentially containing
 $10^9$ or more octree boxes, being an active field of research \cite{Sundar:2008:SIAM,Malhotra:2015:CCP}.

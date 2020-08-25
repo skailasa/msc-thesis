@@ -67,7 +67,7 @@ The main object hierarchy used in \gls{PyExaFMM} is shown in figure
 (\ref{fig:2_5_architecture}). The first major design principle followed is dependency
 inversion, whereby components are arranged in a hierarchy such that downstream
 components, whether they be objects or entire modules, are not dependent on
-upstream components for any of their logic. Instead, they are coupled to them via
+upstream components for any of their logic. Instead, they are coupled together via
 abstractions in the form of known interfaces \cite{Gamma:1994:Addison}. \gls{PyExaFMM} is architected
 around the main `Fmm' object, which is placed downstream, at the top of the object hierarchy.
 This object contains methods that implement the logic for the
@@ -107,7 +107,7 @@ The second major design principle followed by \gls{PyExaFMM} is
 the separation of concerns, whereby implementation details of distinct
 components of a program are separated by modules, with known interfaces
 \cite{Gamma:1994:Addison}. Specifically, \gls{PyExaFMM} separates into independent
-scripts, the code for operator caching discussed in Section \ref{sec:2_3_operator_caching},
+scripts: the code for operator caching discussed in Section \ref{sec:2_3_operator_caching},
 and the code for SVD based compression of the M2L operator matrices discussed in
 Section \ref{sec:2_4_svd_compression}. These scripts are accessible via the
 command-line, through a custom command-line interface, invoked with the command
@@ -123,7 +123,7 @@ user@Workstation ~ % ci compress-m2l
 \end{verbatim}
 
 These commands are again configured using the \gls{JSON} configuration file
-which specifies the other parameters used in a simulation: such as the order the
+which specifies the other parameters used in a simulation, such as the order the
 multipole and local expansions. Following the execution of the above,
 \gls{PyExaFMM} is automatically configured with the required
 operator and particle data, and simulations can be run from within a Python
@@ -159,7 +159,7 @@ is being used in operator precomputations, or what the regularisation parameter
 was taken to be for computing pseudoinverses of kernel operator matrices
 via the SVD has been taken to be, or other specific optimisations outside of the
 main loop's logic. This is as it should be, as if the Fmm
-object contained too many implementation details they would obfuscate the logic,
+object contained too many implementation details it would obfuscate the logic,
 making the code harder to debug. This encapsulates the idea of the separation of
 concerns.
 

@@ -11,15 +11,17 @@ efficient construction of tree data structures, and software design consideratio
 and extensibility. The continuous nature of the results of numerical codes makes
 debugging uniquely challenging, as the nature of the bug could be a numerical error,
 an error in implementation of algorithm logic, or an error due to the misuse of a
-programming language. Testability for \gls{PyExaFMM} refers to
-the attempt to create stable abstractions around algorithmic logic, return values,
+programming language or frameworks. Testability for \gls{PyExaFMM} refers to
+the attempt to create stable interfaces around algorithmic logic, return values,
 and data input and output. Furthermore, as the current implementation represents
 in many ways the first iteration of the software, we adopt object-oriented
 design principles to ensure that new optimisations and extensions are easy
 to implement in the future. Using Python, an \textbf{\gls{interpreted}} and
 \textbf{\gls{object-oriented-language}}, also results in a tradeoff in terms of
-performance for developer productivity - which further impacts on design preferences
-for a small number of very simple and easily accessible objects.
+computational performance for developer productivity - which further impacts
+on design preferences, and pushes \gls{PyExaFMM} to prefer a small number of
+simple objects, without relying too much on inheritance as many optimisation tools
+rely on access to underlying data containers.
 
 As with all optimised numeric codes, \gls{PyExaFMM} relies on an efficient
 vectorised data structures, specifically an efficient representation of the tree

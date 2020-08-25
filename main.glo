@@ -166,6 +166,7 @@
 \glossaryentry{interpreted?\glossentry{interpreted}|setentrycounter[]{page}\glsnumberformat}{19}
 \glossaryentry{Object Oriented Language?\glossentry{object-oriented-language}|setentrycounter[]{page}\glsnumberformat}{19}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{19}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{19}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{19}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{20}
 \glossaryentry{key?\glossentry{key}|setentrycounter[]{page}\glsnumberformat}{20}
@@ -178,10 +179,11 @@
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{20}
 \glossaryentry{interaction list?\glossentry{interaction-list}|setentrycounter[]{page}\glsnumberformat}{20}
 \glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{20}
-\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{20}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{21}
+\glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{MPI?\glossentry{MPI}|setentrycounter[]{page}\glsnumberformat}{21}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{21}
