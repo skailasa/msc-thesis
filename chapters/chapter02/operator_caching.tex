@@ -1,7 +1,7 @@
 Practical implementations of the \gls{KIFMM} rely on the creation of efficient
 surfaces used in the calculation of kernel matrices, as well as a stable method for
 computing the inverse of these kernel matrices. The former problem naturally leads
-to the implementation of caching code to cache, re-use, and scale operator matrices
+to the implementation of caching code to store, re-use, and scale operator matrices
 as appropriate. Whereas the latter requires the implementation of a stable method to
 solve the system of linear equations for each \gls{KIFMM} operator. As mentioned
 in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview}, \gls{PyExaFMM} uses
@@ -79,8 +79,7 @@ corresponding child Morton \gls{key} of the child box involved in their calcualt
  this can be looked up as needed during the \gls{KIFMM} main loop. For the M2L
  matrices, an alternative approach is taken, \gls{PyExaFMM} computes
 and caches all M2L operator matrices for all source boxes in a given target box's
-interaction list for all in all target boxes
-interaction list at all levels. Presently, this computation is distributed across
+interaction list for all target boxes at all levels. Presently, this computation is distributed across
 the available processors of multicore machine
 with Python's native multiprocessing utilities. However, dense matrix-vector
 product operations, such as those required to find the \gls{M2L} operator
@@ -122,7 +121,7 @@ check and equivalent matrices are taken with reference to \cite{Malhotra:2015:CC
 as the authors empirically found find them to achieve good results. Specifically,
 the radius\footnote{It's conventional in FMM literature to refer to the half-side
 length of a box as the `radius'}, of the upward check surface and downward equivalent
-surface of a given is set to be 2.95 times the radius of the box, and the radius of
+surface of a given box is set to be 2.95 times the radius of the box, and the radius of
 upward equivalent surface and downward check surface are set to be 1.05 times the radius
 of the given box. This parameter choice is common to both major C++ implementations of
 of the \gls{KIFMM} \cite{exafmm,Malhotra:2015:CCP}.
@@ -131,7 +130,7 @@ As mentioned, the required operator matrices are loaded from disk at run-time, r
 be used by \gls{PyExaFMM}. Currently, objects corresponding to cached \gls{M2L}
 matrices are simple serialised to be loaded in their entirety at run time by
 \gls{PyExaFMM}. However, the translation of the cache to HDF5 based storage is
-an area of future extension for \gls{PyExaFMM}, and has been implemented
+an area of future extension, and has been implemented
 for the storage of the \gls{M2M} and \gls{L2L} operator matrices. HDF5 offers an
 interface for loading slices of large datasets that may be stored on disks, allowing
 for rapid read times for subsets of a data, even if the underlying dataset
