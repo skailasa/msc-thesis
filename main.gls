@@ -63,7 +63,8 @@
 \glsgroupheading{J}\relax \glsresetentrylist %
 \glossentry{JIT}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{21}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{29\delimN 30}}}%
+		\setentrycounter[]{page}\glsnumberformat{29\delimN 30}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{33}}}%
 \glossentry{JSON}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{30\delimN 31}}}\glsgroupskip
 \glsgroupheading{K}\relax \glsresetentrylist %

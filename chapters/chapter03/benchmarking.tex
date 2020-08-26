@@ -1,19 +1,28 @@
-- numba benchmark code
-    - comment on the programmer efficiency in simply decorating with Numba
-
+The performance impact of using \gls{JIT} compilation with Numba on top of Numpy
+is illustrated in figure (\ref{fig:3_1_numba}). Here we benchmark the performance
+of an implementation of insertion sort, an algorithm with an asymptotic complexity
+bound of $O(N^2)$, when using an implementation built with Numpy containers and
+compare this to an implementation using JIT compilation on top of Numpy containers.
+Both functions are run five times on different inputs of the same size
+in figure (\ref{fig:3_1_numba}). On larger problems it becomes apparent
+that Numba offers an approximately constant speedup over Numpy, in fact for
+sorting arrays of $10^4$ integers the JIT compiled function is $1050 \pm 80$
+times faster, where the error is provided to (1 s.f) than the pure Numpy function.
 
 \begin{figure}[!h]
     \centering
-    {\includegraphics[width=\textwidth]{chapter3/numba.png}}
 
-    \caption{foo bar}
+  {\includegraphics[width=\textwidth]{chapter3/numba_speedup.png}}
+  \vspace{0pt}
+    \caption{Numpy versus Numpy with Numba benchmarked on an insertion sort. $N$
+    refers to the number of integers to sort, and $t$ is the time in seconds taken
+    by the implementation to complete the sort.}
     \label{fig:3_1_numba}
 \end{figure}
 
-- Estimate cost savings from each parallelization step
-- numba
-- hdf5 vs pickle
-- multiproc
+
+- Estimate cost savings from each parallelization steps
+    - multiproc
 
 - Compare experimental results for FMM vs Direct computation as a function of number of particles for the LAPLACE KERNEL!!!!. Justify usage of laplace kernel (paradigm, easy etc.)
 
