@@ -160,8 +160,8 @@ was taken to be for computing pseudoinverses of kernel operator matrices
 via the SVD has been taken to be, or other specific optimisations outside of the
 main loop's logic. This is as it should be, as if the Fmm
 object contained too many implementation details it would obfuscate the logic,
-making the code harder to debug. This encapsulates the idea of the separation of
-concerns.
+making the code harder to debug or write unit tests for. This
+encapsulates the idea of the separation of concerns.
 
 \gls{PyExaFMM} takes this further by creating modules for specific
 operations called by these scripts; specifically it offers its own multiprocessing
