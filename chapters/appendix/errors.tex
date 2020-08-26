@@ -1,0 +1,26 @@
+\label{app:errors}
+
+\subsection{Numba Benchmarking Error Propagation} \label{sec:app_numba}
+
+For each problem size $N$ we sort a new array of $N$ integers five times for statistics.
+The speedup offered by Numba JIT compilation in comparison to just using Numpy
+is calculated using,
+
+\begin{equation}
+    \text{Speedup} = \frac{t_{\text{numpy}}}{t_{\text{JIT}}}
+\end{equation}
+
+where $t_{\text{JIT}}$ and $t_{\text{numpy}}$ are the mean times taken to complete
+a sort for a given problem size $N$ for each method respectively.
+
+The error is then propagated using the standard formula \cite{hughes2010measurements},
+
+\begin{equation}
+    \frac{\sigma_{\text{speedup}}}{\text{Speedup}} = \sqrt{
+        \left ( \frac{\sigma_{\text{JIT}}}{t_{\text{JIT}}} \right )^2 +
+        \left ( \frac{\sigma_{\text{numpy}}}{t_{\text{numpy}}} \right )^2
+    }
+\end{equation}
+
+where $\sigma_{\text{JIT}}$ and $\sigma_{\text{numpy}}$ are the standard deviations
+from the runs for each problem size.

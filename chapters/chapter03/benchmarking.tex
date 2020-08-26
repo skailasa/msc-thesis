@@ -7,19 +7,27 @@ Both functions are run five times on different inputs of the same size
 in figure (\ref{fig:3_1_numba}). On larger problems it becomes apparent
 that Numba offers an approximately constant speedup over Numpy, in fact for
 sorting arrays of $10^4$ integers the JIT compiled function is $1050 \pm 80$
-times faster, where the error is provided to (1 s.f) than the pure Numpy function.
+times faster than the pure Numpy function, where the error is provided to (1 s.f)
+\footnote{Please refer to Appendix \ref{app:errors}, Section \ref{sec:app_numba},
+for the specifics of the error propagation calculation in this experiment.}.
 
 \begin{figure}[!h]
     \centering
 
-  {\includegraphics[width=\textwidth]{chapter3/numba_speedup.png}}
+  {\includegraphics[width=0.9\textwidth]{chapter3/numba_speedup.png}}
   \vspace{0pt}
-    \caption{Numpy versus Numpy with Numba benchmarked on an insertion sort. $N$
-    refers to the number of integers to sort, and $t$ is the time in seconds taken
-    by the implementation to complete the sort.}
+    \caption{The $y$ axis is the multiplicative speedup offered by using Numba in
+    conjunction with Numpy for the above benchmarking experiment. The $x$ axis is
+    the length of a list to be sorted $N$, plotted with a logarithmic scale. Error
+    bars are plotted from the standard deviation in speedup over all trials.}
     \label{fig:3_1_numba}
 \end{figure}
 
+To benchmark the efficacy of HDF5 in comparison to serialisation for saving,
+and loading it from disk we create an artificial Numpy array composed of
+20,000 columns and 10,000 rows of 64 bit floats. This array as a minimum size
+of 1.5 GB (1 s.f.), excluding the metadata associated with the type.
+This array is saved and loaded 5 times from disk
 
 - Estimate cost savings from each parallelization steps
     - multiproc
