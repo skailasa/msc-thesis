@@ -138,7 +138,7 @@
 		\setentrycounter[]{page}\glsnumberformat{2}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{15}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{17\delimR 25}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{27\delimR 32}}}\glsgroupskip
+		\setentrycounter[]{page}\glsnumberformat{27\delimR 33}}}\glsgroupskip
 \glsgroupheading{S}\relax \glsresetentrylist %
 \glossentry{SIMD}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{23}}}%

@@ -1,3 +1,7 @@
+All experiments are computed on a 2018 MacBook Pro, with a 2.4 GHz Quad-Core
+Intel Core i5 processor and 8GB of memory. Furthermore, data is stored to a
+500 GB Apple's proprietary solid state drive.
+
 The performance impact of using \gls{JIT} compilation with Numba on top of Numpy
 is illustrated in figure (\ref{fig:3_1_numba}). Here we benchmark the performance
 of an implementation of insertion sort, an algorithm with an asymptotic complexity
@@ -11,7 +15,7 @@ times faster than the pure Numpy function, where the error is provided to (1 s.f
 \footnote{Please refer to Appendix \ref{app:errors}, Section \ref{sec:app_numba},
 for the specifics of the error propagation calculation in this experiment.}.
 
-\begin{figure}[!h]
+\begin{figure}[ht]
     \centering
 
   {\includegraphics[width=0.9\textwidth]{chapter3/numba_speedup.png}}
@@ -24,13 +28,18 @@ for the specifics of the error propagation calculation in this experiment.}.
 \end{figure}
 
 To benchmark the efficacy of HDF5 in comparison to serialisation for saving,
-and loading it from disk we create an artificial Numpy array composed of
-20,000 columns and 10,000 rows of 64 bit floats. This array as a minimum size
-of 1.5 GB (1 s.f.), excluding the metadata associated with the type.
-This array is saved and loaded 5 times from disk
+and loading data from disk we create a Numpy array composed of
+20,000 columns and 10,000 rows of 64 bit floats. This array has a minimum size
+of 1.5 GB (1 s.f.), excluding the metadata associated with the type, and is
+saved and loaded 5 times from disk for statistics. Serialisation throughout
+\gls{PyExaFMM} is computed using the core Python Pickle library. For saving,
+serialisation takes $2.7 \pm 0.7$ seconds (1 s.f), and hdf5 takes $1.1 ± 0.2$ seconds (1 s.f).
+For loading from memory, as HDF5's mechanism of returning a database style interface
+rather than loading everything to disk, leads to the appearance of rapid
+load times, we also measure the time taken to load the entire file to disk from
+HDF5. Loading the serialised file takes $3.2 \pm 0.4$ seconds (1 s.f), loading
+the HDF5 file to disk takes $1.4 \pm 0.1$ seconds (1 s.f).
 
-- Estimate cost savings from each parallelization steps
-    - multiproc
 
 - Compare experimental results for FMM vs Direct computation as a function of number of particles for the LAPLACE KERNEL!!!!. Justify usage of laplace kernel (paradigm, easy etc.)
 
