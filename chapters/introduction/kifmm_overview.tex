@@ -170,9 +170,8 @@ This expression reflects the fact that in practical implementations these contin
 integrals are discretised as matrix-vector products. Here $K$ refers to a
 `kernel matrix' or operator matrix, which can be found via numerical quadrature, $\phi$ is a vector
 of equivalent density to be found, and $q$ is a known vector containing the check
-potential. The reason for using cubic surfaces is the availability of simple
-quadrature rules to integrate over the faces of each surface. The specifics of
-the surfaces used in PyExaFMM is discussed in greater detail in Chapter \ref{chpt:2_strategy_for_practical_implementation},
+potential. The specifics of the surfaces used in PyExaFMM is discussed in
+greater detail in Chapter \ref{chpt:2_strategy_for_practical_implementation},
 Section \ref{sec:2_3_operator_caching}. One can use Tikhonov regularisation to
 write the solution,
 
@@ -183,7 +182,7 @@ write the solution,
 
 where $\alpha$ is an appropriate regularisation parameter, and $I$ is the identity
 matrix. This equation, a second-kind Fredholm equation, can be solved in numerous
-ways. The authors of \cite{Ying:2004:JCP} make use of a Nystroem method, and indicate
+ways. The authors of \cite{Ying:2004:JCP} make use of a Nyström method, and indicate
 the possibility of using either Galerkin or Collocation methods. For ease of
 implementation, a simpler approach is to instead approximate the solution using a pseudoinverse
 estimated from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This

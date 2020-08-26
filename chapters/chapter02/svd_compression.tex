@@ -252,7 +252,16 @@ methods for low-rank approximations of the M2L operator matrices are attractive 
 for future implementation as they represent the state of the art for accelerating the computation of an \gls{SVD}.
 As noted in Chapter \ref{chpt:1_introduction} Section \ref{sec:1_2_kifmm_overview},
 \gls{PyExaFMM}'s approach differs to other major \gls{KIFMM} implementations \cite{Malhotra:2015:CCP,exafmm}.
-The differing approach will therefore make an interesting point of comparison. Furthermore,
+The differing approach will therefore make an interesting point of comparison.
+For the concatenated \gls{M2L} matrix, the application of the low rank \gls{SVD}
+scheme over all source boxes in a given target box's interaction list has
+an asymptotic complexity of $O(k(T + I \cdot S))$, as $S$ and $T$ are set to be
+equivalent by \gls{PyExaFMM} this may be written as $O(k(p^2 + I \cdot p^2))$, where
+$p$ is the order of the multipole and local expansion where we have used
+(\ref{eq:2_2_quadrature_points}). This compares favourably with the \gls{FFT} scheme described in Chapter
+\ref{chpt:1_introduction} Section \ref{sec:1_2_kifmm_overview} as long as $k \ll p^2$,
+which resulted in an asymptotic complexity of $O(I(p^3 \log(p)))$, or as $I$ is
+bounded by a constant for three dimensional simulations, $O(p^3\log(p))$. Furthermore,
 an open source \textbf{\gls{apache}} \textbf{software foundation} lead software implementation for
 a randomised \gls{SVD} based on these methods, designed to take advantage
 of \gls{instruction-level-parallelism}, is readily available \cite{mahout}.
