@@ -93,7 +93,7 @@ remain ignorant of the implementation details of how these operators were comput
 The main point to note is that a loose hierarchy of objects allows for
 the logic of the main \gls{FMM} loop to be separated from the code it depends on
 , for example for the creation and partitioning of an octree.
-Safe interactions between objects, further enforced by interfaces for data.
+Safe interactions between objects are further enforced by interfaces for data containers.
 Specifically the Abstract Density and Node classes define interfaces for access to concrete Potential density
 objects (used to store the potential computed at a target particle as a result
 of the FMM algorithm), and the multipole or local expansions for a given box in an octree respectively,
