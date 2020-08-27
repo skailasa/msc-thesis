@@ -1,6 +1,6 @@
 All experiments are computed on a 2018 MacBook Pro, with a 2.4 GHz Quad-Core
 Intel Core i5 processor and 8GB of memory. Furthermore, data is stored to a
-500 GB Apple's proprietary solid state drive.
+500 GB Apple solid state drive.
 
 The performance impact of using \gls{JIT} compilation with Numba on top of Numpy
 is illustrated in figure (\ref{fig:3_1_numba}). Here we benchmark the performance
@@ -38,7 +38,22 @@ For loading from memory, as HDF5's mechanism of returning a database style inter
 rather than loading everything to disk, leads to the appearance of rapid
 load times, we also measure the time taken to load the entire file to disk from
 HDF5. Loading the serialised file takes $3.2 \pm 0.4$ seconds (1 s.f), loading
-the HDF5 file to disk takes $1.4 \pm 0.1$ seconds (1 s.f).
+the HDF5 file to disk takes $1.4 \pm 0.1$ seconds (1 s.f). Using HDF5 is almost
+twice as fast as serialisation, the reasons for this are due to the underlying
+techniques used by each method. Roughly speaking, HDF5 stores raw numeric data
+alongside a header file describing its dimensions, as a contiguous byte stream
+on disk which allows for optimised methods to quickly search and retrieve data
+\cite{collette2013python}. Object serialisation is designed to work with arbitrary
+Python objects, raw numeric data is not stored, rather it is first compressed
+into an intermediate representation, that results in a byte stream which is then
+stored on disk. This data is stored alongside the metadata for the object, such
+as it's initialisation code, and even any dependent objects it may have. The
+intermediate representation allows any objects to be serialised in the same
+manner \cite{pickle}.
+
+
+For benchmarking the efficacy of multiprocessing for accelerating the
+\gls{M2L} computation,
 
 
 - Compare experimental results for FMM vs Direct computation as a function of number of particles for the LAPLACE KERNEL!!!!. Justify usage of laplace kernel (paradigm, easy etc.)
