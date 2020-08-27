@@ -54,22 +54,22 @@ manner \cite{pickle}.
 Our model problem is the three dimensional electrostatic problem (\ref{eq:electrostatic_paradigm})
 with the Laplace kernel. Due to the constraints of accessible computing power,
 we benchmark the model performance, as well as the operator precomputation
-calculations using, a 3 level non-adaptive octree, containing 1000 particles which
-are used as sources as well as targets. Furthermore, the surfaces are calculated
-to order $p=2$, therefore each discretised with $8$ quadrature points, and the
+calculations using, a 3 level non-adaptive octree, containing 1000 randomly distributed
+particles which are used as sources as well as targets. All sources are given a
+charge density of 1 Coulomb. Furthermore, the surfaces are calculated to order
+$p=2$, therefore each discretised with $8$ quadrature points (\ref{eq:2_2_quadrature_points}), and the
 parameters for the relative sizes of different surfaces are the same as those
 provided in Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section
 \ref{sec:2_3_operator_caching}.
 
 We benchmark the efficacy of multiprocessing for accelerating the precomputation
-of the \gls{M2M} \gls{L2L} and \gls{M2L} operator matrices for the above octree
+of the \gls{M2M}, \gls{L2L} and \gls{M2L} operator matrices for the above octree
 using different numbers of CPU processor cores in figure (\ref{fig:3_1_multiproc}).
 Precomputations are completed three times for a given number of processor cores,
 for statistics. The speedup for increasing the number of processor cores is non-linear, this is
 indicative of a communication overhead, and the fact that multiprocessing has
 been implemented to a very basic degree with the required data being copied
 over to each process, even if very large.
-
 
 \begin{figure}[ht]
     \centering
@@ -80,10 +80,38 @@ over to each process, even if very large.
     \label{fig:3_1_multiproc}
 \end{figure}
 
+We benchmark the algorithm run time in comparison to direct computation in figure
+(\ref{fig:3_1_complexity}), with same parameters as the octree used for benchmarking
+the operator precomputation, but with an increasing number of target and source
+particles. The calculations are run three times for each input size $N$, for
+statistics. Assuming a power relationship between run time $t$ and input size $N$,
 
-- Compare experimental results for FMM vs Direct computation as a function of number of particles for the LAPLACE KERNEL!!!!. Justify usage of laplace kernel (paradigm, easy etc.)
+\begin{equation}
+    t = N^x
+\end{equation}
 
-- [DIAGRAM] Need to plot the computational complexity.
+where $x$ is unknown, taking logarithms allows one to apply least squares fitting
+to fit a linear relationship to,
+
+\begin{equation}
+    \log(t) = x \log(N)
+\end{equation}
+
+computing the value of $x$ from the gradient. Performing this calculation for the
+results from the \gls{FMM} and direct approaches we report $x=1.1$ (1 d.p) for
+the FMM, and $x=2.0$ (1 d.p) for the direct method. This implies an asymptotic
+complexity of $O(N^{1.1})$, and $O(N^2)$ for the \gls{FMM} and direct methods
+respectively, with the limitation that this has been tested on relatively
+small inputs of only $O(10^3)$ particles.
+
+-\begin{figure}[ht]
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/complexity.png}}
+  \vspace{0pt}
+    \caption{Foo Bar}
+    \label{fig:3_1_complexity}
+\end{figure}
 
 - Understand cost of computation via pyexafmm compared to state of the art exafmm-t.
 
@@ -101,6 +129,3 @@ over to each process, even if very large.
 
 - These are justifiable from the time constraints on full-time development.
 
-Figures required:
-
-- KEY RESULT: Benchmarking figure as a function of N-particles
