@@ -51,9 +51,34 @@ as it's initialisation code, and even any dependent objects it may have. The
 intermediate representation allows any objects to be serialised in the same
 manner \cite{pickle}.
 
+Our model problem is the three dimensional electrostatic problem (\ref{eq:electrostatic_paradigm})
+with the Laplace kernel. Due to the constraints of accessible computing power,
+we benchmark the model performance, as well as the operator precomputation
+calculations using, a 3 level non-adaptive octree, containing 1000 particles which
+are used as sources as well as targets. Furthermore, the surfaces are calculated
+to order $p=2$, therefore each discretised with $8$ quadrature points, and the
+parameters for the relative sizes of different surfaces are the same as those
+provided in Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section
+\ref{sec:2_3_operator_caching}.
 
-For benchmarking the efficacy of multiprocessing for accelerating the
-\gls{M2L} computation,
+We benchmark the efficacy of multiprocessing for accelerating the precomputation
+of the \gls{M2M} \gls{L2L} and \gls{M2L} operator matrices for the above octree
+using different numbers of CPU processor cores in figure (\ref{fig:3_1_multiproc}).
+Precomputations are completed three times for a given number of processor cores,
+for statistics. The speedup for increasing the number of processor cores is non-linear, this is
+indicative of a communication overhead, and the fact that multiprocessing has
+been implemented to a very basic degree with the required data being copied
+over to each process, even if very large.
+
+
+\begin{figure}[ht]
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/multiproc.png}}
+  \vspace{0pt}
+    \caption{Runtime versus number of processors used for operator precomputations.}
+    \label{fig:3_1_multiproc}
+\end{figure}
 
 
 - Compare experimental results for FMM vs Direct computation as a function of number of particles for the LAPLACE KERNEL!!!!. Justify usage of laplace kernel (paradigm, easy etc.)
