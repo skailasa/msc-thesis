@@ -1,7 +1,3 @@
-All experiments are computed on a 2.4 GHz Quad-Core Intel Core i5 processor.
-Additionally, all results are computed and stored in double precision, unless
-otherwise specified.
-
 The major usage of \gls{JIT} compilation by \gls{PyExaFMM} is for the construction
 of the Octree, including the calculation of the interaction lists for target
 boxes, and to accelerate functions for its traversal. Computing the interaction list
@@ -72,8 +68,10 @@ the required data being copied to each process, even if very large.
 
   {\includegraphics[width=0.9\textwidth]{chapter3/multiproc.png}}
   \vspace{0pt}
-    \caption{Runtime versus number of processors used for operator precomputations.
-    Error bars are plotted using standard deviation.}
+    \caption{Runtime versus number of processors used for operator precomputations
+    for the model problem (\ref{eq:electrostatic_paradigm}). Error bars are
+    plotted using standard deviation.
+    }
     \label{fig:3_1_multiproc}
 \end{figure}
 
