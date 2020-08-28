@@ -87,7 +87,7 @@ with Python's native multiprocessing utilities. However, dense matrix-vector
 product operations, such as those required to find the \gls{M2L} operator
 matrices, are good candidates for offloading to \gls{GPU}s. Modern \gls{GPU}s
 consist of up to $O(10^3)$ processor cores at the higher end,
-in comparison to $O(10)$ on an average desktop work work station's CPU
+in comparison to $O(10)$ on an average desktop work station's \textbf{\gls{CPU}}
 \cite{Hwu:2011:MKP}. Roughly speaking, this number of cores allows for massive task level parallelism,
 and works especially well for single-instruction multiple-data (\gls{SIMD}) type tasks, in which
 a single instruction is passed to each process alongside a small amount of data on which it

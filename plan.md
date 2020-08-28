@@ -298,7 +298,6 @@ distribution.
 - Particle distributions to try
     - Random
     - Two blobs
-    - Many blobs
 
 SVD parameter will reflect particle distributions is my suspicion.
 

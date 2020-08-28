@@ -1,3 +1,22 @@
 \chapter{Conclusion}\label{chpt:conclusion}
-\section{Section 1}
-\input{chapters/conclusion/section01.tex}
+
+- Contributions
+    - The first iteration of the 3D (somewhat) parallel KIFMM lib in a popular interpreted language.
+    - well tested and extensibly designed software.
+
+- Limitations
+    - hardware for benchmarking larger data sets.
+    - level of parallelism for speed.
+
+- Future
+    - multiple levels of parallelism (data/process/cpu etc) available, they should be explored and optimised.
+    - implementation of new kernels.
+    - implementation of gradients for benchmarking with open source standards
+    - reduction in boiler plate code for data loading etc, in terms of design.
+    - more integration tests due to complexity.
+    - Parallel tree construction
+    - An adaptive algorithm
+    - Offloading M2L computation to specialized hardware
+    - More robust SVD compression, randomized compression.
+    - Multiproc svd compression library
+    - Taking more check points than multipole/local points for more robust pseudo-inverse.
