@@ -2,30 +2,25 @@ All experiments are computed on a 2018 MacBook Pro, with a 2.4 GHz Quad-Core
 Intel Core i5 processor and 8GB of memory. Furthermore, data is stored to a
 500 GB Apple solid state drive.
 
-The performance impact of using \gls{JIT} compilation with Numba on top of Numpy
-is illustrated in figure (\ref{fig:3_1_numba}). Here we benchmark the performance
-of an implementation of insertion sort, an algorithm with an asymptotic complexity
-bound of $O(N^2)$, when using an implementation built with Numpy containers and
-compare this to an implementation using JIT compilation on top of Numpy containers.
-Both functions are run five times on different inputs of the same size
-in figure (\ref{fig:3_1_numba}). On larger problems it becomes apparent
-that Numba offers an approximately constant speedup over Numpy, in fact for
-sorting arrays of $10^4$ integers the JIT compiled function is $1050 \pm 80$
-times faster than the pure Numpy function, where the error is provided to (1 s.f)
-\footnote{Please refer to Appendix \ref{app:errors}, Section \ref{sec:app_numba},
-for the specifics of the error propagation calculation in this experiment.}.
-
-\begin{figure}[ht]
-    \centering
-
-  {\includegraphics[width=0.9\textwidth]{chapter3/numba_speedup.png}}
-  \vspace{0pt}
-    \caption{The $y$ axis is the multiplicative speedup offered by using Numba in
-    conjunction with Numpy for the above benchmarking experiment. The $x$ axis is
-    the length of a list to be sorted $N$, plotted with a logarithmic scale. Error
-    bars are plotted from the standard deviation in speedup over all trials.}
-    \label{fig:3_1_numba}
-\end{figure}
+The major usage of \gls{JIT} compilation by \gls{PyExaFMM} is for the construction
+of the Octree, including the calculation of the interaction lists for target
+boxes, and to accelerate functions for its traversal. Computing the interaction list
+involves looping over all target boxes of an octree, at all levels, therefore
+is a good candidate for application of \gls{JIT} compilation. For benchmarking
+we construct a three level octree, with 1000 randomly distributed particles which are
+taken to be sources as well as targets. We report that without \gls{JIT} compilation
+it takes $380 \pm 20$ ms with errors taken as the standard deviation
+and are reported to 1 s.f over 5 runs, in comparison
+to $8.2 \pm 0.9$ ms for the same experiment run with \gls{JIT} compilation.
+\gls{JIT} compilation is also used to cache tree traversal methods, for example
+used to calculate the parent box of a given box, or the level of the octree that
+it is at. We benchmark the efficacy of this cache by computing the level
+of a box with a Morton key of 100000000, for which we report \gls{JIT} compilation
+takes $1 \pm 1$ µs with errors taken as the standard deviation and reported
+to 1 s.f over 5 runs, in comparison to the normal implementation which takes
+$3 µs ± 1 µs$ for the same experiment. The large errors for the \gls{JIT} compiled
+function is indicative of the impact of the cache, with the the initial
+run taking 10 times longer than the fastest one, reported to 1 s.f.
 
 To benchmark the efficacy of HDF5 in comparison to serialisation for saving,
 and loading data from disk we create a Numpy array composed of
@@ -51,25 +46,26 @@ as it's initialisation code, and even any dependent objects it may have. The
 intermediate representation allows any objects to be serialised in the same
 manner \cite{pickle}.
 
-Our model problem is the three dimensional electrostatic problem (\ref{eq:electrostatic_paradigm})
-with the Laplace kernel. Due to the constraints of accessible computing power,
-we benchmark the model performance, as well as the operator precomputation
-calculations using, a 3 level non-adaptive octree, containing 1000 randomly distributed
-particles which are used as sources as well as targets. All sources are given a
-charge density of 1 Coulomb. Furthermore, the surfaces are calculated to order
-$p=2$, therefore each discretised with $8$ quadrature points (\ref{eq:2_2_quadrature_points}), and the
-parameters for the relative sizes of different surfaces are the same as those
-provided in Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section
-\ref{sec:2_3_operator_caching}.
+Due to the constraints of accessible computing power, we benchmark the effect of
+multiprocessing on operator matrix precomputation calculations using, a 3 level
+non-adaptive octree, containing 1000 randomly distributed
+particles which are used as sources as well as targets, using the Laplace kernel
+from our model problem (\ref{eq:electrostatic_paradigm}). Furthermore, all
+sources are given a charge density of 1 Coulomb and the relevant surfaces
+are calculated to order $p=2$, therefore each discretised with $8$ quadrature points
+(\ref{eq:2_2_quadrature_points}), with the parameters for the relative sizes
+of different surfaces are the same as those provided
+in Chapter \ref{chpt:2_strategy_for_practical_implementation},
+Section \ref{sec:2_3_operator_caching}.
 
 We benchmark the efficacy of multiprocessing for accelerating the precomputation
 of the \gls{M2M}, \gls{L2L} and \gls{M2L} operator matrices for the above octree
 using different numbers of CPU processor cores in figure (\ref{fig:3_1_multiproc}).
-Precomputations are completed three times for a given number of processor cores,
-for statistics. The speedup for increasing the number of processor cores is non-linear, this is
-indicative of a communication overhead, and the fact that multiprocessing has
-been implemented to a very basic degree with the required data being copied
-over to each process, even if very large.
+Operators are computed three times for a given number of processor cores,
+for statistics. The speedup offered by increasing the number of processor cores
+is non-linear, this is indicative of a communication overhead, and the
+fact that multiprocessing has been implemented to a very basic degree with
+the required data being copied to each process, even if very large.
 
 \begin{figure}[ht]
     \centering
@@ -84,8 +80,8 @@ over to each process, even if very large.
 We benchmark the algorithm run time in comparison to direct computation in figure
 (\ref{fig:3_1_complexity}), with same parameters as the octree used for benchmarking
 the operator precomputation, but with an increasing number of target and source
-particles. The calculations are run three times for each input size $N$, for
-statistics. Assuming a power relationship between run time $t$ and input size $N$,
+particles $N$. The calculations are run three times for each problem size, for
+statistics. Assuming a power relationship between run time $t$ and problem size $N$,
 
 \begin{equation}
     t = N^x
@@ -105,7 +101,7 @@ complexity of $O(N^{1.1})$, and $O(N^2)$ for the \gls{FMM} and direct methods
 respectively, with the limitation that this has been tested on relatively
 small inputs of only $O(10^3)$ particles.
 
--\begin{figure}[ht]
+\begin{figure}[ht]
     \centering
 
   {\includegraphics[width=0.9\textwidth]{chapter3/complexity.png}}

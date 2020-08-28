@@ -159,8 +159,7 @@ $O(m^2 + n^2)$ from (\ref{eq:2_4_b_svd}). Compared with the application of the
 of $O(k(m + n))$. As long as $k < \min (m, n)$, this represents a complexity
 saving and therefore faster matrix-vector products with the approximation
 $B_\tau$. This internal dimension $k$ which represents the amount of compression
-is often referred to as the target rank. Optimum choices of the tolerance set
-in (\ref{eq:2_4_svd_tol}) and the resulting optimum $k$ are explored in
+is often referred to as the target rank. Optimum choices for $k$ are explored in
 Chapter \ref{chpt:3} Section \ref{sec:3_2_svd_params}.
 
 Currently, \gls{PyExaFMM} computes the \gls{SVD} using the provided function
