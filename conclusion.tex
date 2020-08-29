@@ -1,11 +1,23 @@
 \chapter{Conclusion}\label{chpt:conclusion}
 
 In summary, the main contribution of the work underlying this thesis is
-\gls{PyExaFMM}, which represents the first iteration of a three dimensional
-\gls{KIFMM} simulation library, with some parallel features. The software has been
-designed to be well testable and extensible, however is currently someway behind
-state-of-the art implementations in terms of performance
-\cite{exafmm,Malhotra:2015:CCP}.
+\gls{PyExaFMM}; a three dimensional \gls{KIFMM} simulation library
+with some parallel features. The software has been designed to be well
+testable and extensible, however is currently someway behind state of the art
+implementations in terms of speed \cite{exafmm,Malhotra:2015:CCP}.
+Furthermore, from table (\ref{table:3_1_jit}),
+we see that some current optimisations, namely \gls{JIT} compilation for some
+Numpy based functions, have been naively applied. Despite this, we achieve the
+complexity bound of the \gls{FMM} algorithm with our implementation, and it
+represents a good first step towards the goal of a Python \gls{KIFMM} implementation
+which sacrifices as little performance as possible.
+
+To bring \gls{PyExaFMM} in line with state of the art \gls{KIFMM} software
+extensions which fully take advantage of modern computing hardware will
+have to be implemented. Modern heterogenous computers have multiple access to
+multiple multi-core \gls{CPU} and \gls{GPU} units, with multiple levels of
+memory-cache, and vectorisation available at the processor level
+\cite{Malhotra:2015:CCP}. Furthermore, modern
 
 generic functionality
 
@@ -13,26 +25,56 @@ generic functionality
 
 - implementation of new kernels.
 
-trees
+- volume fmm extension - for massive bodies?
 
-- Parallel tree construction
 
-- An adaptive algorithm
+Optimising software for modern hardware
 
-software design
+- modern cpu have multiple cores, multiple levels of cache, vectorisation at
+the processor level.
 
-- more integration tests due to complexity.
+Intra Node Optimisation (Shared Memory Parallelism)
 
-- reduction in boiler plate code for data loading etc, in terms of design.
+Near interactions
+- p2p most expensive part of the algorithm
 
-- new module for data handling.
+    - can use avx vectorisation
 
-compression
+    - newton iteration
 
-- More robust SVD compression, randomized compression.
+Far interactions
+
+- randomised SVD for M2L compression.
+
+- multiprocessing the M2L compression script.
+
+- m2l distributed across gpu
+
+- share required memory across processes
+
+Asynhronous execution across chunks of arrays using Dask.
+
+Distributed Memory Parallelism
+
+- parallel tree construction.
+
+- construct local trees across processors. distributed octree.
+
+- compute morton id at leaf level, partition all across processors
+
+- compute interaction lists for subtrees execution
+
+- duplicates are resolved/removed
+
+- communication overhead in passing required 'ghost' octant information
+ready for downward pass.
+
+
+- adaptive octrees
+
+    - 2:1 balance refinement problem, need to understand what this is.
+
+Stability
 
 - Taking more check points than multipole/local points for more robust pseudo-inverse.
 
-parallelism
-
-- Offloading M2L computation to specialized hardware

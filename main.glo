@@ -324,5 +324,12 @@
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{40}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{41}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{41}
-\glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{42}
-\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{42}
+\glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{CPU?\glossentry{CPU}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{41}
+\glossaryentry{well separated?\glossentry{well-separated}|setentrycounter[]{page}\glsnumberformat}{43}
+\glossaryentry{near neighbours?\glossentry{near-neighbours}|setentrycounter[]{page}\glsnumberformat}{43}

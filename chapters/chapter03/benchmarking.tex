@@ -60,10 +60,10 @@ analysis takes so much longer for some Numpy based functions than others.
     Method & Numpy + Numba & Numpy \\ [0.5ex] % inserts table
     %heading
     \hline % inserts single horizontal line
-    Get Level & 280 ns ± 276 ns  & 1.01 µs ± 265 ns \\ % inserting body of the table
-    Get Offset & 29.6 µs ± 291 µs & 804 ns ± 324 ns \\
-    Remove Offset & 30.7 µs ± 301 µs & 1.83 µs ± 566 ns \\
-    Get Octant & 23.6 µs ± 231 µs & 2.16 µs ± 2.71 µs \\
+    Get Level of a Key & 280 ns ± 276 ns  & 1.01 µs ± 265 ns \\ % inserting body of the table
+    Get Offset of Key & 29.6 µs ± 291 µs & 804 ns ± 324 ns \\
+    Remove Offset from a Key & 30.7 µs ± 301 µs & 1.83 µs ± 566 ns \\
+    Get Octant of a Key & 23.6 µs ± 231 µs & 2.16 µs ± 2.71 µs \\
     Get Octant Index From Key & 64.4 µs ± 632 µs & 10.7 µs ± 3.82 µs \\
     Get Key From Octant Index & 36.4 µs ± 356 µs & 11.1 µs ± 3.54 µs \\
     Get Octant Index From Cartesian Coordinate & 50.4 µs ± 484 µs & 17.3 µs ± 21 µs \\
@@ -252,6 +252,6 @@ the computation for which highly-optimised implementations exist
 \cite{Lomont:2003, sqrt}. Secondly \textbf{\gls{AVX}} vectorisation is used
 to apply the kernel function. Roughly speaking, \gls{AVX} vectorisation allows
 for parallel execution of \gls{SIMD} type instructions in a \gls{CPU}. With similar
-optimisations, PVFMM is able to report a 3.8 multiplicative speed up, in
+optimisations, PVFMM is able to report a 3.8 times multiplicative speed up, in
 comparison to naive applications of the Laplace kernel \cite{Malhotra:2015:CCP}.
 
