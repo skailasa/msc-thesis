@@ -1,22 +1,18 @@
-The major usage of \gls{JIT} compilation by \gls{PyExaFMM} is for the construction
+The major usage of \gls{JIT} compilation by \gls{PyExaFMM} is in the construction
 of the Octree, including the calculation of the interaction lists for target
-boxes, and to accelerate functions for its traversal. Computing the interaction list
-involves looping over all target boxes of an octree, at all levels, therefore
-is a good candidate for application of \gls{JIT} compilation. For benchmarking
-we construct a three level octree, with 1000 randomly distributed particles which are
-taken to be sources as well as targets. We report that without \gls{JIT} compilation
-it takes $380 \pm 20$ ms, with errors taken as the standard deviation
-and reported to 1 s.f over 5 runs; in comparison
-to $8.2 \pm 0.9$ ms for the same experiment run with \gls{JIT} compilation.
-\gls{JIT} compilation is also used to cache tree traversal methods, for example
-used to calculate the parent box of a given box, or the level of the octree that
-it is at. We benchmark the efficacy of this cache by computing the level
-of a box with a Morton key of $1 \times 10^8$, for which we report \gls{JIT} compilation
-takes $1 \pm 1$ µs with errors taken as the standard deviation and reported
-to 1 s.f over 5 runs, in comparison to the ordinary Numpy implementation which takes
-$3 µs ± 1 µs$ for the same experiment. The large errors for the \gls{JIT} compiled
-function is indicative of the impact of the cache, with the the initial
-run taking 10 times longer than the fastest one, reported to 1 s.f.
+boxes, and to accelerate functions for its traversal. The impact of \gls{JIT}
+compilation on tree construction is illustrated in figures
+(\ref{fig:3_1_octree}) and (\ref{fig:3_1_octree2}), where octrees constructed with
+Numpy and Numba together are compared to octrees constructed with just Numpy.
+Each tree is constructed to a maximum depth of 5 levels over a unit box
+centered at the origin. The construction time is measured against an
+the numbers of particles $N$ placed in the tree, which are taken to be
+both the sources and the targets. The construction
+is repeated five times on each problem size $N$ for statistics, though in both
+figure (\ref{fig:3_1_octree}) and (\ref{fig:3_1_octree2}) the error bars, taken
+from the standard deviations, are generally too small to see. Figure (\ref{fig:3_1_octree2})
+illustrates how the multiplicative speedup offered by \gls{JIT} compilation via
+Numba has an optimimum problem size $N$, after which the speedups provided diminish.
 
 \begin{figure}[ht]
     \centering
@@ -24,11 +20,36 @@ run taking 10 times longer than the fastest one, reported to 1 s.f.
   {\includegraphics[width=0.9\textwidth]{chapter3/octree.png}}
   \vspace{0pt}
     \caption{
-        Foo
+        Octree initialisation time versus number of particles $N$.
     }
     \label{fig:3_1_octree}
 \end{figure}
 
+\begin{figure}[ht]
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/octree2.png}}
+  \vspace{0pt}
+    \caption{
+        Multiplicative speedup offered by using Numba on top of just Numpy.
+        The analysis used to calculate the errors is provided in
+        Appendix \ref{app:errors}.
+    }
+    \label{fig:3_1_octree2}
+\end{figure}
+
+Table (\ref{table:3_1_jit}) provides timing comparisons for all the octree traversal
+functions used in \gls{PyExaFMM} when using Numba and Numpy, or just Numpy alone.
+\gls{JIT} compilation relies on a preliminary code analysis, to find optimisations
+in the interpreted byte code, this can lead to relatively longer runtimes when
+a \gls{JIT} compiled function is first invoked, in comparison to subsequent
+invocations. All the calculations in table (\ref{table:3_1_jit}) were run for a
+Morton key of 100 placed in a unit box centered at the origin, and were repeated
+100 times for statistics. We observe that the preliminary analysis step for
+some \gls{JIT} compiled function is so expensive that the mean time for the \gls{JIT}
+compiled function is significantly longer than using a function with Numpy alone.
+Further investigation is needed to understand exactly why the \gls{JIT} preliminary
+analysis takes so much longer for some Numpy based functions than others.
 
 \begin{table}[ht]
     \centering % used for centering table
@@ -54,23 +75,23 @@ run taking 10 times longer than the fastest one, reported to 1 s.f.
     \hline %inserts single line
     \end{tabular}
     \label{table:3_1_jit} % is used to refer this table in the text
-    \caption{Benchmarking Foo} % title of Table
+    \caption{
+        Benchmarking tree traversal functions implemented in \gls{PyExaFMM}.
+        Errors are taken from the standard deviation over trials.
+        } % title of Table
 \end{table}
 
 
-To benchmark the efficacy of HDF5 in comparison to serialisation for saving
-and loading data from disk we create a Numpy array composed of
-20,000 columns and 10,000 rows of 64 bit floats. This array has a minimum size
-of 1.5 GB (1 s.f.), excluding the metadata associated with the type, and is
-saved and loaded 5 times from disk for statistics. Serialisation throughout
-\gls{PyExaFMM} is computed using the core Python Pickle library. For saving,
-serialisation takes $2.7 \pm 0.7$ s (1 s.f), and hdf5 takes $1.1 \pm 0.2$ s (1 s.f).
-For loading from memory, as HDF5's mechanism of returning a database style interface
-rather than loading everything to disk, leads to the appearance of rapid
-load times, we also measure the time taken to load the entire file to disk from
-HDF5. Loading the serialised file takes $3.2 \pm 0.4$ s (1 s.f), loading
-the HDF5 file to disk takes $1.4 \pm 0.1$ s (1 s.f). Using HDF5 is almost
-twice as fast as serialisation, the reasons for this are due to the underlying
+The loading and saving speeds of a increasingly large files into memory by
+HDF5 in comparison to Python's native object serialisation library, Pickle,
+are illustrated in figures (\ref{fig:3_1_loadtime}) and (\ref{fig:3_1_savetime})
+respectively. Each trial was repeated 5 times with each file size for statistics.
+The multiplicative speedups for loading and saving using HDF5 are illustrated
+in figures (\ref{fig:3_1_loadtime_speedup}) and (\ref{fig:3_1_savetime_speedup})
+respectively.
+
+We observe that the speedup offered by HDF5 for loading and saving
+data is approximately constant over file size. The reasons for this are due to the underlying
 techniques used by each method. Roughly speaking, HDF5 stores raw numeric data
 alongside a header file describing its dimensions, as a contiguous byte stream
 on disk which allows for optimised methods to quickly search and retrieve data
@@ -82,50 +103,75 @@ as it's initialisation code, and even any dependent objects it may have. The
 intermediate representation allows any objects to be serialised in the same
 manner \cite{pickle}.
 
-\begin{figure}[ht]
-    \centering
-
-  {\includegraphics[width=0.9\textwidth]{chapter3/savetime.png}}
-  \vspace{0pt}
-    \caption{
-        Foo
-    }
-    \label{fig:3_1_savetime}
-\end{figure}
-
-
-\begin{figure}[ht]
+\begin{figure}
     \centering
 
   {\includegraphics[width=0.9\textwidth]{chapter3/loadtime.png}}
   \vspace{0pt}
     \caption{
-        Bar
+        Loading times versus File Size comparing object serialisation to HDF5.
     }
     \label{fig:3_1_loadtime}
 \end{figure}
 
 
-Due to the constraints of accessible computing power, we benchmark the effect of
-multiprocessing on operator matrix precomputation calculations using, a 3 level
-non-adaptive octree, containing 1000 randomly distributed
-particles placed in a unit cube which are used as sources as well as targets,
-using the Laplace kernel from our model problem (\ref{eq:electrostatic_paradigm}).
-Furthermore, all sources are given a charge density of 1 Coulomb and the relevant surfaces
-are calculated to order $p=2$, therefore each discretised with $8$ quadrature points
-(\ref{eq:2_2_quadrature_points}), with the parameters for the relative sizes
-of different surfaces are the same as those provided
-in Chapter \ref{chpt:2_strategy_for_practical_implementation},
-Section \ref{sec:2_3_operator_caching}.
+\begin{figure}
+    \centering
 
-We benchmark the efficacy of multiprocessing for accelerating the precomputation
-of the \gls{M2M}, \gls{L2L} and \gls{M2L} operator matrices for the above octree
-using different numbers of \gls{CPU} processor cores in figure (\ref{fig:3_1_multiproc}).
-Operators are computed three times for a given number of processor cores
-for statistics. The speedup offered by increasing the number of processor cores
-is non-linear, this is indicative of a communication overhead, and the
-fact that multiprocessing has been implemented to a very basic degree with
-the required data being copied to each process, even if very large.
+  {\includegraphics[width=0.9\textwidth]{chapter3/savetime.png}}
+  \vspace{0pt}
+    \caption{
+        Saving times versus File Size comparing object serialisation to HDF5.
+    }
+    \label{fig:3_1_savetime}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/loadtime_speedup.png}}
+  \vspace{0pt}
+    \caption{
+        The multiplicative speedup offered by HDF5 over object serialisation
+        as a function of file size for loading files.
+        The analysis used to calculate the errors is provided in
+        Appendix \ref{app:errors}.
+    }
+    \label{fig:3_1_loadtime_speedup}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/savetime_speedup.png}}
+  \vspace{0pt}
+    \caption{
+        The multiplicative speedup offered by HDF5 over object serialisation
+        as a function of file size for saving files.
+        The analysis used to calculate the errors is provided in
+        Appendix \ref{app:errors}.
+    }
+    \label{fig:3_1_savetime_speedup}
+\end{figure}
+
+
+The effect of multiprocessing on operator matrix precomputations is
+illustrated in figure (\ref{fig:3_1_multiproc}). Here, we solve
+for operator matrices of the model electrostatic problem in three dimensions
+(\ref{eq:electrostatic_paradigm}), using a tree with a maximum depth of 3 levels,
+and 1000 randomly distributed particles in a unit cube, varying the number of
+processor cores accessible to the script. These are taken to be
+both sources and targets. Unit charges are placed on each source particle, and
+all relevant surfaces are calculated to order $p=2$, therefore discretised
+with 8 quadrature points (\ref{eq:2_2_quadrature_points}). The parameters for
+the relative sizes of different surfaces are the same as those provided
+in Chapter \ref{chpt:2_strategy_for_practical_implementation},
+Section \ref{sec:2_3_operator_caching}. The speedup offered by increasing the
+number of processor cores is non-linear, this is indicative of a communication
+overhead, and the fact that multiprocessing has been implemented to a very
+basic degree with the required data being copied to each process, even if very large.
 
 \begin{figure}[ht]
     \centering
@@ -140,7 +186,7 @@ the required data being copied to each process, even if very large.
 \end{figure}
 
 We benchmark the algorithm run time in comparison to direct computation in figure
-(\ref{fig:3_1_complexity}), with same parameters as the octree used for benchmarking
+(\ref{fig:3_1_complexity}), with same octree parameters as used for benchmarking
 the operator precomputation, but with an increasing number of target and source
 particles $N$ for our model problem (\ref{eq:electrostatic_paradigm}). The
 calculations are run three times for each problem size for statistics.
@@ -177,14 +223,14 @@ been tested on relatively small inputs of only $O(10^3)$ particles.
     \label{fig:3_1_complexity}
 \end{figure}
 
-In terms of a benchmark figure, we can report that with a simulation with
-the above octree and $N=3000$ takes $17.1 \pm 0.2$ s, over the three runs with
+We report that with a simulation with the above octree and
+$N=3000$ takes $17.1 \pm 0.2$ s, over the three runs with
 error calculated from standard deviation and reported to 1 s.f. From correspondence
 with the authors of ExaFMM-T, we can report their corresponding benchmark figure,
 calculated on a 14 Core Intel i9-7940X \gls{CPU} with $N=10^6$ particles
 randomly distributed in a unit cube, it takes 0.52 s to perform a $p=4$ degree
 computation, including tree construction but excluding the
-operator precomputations, in single precision. Time limitations for this project
+operator precomputations, in single precision \cite{exafmm}. Time limitations for this project
 makes it difficult to perform comparisons using equivalent hardware, however
 disparities in hardware are unlikely to explain the magnitude of superiority
 of ExaFMM-t's performance in comparison to \gls{PyExaFMM}.
@@ -206,3 +252,5 @@ to apply the kernel function. Roughly speaking, \gls{AVX} vectorisation allows
 for parallel execution of \gls{SIMD} type instructions in a \gls{CPU}. With similar
 optimisations, PVFMM is able to report a 3.8 multiplicative speed up, in
 comparison to naive applications of the Laplace kernel \cite{Malhotra:2015:CCP}.
+
+\pagebreak
