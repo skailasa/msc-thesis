@@ -37,11 +37,20 @@ run taking 10 times longer than the fastest one, reported to 1 s.f.
     Method & Numpy + Numba & Numpy \\ [0.5ex] % inserts table
     %heading
     \hline % inserts single horizontal line
-    1 & 50 & 837 \\ % inserting body of the table
-    2 & 47 & 877 \\
-    3 & 31 & 25 \\
-    4 & 35 & 144 \\
-    5 & 45 & 300 \\ [1ex] % [1ex] adds vertical space
+    Get Level & 280 ns ± 276 ns  & 1.01 µs ± 265 ns \\ % inserting body of the table
+    Get Offset & 29.6 µs ± 291 µs & 804 ns ± 324 ns \\
+    Remove Offset & 30.7 µs ± 301 µs & 1.83 µs ± 566 ns \\
+    Get Octant & 23.6 µs ± 231 µs & 2.16 µs ± 2.71 µs \\
+    Get Octant Index From Key & 64.4 µs ± 632 µs & 10.7 µs ± 3.82 µs \\
+    Get Key From Octant Index & 36.4 µs ± 356 µs & 11.1 µs ± 3.54 µs \\
+    Get Octant Index From Cartesian Coordinate & 50.4 µs ± 484 µs & 17.3 µs ± 21 µs \\
+    Get Key From Cartesian Coordinate & 2.71 µs ± 1.58 µs & 30.4 µs ± 20.3 µs \\
+    Get Box Center From Octant Index & 49.2 µs ± 476 µs & 21.7 µs ± 27.2 µs \\
+    Get Box Center From Key & 60.5 µs ± 581 µs & 22.4 µs ± 7.52 µs \\
+    Get Parent Key & 29.7 µs ± 292 µs & 2.47 µs ± 546 ns \\
+    Get Child Keys & 37.6 µs ± 361 µs & 8.62 µs ± 11.2 µs \\
+    Get All Neighbor Keys & 98.4 µs ± 803 µs & 445 µs ± 80.1 µs\\
+    Get All Possible Keys In Interaction List & 98.4 µs ± 803 µs & 1.67 ms ± 225 µs \\ [1ex] % [1ex] adds vertical space
     \hline %inserts single line
     \end{tabular}
     \label{table:3_1_jit} % is used to refer this table in the text
