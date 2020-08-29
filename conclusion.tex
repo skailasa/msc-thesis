@@ -1,22 +1,38 @@
 \chapter{Conclusion}\label{chpt:conclusion}
 
-- Contributions
-    - The first iteration of the 3D (somewhat) parallel KIFMM lib in a popular interpreted language.
-    - well tested and extensibly designed software.
+In summary, the main contribution of the work underlying this thesis is
+\gls{PyExaFMM}, which represents the first iteration of a three dimensional
+\gls{KIFMM} simulation library, with some parallel features. The software has been
+designed to be well testable and extensible, however is currently someway behind
+state-of-the art implementations in terms of performance
+\cite{exafmm,Malhotra:2015:CCP}.
 
-- Limitations
-    - hardware for benchmarking larger data sets.
-    - level of parallelism for speed.
+generic functionality
 
-- Future
-    - multiple levels of parallelism (data/process/cpu etc) available, they should be explored and optimised.
-    - implementation of new kernels.
-    - implementation of gradients for benchmarking with open source standards
-    - reduction in boiler plate code for data loading etc, in terms of design.
-    - more integration tests due to complexity.
-    - Parallel tree construction
-    - An adaptive algorithm
-    - Offloading M2L computation to specialized hardware
-    - More robust SVD compression, randomized compression.
-    - Multiproc svd compression library
-    - Taking more check points than multipole/local points for more robust pseudo-inverse.
+- implementation of gradients for benchmarking with open source standards
+
+- implementation of new kernels.
+
+trees
+
+- Parallel tree construction
+
+- An adaptive algorithm
+
+software design
+
+- more integration tests due to complexity.
+
+- reduction in boiler plate code for data loading etc, in terms of design.
+
+- new module for data handling.
+
+compression
+
+- More robust SVD compression, randomized compression.
+
+- Taking more check points than multipole/local points for more robust pseudo-inverse.
+
+parallelism
+
+- Offloading M2L computation to specialized hardware

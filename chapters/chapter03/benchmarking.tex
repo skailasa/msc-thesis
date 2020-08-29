@@ -18,6 +18,37 @@ $3 µs ± 1 µs$ for the same experiment. The large errors for the \gls{JIT} com
 function is indicative of the impact of the cache, with the the initial
 run taking 10 times longer than the fastest one, reported to 1 s.f.
 
+\begin{figure}[ht]
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/octree.png}}
+  \vspace{0pt}
+    \caption{
+        Foo
+    }
+    \label{fig:3_1_octree}
+\end{figure}
+
+
+\begin{table}[ht]
+    \centering % used for centering table
+    \begin{tabular}{c c c} % centered columns (4 columns)
+    \hline\hline %inserts double horizontal lines
+    Method & Numpy + Numba & Numpy \\ [0.5ex] % inserts table
+    %heading
+    \hline % inserts single horizontal line
+    1 & 50 & 837 \\ % inserting body of the table
+    2 & 47 & 877 \\
+    3 & 31 & 25 \\
+    4 & 35 & 144 \\
+    5 & 45 & 300 \\ [1ex] % [1ex] adds vertical space
+    \hline %inserts single line
+    \end{tabular}
+    \label{table:3_1_jit} % is used to refer this table in the text
+    \caption{Benchmarking Foo} % title of Table
+\end{table}
+
+
 To benchmark the efficacy of HDF5 in comparison to serialisation for saving
 and loading data from disk we create a Numpy array composed of
 20,000 columns and 10,000 rows of 64 bit floats. This array has a minimum size
@@ -41,6 +72,30 @@ stored on disk. This data is stored alongside the metadata for the object, such
 as it's initialisation code, and even any dependent objects it may have. The
 intermediate representation allows any objects to be serialised in the same
 manner \cite{pickle}.
+
+\begin{figure}[ht]
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/savetime.png}}
+  \vspace{0pt}
+    \caption{
+        Foo
+    }
+    \label{fig:3_1_savetime}
+\end{figure}
+
+
+\begin{figure}[ht]
+    \centering
+
+  {\includegraphics[width=0.9\textwidth]{chapter3/loadtime.png}}
+  \vspace{0pt}
+    \caption{
+        Bar
+    }
+    \label{fig:3_1_loadtime}
+\end{figure}
+
 
 Due to the constraints of accessible computing power, we benchmark the effect of
 multiprocessing on operator matrix precomputation calculations using, a 3 level
