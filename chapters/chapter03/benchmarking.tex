@@ -5,7 +5,7 @@ compilation on tree construction is illustrated in figures
 (\ref{fig:3_1_octree}) and (\ref{fig:3_1_octree2}), where octrees constructed with
 Numpy and Numba together are compared to octrees constructed with just Numpy.
 Each tree is constructed to a maximum depth of 5 levels over a unit box
-centered at the origin. The construction time is measured against an
+centered at the origin. The construction time is measured against
 the numbers of particles $N$ placed in the tree, which are taken to be
 both the sources and the targets. The construction
 is repeated five times on each problem size $N$ for statistics, though in both
@@ -47,7 +47,7 @@ in the interpreted byte code, this can lead to relatively longer runtimes when
 a \gls{JIT} compiled function is first invoked, in comparison to subsequent
 invocations. All the calculations in table (\ref{table:3_1_jit}) were run for a
 Morton key of 100 placed in a unit box centered at the origin, and were repeated
-100 times for statistics. We observe that the preliminary analysis step for
+one hundred times for statistics. We observe that the preliminary analysis step for
 some \gls{JIT} compiled function is so expensive that the mean time for the \gls{JIT}
 compiled function is significantly longer than using a function with Numpy alone.
 Further investigation is needed to understand exactly why the \gls{JIT} preliminary
@@ -79,15 +79,17 @@ analysis takes so much longer for some Numpy based functions than others.
     \label{table:3_1_jit} % is used to refer this table in the text
     \caption{
         Benchmarking tree traversal functions implemented in \gls{PyExaFMM}.
-        Errors are taken from the standard deviation over trials.
+        Errors are taken from the standard deviation over trials. Results and
+        errors are truncated to 3 significant figures. The errors are calculated
+        from a standard deviation over trials.
         } % title of Table
 \end{table}
 
 
-The loading and saving speeds of a increasingly large files into memory by
+The loading and saving speeds, as a function of file size, into memory by
 HDF5 in comparison to Python's native object serialisation library, Pickle,
 are illustrated in figures (\ref{fig:3_1_loadtime}) and (\ref{fig:3_1_savetime})
-respectively. Each trial was repeated 5 times with each file size for statistics.
+respectively. Each trial was repeated five times with each file size for statistics.
 The multiplicative speedups for loading and saving using HDF5 are illustrated
 in figures (\ref{fig:3_1_loadtime_speedup}) and (\ref{fig:3_1_savetime_speedup})
 respectively.
@@ -159,14 +161,14 @@ manner \cite{pickle}.
 \end{figure}
 
 
-The effect of multiprocessing on operator matrix precomputations is
-illustrated in figure (\ref{fig:3_1_multiproc}). Here, we solve
-for operator matrices of the model electrostatic problem in three dimensions
-(\ref{eq:electrostatic_paradigm}), using a tree with a maximum depth of 3 levels,
-and 1000 randomly distributed particles in a unit cube, varying the number of
-processor cores accessible to the script. These are taken to be
-both sources and targets. Unit charges are placed on each source particle, and
-all relevant surfaces are calculated to order $p=2$, therefore discretised
+The effect of multiprocessing on time to calculate the operator matrix precomputations is
+illustrated in figure (\ref{fig:3_1_multiproc}). Here we solve
+for the operator matrices of the model electrostatic problem in three dimensions
+(\ref{eq:electrostatic_paradigm}) for a 1000 randomly distributed particles placed in
+a unit cube. These are taken to be both sources and targets, with unit charges
+placed on all sources. The problem is discretised using an octree with a maximum depth of 3 levels,
+and we vary the number of processor cores accessible to the script.
+Televant surfaces are calculated to order $p=2$, and therefore discretised
 with 8 quadrature points (\ref{eq:2_2_quadrature_points}). The parameters for
 the relative sizes of different surfaces are the same as those provided
 in Chapter \ref{chpt:2_strategy_for_practical_implementation},

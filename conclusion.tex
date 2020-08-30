@@ -3,78 +3,46 @@
 In summary, the main contribution of the work underlying this thesis is
 \gls{PyExaFMM}; a three dimensional \gls{KIFMM} simulation library
 with some parallel features. The software has been designed to be well
-testable and extensible, however is currently someway behind state of the art
-implementations in terms of speed \cite{exafmm,Malhotra:2015:CCP}.
+testable and extensible, however it is currently someway behind state of the art
+implementations in terms of speed \cite{Malhotra:2015:CCP, exafmm}.
 Furthermore, from table (\ref{table:3_1_jit}),
 we see that some current optimisations, namely \gls{JIT} compilation for some
-Numpy based functions, have been naively applied. Despite this, we achieve the
-complexity bound of the \gls{FMM} algorithm with our implementation, and it
-represents a good first step towards the goal of a Python \gls{KIFMM} implementation
-which sacrifices as little performance as possible.
-
-To bring \gls{PyExaFMM} in line with state of the art \gls{KIFMM} software
+Numpy based functions, have been naively applied. To bring
+ \gls{PyExaFMM} in line with state of the art \gls{KIFMM} software
 extensions which fully take advantage of modern computing hardware will
 have to be implemented. Modern heterogenous computers have multiple access to
 multiple multi-core \gls{CPU} and \gls{GPU} units, with multiple levels of
 memory-cache, and vectorisation available at the processor level
-\cite{Malhotra:2015:CCP}. Furthermore, modern
+\cite{Malhotra:2015:CCP}. The current optimisations within \gls{PyExaFMM} do not
+take advantage of shared or distributed memory parallelism. As mentioned in
+Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_1_fmm_overview}, the near-field
+\gls{P2P} calculations can be transferred to \gls{GPU}s for acceleration
+\cite{Hwu:2011:MKP}, alternatively as discussed above fast Newton iterations and
+\gls{AVX} vectorisation at the \gls{CPU} level
+is used to accelerate the \gls{P2P} calculations in both major \gls{KIFMM}
+implementations \cite{Malhotra:2015:CCP, exafmm}. These optimisations are
+dependent on the available hardware, however share a common theme in distributing
+a single \gls{P2P} instruction, across multiple particle interactions, following
+the \gls{SIMD} paradigm. The calculation of the far-field \gls{M2L} operator
+matrices can also be accelerated by the above techniques. Furthermore, randomised
+\gls{SVD} compression \cite{Erichson:2019:JOSS, Halko:2011:SIAM} can be implemented
+to also take advantage of shared memory parallelism as described in Chapter
+\ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_4_svd_compression},
+with the additional benefit of reducing the cost of computing low-rank \gls{SVD}
+approximations of the \gls{M2L} operator matrices.
+The mixed performance of \gls{JIT} compilation for the construction of trees
+leaves a lot of room for for further optimisation in \gls{PyExaFMM}. Specifically,
+state of the art implementations construct adaptive trees in parallel, taking
+advantage of the distributed memory programming paradigm with \gls{MPI} \cite{Malhotra:2015:CCP}.
+PVFMM, for example, chunks particle data across processors, constructing subtrees in parallel,
+and uses \gls{MPI} to pass required multipole and local expansions to other processes
+as required during the main \gls{FMM} loop. In addition to the above optimisations,
+the current \gls{PyExaFMM} can be further sanitised. Specifically, integration tests
+that test the way in which modules interact, should be added on top of the current
+unit test suite. Additionally, more detailed code profiling to clearly identify
+the most significant memory and \gls{CPU} bottlenecks should be a priority.
 
-generic functionality
-
-- implementation of gradients for benchmarking with open source standards
-
-- implementation of new kernels.
-
-- volume fmm extension - for massive bodies?
-
-
-Optimising software for modern hardware
-
-- modern cpu have multiple cores, multiple levels of cache, vectorisation at
-the processor level.
-
-Intra Node Optimisation (Shared Memory Parallelism)
-
-Near interactions
-- p2p most expensive part of the algorithm
-
-    - can use avx vectorisation
-
-    - newton iteration
-
-Far interactions
-
-- randomised SVD for M2L compression.
-
-- multiprocessing the M2L compression script.
-
-- m2l distributed across gpu
-
-- share required memory across processes
-
-Asynhronous execution across chunks of arrays using Dask.
-
-Distributed Memory Parallelism
-
-- parallel tree construction.
-
-- construct local trees across processors. distributed octree.
-
-- compute morton id at leaf level, partition all across processors
-
-- compute interaction lists for subtrees execution
-
-- duplicates are resolved/removed
-
-- communication overhead in passing required 'ghost' octant information
-ready for downward pass.
-
-
-- adaptive octrees
-
-    - 2:1 balance refinement problem, need to understand what this is.
-
-Stability
-
-- Taking more check points than multipole/local points for more robust pseudo-inverse.
-
+Despite its limitations, \gls{PyExaFMM} achieves the complexity bound of the
+\gls{FMM} algorithm, and it represents a significant first step towards the goal
+of an open source Python \gls{KIFMM} implementation which sacrifices as little
+computational performance as possible in comparison to major compiled implementations.

@@ -9,10 +9,10 @@ we will be keeping redundant singular vectors which do not contribute significan
 to the final result for potential.
 
 For this experiment we use a 3 level octree containing 1000 randomly distributed
-particles in a unit cube, which are taken to be sources as well as targets, and
-with unit charges have been placed on the sources. We compute $p=3$ degree multipole and
+particles placed in a unit cube, these are taken to be sources as well as targets, and
+unit charges have been placed on the sources. We compute $p=3$ degree multipole and
 local expansions therefore discretising each surface with 26 quadrature points.
-Our metric is the mean percentage error of the \gls{PyExaFMM} result and
+Our metric of accuracy is the mean percentage error of the \gls{PyExaFMM} result and
 full-rank \gls{M2L} matrices, with respect to the direct result.
 This mean is taken across errors for all target particles. For the above
 tree topology and expansion order $p$, we find a a mean percentage error of
@@ -36,5 +36,14 @@ the results of which are illustrated in figure (\ref{fig:3_2_svd}).
 Figure (\ref{fig:3_2_svd}) indicates that singular vectors corresponding to rank
 greater than 6 are actually adding noise to the results of \gls{PyExaFMM}, with
 an optimum target rank $k$ in the range 4-6 for the above tree topology. Currently
-\gls{PyExaFMM} does not attempt to find an optimum rank for a given tree topology,
-however this represents a future body of work.
+\gls{PyExaFMM} does not attempt to find an optimum rank for a given tree topology.
+however this represents a future body of work. Furthermore we see that even rank a
+one approximation leads to a marginal increase in error. Specifically a rank one
+approximation leads to a mean percentage error of 1.99 (2 d.p), compared with
+1.96 (2 d.p) for the mean percentage error with the full-rank \gls{M2L} matrix.
+Future work should investigate whether a bound for the error of a
+rank one approximation of the \gls{M2L} operator matrix, and the mean percentage
+error exists. \gls{PyExaFMM} could adopt this bound into the software implementation,
+to offer the user a trade-off between speed and accuracy due to the compression of
+the \gls{M2L} operator matrix.
+
