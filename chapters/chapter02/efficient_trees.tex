@@ -21,9 +21,9 @@ do not have the requirement to be continuous as illustrated by figure
 (\ref{fig:2_2_multi_order}), making them relatively simple to implement.
 
 As the line is chosen to pass through the center of each box of the quadtree,
- the position can be efficiently represented
+ the position along it can be efficiently represented
  as a pair of `binary coordinates' corresponding to the index of the box the line
- passes through, as the dimensions of the box at each level are pre-defined for a
+ is passing through, as the dimensions of the box at each level are pre-defined for a
  given octree. For example, the bottom-left box at the coarser level in figure (\ref{fig:2_2_multi_order})
  will have a binary coordinate of,
 
@@ -36,7 +36,7 @@ As the line is chosen to pass through the center of each box of the quadtree,
  box in each level by adding a displacement corresponding to the number of boxes so far
  encoded at all coarser levels. For example, the first encoded box, which in figure (\ref{fig:2_2_multi_order})
  corresponds to the binary coordinate $00$ will have a displacement of 0.
- This leaves this first box with a Morton encoded position, or \textbf{\gls{key}}
+ This leaves this first box with a Morton encoded position, or \textbf{\gls{key}},
  of 0 in base ten. Similarly, the encoding for the bottom-left box at the finer
  level in figure (\ref{fig:2_2_multi_order}) will have binary coordinates of,
 
@@ -60,8 +60,8 @@ that encodes the box they lie in for each level of a given octree, as well as tr
 the octree. Specifically, \gls{PyExaFMM} makes use of a \textit{linear} Morton encoding, meaning that it assigns
 all particles to the keys of boxes they occupy at a maximum depth which has been refined to the
 pre-defined leaf level of the desired octree. It does so by assuming that the
-leaf level of the octree describing the domain of interest is partitioned into equal
-sized leaf boxes, and checking the relative coordinates of each particle, with respect to the coordinates defining
+leaf level of the octree describing the domain of interest is partitioned into leaf boxes of
+equal size, and checking the relative coordinates of each particle, with respect to the coordinates defining
 the leaf box vertices. Furthermore, this operation only provides
 a set of keys at the leaf-level which are non-empty, allowing \gls{PyExaFMM} to
 ignore the remainder of the space covered by the domain of the octree. Once this

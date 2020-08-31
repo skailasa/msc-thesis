@@ -87,7 +87,7 @@ analysis takes so much longer for some Numpy based functions than others.
 
 
 The loading and saving speeds of files into/from memory, as a function of file size,
-by HDF5 in comparison to Python's native object serialisation library, Pickle,
+using HDF5 in comparison to Python's native object serialisation library, Pickle,
 are illustrated in figures (\ref{fig:3_1_loadtime}) and (\ref{fig:3_1_savetime})
 respectively. Each trial was repeated five times with each file size for statistics.
 The multiplicative speedups for loading and saving using HDF5 are illustrated
@@ -189,7 +189,7 @@ basic degree with the required data being copied to each process, even if very l
     \label{fig:3_1_multiproc}
 \end{figure}
 
-We benchmark the algorithm run time in comparison to direct computation in figure
+We benchmark the asymptotic run time of \gls{PyExaFMM} in comparison to direct computation in figure
 (\ref{fig:3_1_complexity}), with same octree parameters as used for benchmarking
 the operator precomputation, but with an increasing number of target and source
 particles $N$ for our model problem (\ref{eq:electrostatic_paradigm}). The
@@ -197,20 +197,20 @@ calculations are run three times for each problem size for statistics.
 Assuming a power relationship between run time $t$ and problem size $N$,
 
 \begin{equation}
-    t = N^x
+    t = N^x,
 \end{equation}
 
 where $x$ is unknown, taking logarithms allows one to apply least squares fitting
 to fit a linear relationship to,
 
 \begin{equation}
-    \log(t) = x \log(N)
+    \log(t) = x \log(N),
 \end{equation}
 
 computing the value of $x$ from the gradient. Performing this calculation for the
-results from the \gls{FMM} and direct approaches we report $x=1.14$ (2 d.p) for
+results from \gls{PyExaFMM} and direct calculation we report $x=1.14$ (2 d.p) for
 \gls{PyExaFMM}, and $x=1.98$ (2 d.p) for the direct computation. This implies an approximate
-asymptotic complexity of $O(N)$, and $O(N^2)$ for the \gls{FMM} and direct methods
+asymptotic complexity of $O(N)$, and $O(N^2)$ for \gls{PyExaFMM} and direct methods
 respectively in line with what is expected, with the limitation that this has
 been tested on relatively small inputs of only $O(10^3)$ particles.
 

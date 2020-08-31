@@ -214,7 +214,7 @@ by first applying an \gls{SVD} decomposition using (\ref{eq:1_2_svd}) and then
 inverting the diagonal matrix $\Sigma$ using Tikhonov regularisation
 similar to (\ref{eq:1_2_tikhonov}), and finally by applying (\ref{eq:1_2_pseudo_inverse}).
 The justification of the choices for the regularisation parameter
-$\alpha$ and the tolerance for the pseudoinverse are discussed in detail in
+$\alpha$ and the tolerance for the singular values are discussed in detail in
 Chapter \ref{chpt:2_strategy_for_practical_implementation},
 Section \ref{sec:2_3_operator_caching}. In terms of the asymptotic complexity of the \gls{SVD},
 as the singular values and vectors are iterated through once in a straightforward
@@ -261,7 +261,7 @@ the $O(N)$ complexity is maintained for the \gls{KIFMM}.
 
 \subsection{Summary}
 
-The different approach of the \gls{KIFMM} leads to some different implementation
+The different approach of the \gls{KIFMM} leads to different implementation
 challenges in comparison to the \gls{FMM}. The key difficulty arises from the
 instability in computing the matrix inverse of the kernel matrix between the
 check and equivalent matrices. As mentioned, choices for the

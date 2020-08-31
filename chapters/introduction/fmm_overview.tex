@@ -73,7 +73,7 @@ where $\phi$ is the electrostatic potential, $q$ is the charge density and
 $\epsilon_0$ is the permittivity of free space. It can therefore be seen that
 the \gls{FMM} is actually solving the Poisson problem by reformulating it as an
 integral equation \cite{Epton:1995:SIAM}. The ubiquity of problems of the form (\ref{eq:n_body_problem})
-in computational science has lead to diverse application of the FMM. For example,
+in computational science has lead to diverse applications of the FMM. For example,
 in the modeling the electrostatic interactions of charged particles in complex
 biological molecules at biologically relevant length scales \cite{Board:1992:CPL}.
 The extension of FMMs to Helmholtz equations \cite{Rokhlin:1990:JCP}, has lead
@@ -136,10 +136,11 @@ As $\epsilon$ is small far away from charge distribution one can expand $1/d$ bi
 
 \begin{flalign}
     \frac{1}{d} &= \frac{1}{r}(1+\epsilon)^{-1/2} = \frac{1}{r}\left (1 - \frac{1}{2}\epsilon + \frac{3}{8}\epsilon^2 - ... \right) \\
-    \frac{1}{d} &= \frac{1}{r} \sum_{n=0}^{\infty} \left(\frac{r'}{r} \right)^n P_n(\cos \alpha)
+    \frac{1}{d} &= \frac{1}{r} \sum_{n=0}^{\infty} \left(\frac{r'}{r} \right)^n P_n(\cos \alpha),
 \end{flalign}
 
-Using this, the exact multipole expansion for this charge distribution is,
+where $P_n(\cos \alpha)$ are Legendre polynomials. Using this, the exact multipole
+expansion for this charge distribution is,
 
 \begin{flalign}
     \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\frac{1}{r^{n+1}}\int (r')^nP_n(\cos \alpha)\rho(\mathbf{r'}) d \tau'
@@ -160,7 +161,7 @@ Using the addition theorem for Legendre polynomials \cite{Greengard:1987:Yale},
 
 where the Legendre polynomial is written in terms of spherical harmonics,
 where $(r, \theta, \phi)$ and $(\rho, \alpha, \beta)$ define two spherical coordinates,
-and $\gamma$ is the angle subtended between them. Therefore, the multipole expansion goes to,
+and $\gamma$ is the angle subtended between them. The multipole expansion goes to,
 
 \begin{flalign}
     \Phi(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r_i)^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
@@ -176,10 +177,10 @@ where,
 \end{equation}
 
 This is an exact expansion, and it converges for $\frac{r_i}{r} < 1$. This convergence
-condition means that estimating of the potential at a given evaluation point
-calculated using the multipole expansion is only possible in the far-field, the
+condition means that estimating the potential at a given evaluation point
+using the multipole expansion is only possible in the far-field, the
 boundary of which is often tuned empirically for different systems as it's user
-defined. If instead the expansion is taken with centre at the evaluation point,
+defined. If instead the expansion is taken centered at the evaluation point,
 one can rewrite as the multipole expansion as a `local' expansion,
 
 \begin{flalign}
@@ -218,8 +219,8 @@ coefficients. These are crucial in providing the improvements to asymptotic comp
   \caption{(A) A multipole expansion centered on charge distribution. (B) A local
   expansion, centered around a point of evaluation. Regions in which the expansions
   converge are shaded in grey. For the multipole expansion this is the entire domain
-  outside of the region for $r>r'$, and for the local expansion this is the region
-  for which $r < r'$}
+  outside of the region for $r>r_i, \> \forall i \in [1, N]$, and for the local expansion this is the region
+  for which $r < r_i, \>  \forall i \in [1, N]$}
 
   \label{fig:1_1_multipole_local_expansions}
 \end{figure}
@@ -246,7 +247,7 @@ i.e. $d=3$ in three dimensions. If one were to simply traverse the tree from
 the coarsest, or `root', level to the finest, or `leaf', level and find the multipole expansion of source
 particles in each box of each level, one could then evaluate these multipole expansions
 at each particle to solve the $N$-Body problem. As there are $O(\log(N))$
-boxes in the tree, and $N$ particles this results in a $O(N\log(N))$ asymptotic
+boxes in the tree, and $N$ particles, this results in a $O(N\log(N))$ asymptotic
 complexity.
 
 However the FMM reduces computational complexity further by making use of local
@@ -269,7 +270,7 @@ two basic steps,
     operation, or \textbf{\gls{P2M}}. Then as one moves up the tree hierarchy, the
     multipole expansions of a each box's parent box is computed by shifting the
     expansion centers of the multipole expansion of a given child box, to the center
-    of the parent box a, in a multipole-to-multipole operation or \textbf{\gls{M2M}},
+    of the parent box, in a multipole-to-multipole operation or \textbf{\gls{M2M}},
     and summing together all the coefficients. Following the upward pass, one
     obtains the multipole expansion for each box containing source particles at
     all levels of the hierarchical tree.
@@ -338,8 +339,8 @@ provided in Appendix \ref{app:analytic_fmm}.
       grey region indicates the \gls{near-field}, where this multipole expansion
       does not converge. For the M2L and P2P steps the grey region indicates
       box interactions already compressed and available via the translation or
-      direct usage of local expansions. The larger/smaller stars in the M2M and
-      L2L steps correspond to the parent/child expansions.
+      direct usage of local expansions. The larger and smaller stars in the M2M and
+      L2L steps correspond to the parent and child expansions respectively.
   }
   \label{fig:1_1_main_loop}
 \end{figure}
@@ -366,8 +367,8 @@ the distribution of the particles of interest is not uniform over the computatio
 domain, one may be needlessly refining the boxes in some regions which may even be
 empty. Therefore, although the asymptotic complexity of
 the FMM is $O(N)$, it is clear that practical implementations will suffer unless
-care is taken to use efficient vectorised data structures for the creation of
-appropriate hierarchical tree required by the algorithm.
+care is taken to use efficient vectorised data structures for the creation of an
+appropriate hierarchical tree as required by the algorithm.
 
 Additionally, there is significant scope for multiple levels of
 parallelism in practical implementations. For example, the computations
