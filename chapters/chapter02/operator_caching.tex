@@ -62,7 +62,8 @@ to cache, in comparison to just storing the inverse and the kernel matrices sepa
 as we can just apply the M2L operator matrix to the known source density in order
 to calculate the unknown source density in a single matrix-vector product.
 
-As described in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview}, one
+As described in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview},
+for the model problem (\ref{eq:electrostatic_paradigm}) one
 can take advantage of the similarities between the nature of the calculation of
 (\ref{eq:2_3_general_operator}) for the \gls{M2M} and \gls{L2L} operator matrices, if
 the check and equivalent surfaces in both cases are chosen correctly. Specifically,
@@ -155,33 +156,38 @@ implementation of ExaFMM-T and PVFMM \cite{Malhotra:2015:CCP, exafmm}.
 Consider the SVD of a given operator matrix,
 
 \begin{equation}
-    K_A = U \Sigma V^*
+    K_A = U \Sigma V^*,
 \end{equation}
 
 with a pseudoinverse of
 
 \begin{equation}
-    K_A^\dagger = V \Sigma^{-1} U^*
+    K_A^{-1} = V \Sigma^{-1} U^*,
     \label{eq:2_4_pseudoinv}
 \end{equation}
 
 the inversion of the diagonal matrix of singular values can be regularised as,
 
 \begin{equation}
-    \Sigma^{-1} = (\alpha I + \Sigma^*\Sigma)^{-1} = \Sigma_{\text{reg}}^{-1}
+    (\alpha I + \Sigma^*\Sigma)^{-1}\Sigma^* =: \Sigma_{\text{reg}}^{-1},
     \label{eq:2_4_regularised_general_operator}
 \end{equation}
 
-a pseudoinverse using an \gls{SVD} (\ref{eq:2_4_pseudoinv}) is then calculated
-for this matrix $\Sigma_{\text{reg}}$, in which singular vectors corresponding
-to `small' singular values less than a specified tolerance are filtered out of
-the final approximation in order to maintain numerical stability. This tolerance
-value is in practice set to be a number close
-to machine precision, and \gls{PyExaFMM} uses a value of $\text{tol} = 4 \cdot \text{EPS} \cdot \max (\Sigma_{\text{reg}})$,
-where EPS is machine precision, and $\max (\Sigma_{\text{reg}})$ is the largest
-entry in $\Sigma_{\text{reg}}$. This has been determined empirically to provide
+giving,
+
+\begin{equation}
+    K_A^{-1} = V \Sigma_{\text{reg}}^{-1} U^*
+\end{equation}
+
+
+For numerical stability, singular vectors corresponding to `large' diagonal terms in
+$(\alpha I + \Sigma^*\Sigma)^{-1}$ are filtered out, if they exceed
+a specified tolerance. This tolerance value is set using a number close
+to machine precision, and \gls{PyExaFMM} uses a value of, $\text{tol} = 1/ (4 \cdot \text{EPS} \cdot \max (\alpha I + \Sigma^*\Sigma)^{-1} )$,
+where EPS is machine precision, and $\max ( \alpha I + \Sigma^*\Sigma)^{-1}$ is the largest
+entry in $(\alpha I + \Sigma^*\Sigma)^{-1}$. This has been determined empirically to provide
 stable results. The regularisation parameter $\alpha$ is also determined empirically,
-and a value proportional to the largest singular value of $K_A$, where
+and a value proportional to the largest singular value of $K_A$,
 $\alpha=0.075 \cdot \max(\Sigma)$ is found to provide stable results.\footnote{
     The regularisation parameter $\alpha$ used by the authors of \cite{Malhotra:2015:CCP}
     is $\alpha \approx  1 \times 10^{-9}$, which was provided through direct email correspondence. However,

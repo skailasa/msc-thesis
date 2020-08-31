@@ -201,7 +201,7 @@ The key point to note is that the multipole and local expansions are exact, and
 can be truncated as required to ensure that the asymptotic complexity of evaluating
 a multipole or local expansion at an evaluation point is bounded by $O(N)$. A
 rigorous error analysis of the analytic FMM is outside the scope of this thesis, and
-we defer to the literature for exact expressions for these truncation errors \cite{Greengard:1987:Yale},
+we defer to the literature for exact expressions for these truncation errors \cite{Greengard:1987:JCP},
 Furthermore, exact operations exist for shifting the center of these expansions,
 as well as translating multipole expansion coefficients into equivalent local expansion
 coefficients,
@@ -302,7 +302,7 @@ two basic steps,
 
 
 With this specification, a more detailed analysis of the algorithm is possible,
-though we defer to \cite{Greengard:1987:Yale} for a rigorous discussion.
+though we defer to \cite{Greengard:1987:JCP} for a rigorous discussion.
 Firstly, as mentioned above, the tree must be refined such that the leaf boxes
 contain only a small constant number of particles, $\kappa$. The level of refinement $n$
 is therefore approximately taken to be $n \approx \log(N)$, where $N$ is the number

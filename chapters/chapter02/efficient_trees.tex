@@ -25,19 +25,30 @@ As the line is chosen to pass through the center of each quadrant of the quadtre
  as a pair of `binary coordinates' corresponding to the index of the quadrant the line
  passes through, as the dimensions of the box at each level are pre-defined for a
  given octree. For example, the bottom-left quadrant at the coarser level in figure (\ref{fig:2_2_multi_order})
- will have a binary coordinate of $00$. This encoding can be made unique for each
+ will have a binary coordinate of,
+
+ \begin{equation}
+     \underbrace{0}_{x}\underbrace{0}_{y},
+ \end{equation}
+
+ where $x$ and $y$ correspond to the index of the quadrant along the $x$ and $y$
+ directions at this level. This encoding can be made unique for each
  quadrant in each level by adding a displacement corresponding to the number of boxes so far
  encoded at all coarser levels. For example, the first encoded box, which in figure (\ref{fig:2_2_multi_order})
- corresponds to the binary coordinate $00$ will have a displacement due to the
- number of boxes thus far encoded at this level, and all coarser levels, of which
- there are none in this case, of 0. This leaves this first box with a Morton encoded position,
- or \textbf{\gls{key}} of 0 in base ten. Similarly, the encoding for the bottom-left box at the finer
- level in figure (\ref{fig:2_2_multi_order}) will have binary coordinates of $00$,
- and a displacement due to the number of boxes encoded at previous levels of 4
- \footnote{As is common in computer science, we begin indexing at 0, rather than 1.},
-therefore it's Morton \gls{key} in base ten will be $4$.
+ corresponds to the binary coordinate $00$ will have a displacement of 0.
+ This leaves this first box with a Morton encoded position, or \textbf{\gls{key}}
+ of 0 in base ten. Similarly, the encoding for the bottom-left box at the finer
+ level in figure (\ref{fig:2_2_multi_order}) will have binary coordinates of,
 
-This concept is easily extended to three dimensions, and is illustrated in
+ \begin{equation}
+    \underbrace{00}_{x}\underbrace{00}_{y},
+\end{equation}
+
+Four bits are needed, two each for the $x$ and $y$ coordinate, as there are 16
+ quadrants at this level. The displacement due to the number of boxes encoded at
+ previous levels of 4 \footnote{As is common in computer science, we begin indexing at 0, rather than 1.},
+therefore it's Morton \gls{key} in base ten will be $4$. This concept is easily
+extended to three dimensions, and is illustrated in
 figure (\ref{fig:2_2_morton_encoding}) at level 1 of an octree. Here the binary
 coordinates simply contain three bits, for the $xyz$ octant of a given cube
 in the octree, and the displacement mechanism is entirely analogous with the

@@ -228,17 +228,18 @@ these solves require the computation of the check and equivalent surfaces involv
 as well as the numerical quadrature over the equivalent/source densities to compute
 the required check potentials. However, the the matrix to be inverted
 in the \gls{M2M} operation as well as the \gls{L2L} operation are very similar, which can
-be seen from figure (\ref{fig:1_2_m2m_l2l}). In fact, if
+be seen from figure (\ref{fig:1_2_m2m_l2l}). In fact for the kernel function of
+the model problem (\ref{eq:electrostatic_paradigm}), if
 the upward \gls{check-surface} is chosen to coincide with the downward
 \gls{equivalent-surface}, and the upward \gls{equivalent-surface} is chosen to
 coincide with the downward \gls{check-surface}, the matrix to be inverted for the M2M
 operation is the transpose of the matrix to be inverted for the \gls{L2L} operation,
 except for a scaling factor dependent on the level of the Octree the surfaces
-are created in. This scaling factor is easy to identify, and for the model problem of
-three dimensional electrostatics with a Laplace kernel, the scaling factor between
-kernel matrices evaluated at two adjacent Octree levels, $l$, is $K^{l+1} = 2K^l$.
+are created in. This scaling factor is easy to identify for the model problem of
+three dimensional electrostatics with a Laplace kernel,
+kernel matrices evaluated at two adjacent Octree levels, $l$, are scaled as $K^{l+1} = 2K^l$.
 Similarly, the required matrix inverse for the \gls{L2L} and \gls{M2L} operations exactly coincide
-except for a scaling factor. Therefore, practical implementations
+except for a scaling factor. Therefore, practical implementations of (\ref{eq:electrostatic_paradigm})
 need to compute at most one matrix inversion which can be cached. This can then
 be scaled and applied as required at each step of the algorithm. Furthermore,
 for the Laplace kernel specifically, the scaling factors are present on both sides
