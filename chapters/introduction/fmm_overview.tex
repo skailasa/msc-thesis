@@ -31,7 +31,8 @@ where $q_i$ refers to a charge density with the kernel function,
 \label{eq:laplace_kernel}
 \end{equation}
 
-the constant $\epsilon_0$ is the permittivity of free space. It's easy to see
+the constant $\epsilon_0$ is the permittivity of free space. For practical
+purposes, we define $K(x,x) = 0$. It's easy to see
 how a naive direct application of this equation over $N$ particles
 results in an algorithm of $O(N^2)$ complexity, therefore it's only practicable
 for systems of moderate size, whereas in realistic systems, one may be interested in
@@ -42,7 +43,7 @@ version, which is the main focus of this thesis, is presented later.
 Though substantially different in implementation, the analytic FMM will provide the opportunity
 to exposit many of the key ideas behind all FMM-based algorithms, and provides
 a good starting point for understanding and developing upon these algorithms.
-First presented by Greengard \cite{Greengard:1987:Yale},
+First presented by Greengard \cite{Greengard:1987:JCP},
 the analytic \gls{FMM} represented a sea change for $N$-Body simulation. By
 trading off computations for error, it manages to achieve an asymptotic complexity
  of just $O(N)$. Additionally, it comes equipped with rigorous error bounds,
@@ -71,7 +72,7 @@ can be derived from Gauss' law as \cite{Griffiths:2017:CUP},
 where $\phi$ is the electrostatic potential, $q$ is the charge density and
 $\epsilon_0$ is the permittivity of free space. It can therefore be seen that
 the \gls{FMM} is actually solving the Poisson problem by reformulating it as an
-integral equation. The ubiquity of problems of the form (\ref{eq:n_body_problem})
+integral equation \cite{Epton:1995:SIAM}. The ubiquity of problems of the form (\ref{eq:n_body_problem})
 in computational science has lead to diverse application of the FMM. For example,
 in the modeling the electrostatic interactions of charged particles in complex
 biological molecules at biologically relevant length scales \cite{Board:1992:CPL}.
@@ -121,11 +122,11 @@ From law of the cosines,
 
 \begin{flalign}
     d^2 &= r^2 + (r')^2 - 2rr'\cos \alpha = r^2 \left [ 1 + \left ( \frac{r'}{r} \right)^2 - 2 \left (\frac{r'}{r} \right)\cos \alpha \right]\\
-    d &= r \sqrt{1+\epsilon}
+    d &= r \sqrt{1+\epsilon},
     \label{eq:1_1_law_of_cosines}
 \end{flalign}
 
-Where,
+where,
 
 \begin{flalign}
     \epsilon \equiv \left ( \frac{r'}{r} \right) \left (\frac{r'}{r} - 2 \cos \alpha \right)
@@ -145,30 +146,36 @@ Using this, the exact multipole expansion for this charge distribution is,
 \end{flalign}
 
 If instead one considers a charge distribution composed of $N$ discrete charges
-$q_i$ this goes to,
+$q_i$ at positions $r_i$, this goes to,
 
 \begin{flalign}
-    \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)
+    \Phi(\mathbf{r}) = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r_i)^n q_i}{r^{n+1}}P_n(\cos \alpha)
 \end{flalign}
 
 Using the addition theorem for Legendre polynomials \cite{Greengard:1987:Yale},
 
 \begin{flalign}
-    P_n(\cos \gamma) = \sum_{m=-n}^n Y_n^{-m}(\alpha, \beta) Y_n^m(\theta, \phi)
+    P_n(\cos \gamma) = \sum_{m=-n}^n Y_n^{-m}(\alpha, \beta) Y_n^m(\theta, \phi),
 \end{flalign}
 
-Where the Legendre polynomial is written in terms of spherical harmonics,
+where the Legendre polynomial is written in terms of spherical harmonics,
 where $(r, \theta, \phi)$ and $(\rho, \alpha, \beta)$ define two spherical coordinates,
 and $\gamma$ is the angle subtended between them. Therefore, the multipole expansion goes to,
 
 \begin{flalign}
-    \Phi(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r')^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
-    & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r')^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{r^{n+1}}Y_n^m(\theta, \phi)\\
-    & = \sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n\frac{M_n^m}{r^{n+1}} \cdot Y_n^m(\theta, \phi)
+    \Phi(\mathbf{r}) &= \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\frac{(r_i)^n q_i}{r^{n+1}}P_n(\cos \alpha)\\
+    & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r_i)^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{r^{n+1}}Y_n^m(\theta, \phi)\\
+    & = \frac{1}{4 \pi \epsilon_0}\sum_{n=0}^{\infty}\sum_{m=-n}^n M_n^m \cdot \frac{Y_n^m(\theta, \phi)}{r^{n+1}}  ,
     \label{eq:1_1_multipole_expansion}
 \end{flalign}
 
-This is an exact expansion, and it converges for $\frac{r'}{r} < 1$. This convergence
+where,
+
+\begin{equation}
+    M_n^m = \sum_{i=1}^N (r_i)^n q_i Y_n^{-m}(\alpha_i, \beta_i)
+\end{equation}
+
+This is an exact expansion, and it converges for $\frac{r_i}{r} < 1$. This convergence
 condition means that estimating of the potential at a given evaluation point
 calculated using the multipole expansion is only possible in the far-field, the
 boundary of which is often tuned empirically for different systems as it's user
@@ -176,12 +183,18 @@ defined. If instead the expansion is taken with centre at the evaluation point,
 one can rewrite as the multipole expansion as a `local' expansion,
 
 \begin{flalign}
-    \Phi(\mathbf{r}) & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r)^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{r'^{n+1}}Y_n^m(\theta, \phi)\\
-    & = \frac{1}{4 \pi \epsilon_0} \sum_{i=1}^N \sum_{n=0}^{\infty} \sum_{m=-j}^n L_m^n \cdot  Y_m^n(\theta, \phi) \cdot r^j
+    \Phi(\mathbf{r}) & = \frac{1}{4 \pi \epsilon_0}\sum_{i=1}^N\sum_{n=0}^{\infty}\sum_{m=-n}^n \frac{(r)^n q_i Y_n^{-m}(\alpha_i, \beta_i) }{(r_i)^{n+1}}Y_n^m(\theta, \phi)\\
+    & = \frac{1}{4 \pi \epsilon_0} \sum_{n=0}^{\infty} \sum_{m=-n}^n L_n^m \cdot  Y_n^m(\theta, \phi) \cdot r^n,
     \label{eq:1_1_local_expansion}
 \end{flalign}
 
-which converges when $\frac{r}{r'} < 1$. The region of convergence for both types
+where,
+
+\begin{equation}
+    L^m_n = \sum_{i=1}^N \frac{q_i Y^{-m}_n(\alpha_i, \beta_i)}{(r_i)^{n+1}},
+\end{equation}
+
+which converges when $\frac{r}{r_i} < 1$. The region of convergence for both types
 of expansions are shown in figure (\ref{fig:1_1_multipole_local_expansions}).
 
 The key point to note is that the multipole and local expansions are exact, and
