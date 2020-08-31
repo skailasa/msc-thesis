@@ -21,28 +21,29 @@ Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_1_fmm_overview}, the near-
 \gls{AVX} vectorisation at the \gls{CPU} level
 is used to accelerate the \gls{P2P} calculations in both major \gls{KIFMM}
 implementations \cite{Malhotra:2015:CCP, exafmm}. These optimisations are
-dependent on the available hardware, however share a common theme in distributing
+dependent on the available hardware, however they share a common approach in distributing
 a single \gls{P2P} instruction, across multiple particle interactions, following
 the \gls{SIMD} paradigm. The calculation of the far-field \gls{M2L} operator
 matrices can also be accelerated by the above techniques. Furthermore, randomised
 \gls{SVD} compression \cite{Erichson:2019:JOSS, Halko:2011:SIAM} can be implemented
 to also take advantage of shared memory parallelism as described in Chapter
 \ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_4_svd_compression},
-with the additional benefit of reducing the cost of computing low-rank \gls{SVD}
-approximations of the \gls{M2L} operator matrices.
-The mixed performance of \gls{JIT} compilation for the construction of trees
+reducing further the cost of computing low-rank approximations of the \gls{M2L} operator matrices.
+The mixed performance of \gls{JIT} compilation for the construction of trees,
 leaves a lot of room for for further optimisation in \gls{PyExaFMM}. Specifically,
 state of the art implementations construct adaptive trees in parallel, taking
 advantage of the distributed memory programming paradigm with \gls{MPI} \cite{Malhotra:2015:CCP}.
 PVFMM, for example, chunks particle data across processors, constructing subtrees in parallel,
-and uses \gls{MPI} to pass required multipole and local expansions to other processes
+and uses \gls{MPI} to pass multipole and local expansion coefficients to other processes
 as required during the main \gls{FMM} loop. In addition to the above optimisations,
-the current \gls{PyExaFMM} can be further sanitised. Specifically, integration tests
+the current \gls{PyExaFMM} codebase can be further sanitised. Specifically, integration tests
 that test the way in which modules interact, should be added on top of the current
-unit test suite. Additionally, more detailed code profiling to clearly identify
-the most significant memory and \gls{CPU} bottlenecks should be a priority.
+unit test suite. Additionally, it should be a priority to perform more
+detailed code profiling to clearly identify the most significant memory and
+ \gls{CPU} bottlenecks.
 
 Despite its limitations, \gls{PyExaFMM} achieves the complexity bound of the
-\gls{FMM} algorithm, and it represents a significant first step towards the goal
+\gls{FMM} algorithm. Furthermore, it represents a significant first step towards the goal
 of an open source Python \gls{KIFMM} implementation which sacrifices as little
-computational performance as possible in comparison to major compiled implementations.
+computational performance as possible, in comparison to major compiled language
+implementations.
