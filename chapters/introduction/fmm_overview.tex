@@ -202,10 +202,9 @@ can be truncated as required to ensure that the asymptotic complexity of evaluat
 a multipole or local expansion at an evaluation point is bounded by $O(N)$. A
 rigorous error analysis of the analytic FMM is outside the scope of this thesis, and
 we defer to the literature for exact expressions for these truncation errors \cite{Greengard:1987:JCP},
-Furthermore, exact operations exist for shifting the center of these expansions,
-as well as translating multipole expansion coefficients into equivalent local expansion
-coefficients,
-which are crucial in providing the improvements to asymptotic complexity\footnote{
+Furthermore, there exist exact operations for shifting the center of these expansions,
+as well as for translating multipole expansion coefficients into equivalent local expansion
+coefficients. These are crucial in providing the improvements to asymptotic complexity\footnote{
     Expressions for these shift operators for the three dimensional Laplace kernel
     considered as our model problem are provided in Appendix \ref{app:3d_laplace}.
 }.
@@ -257,7 +256,7 @@ Laplace kernel considered as our model problem are provided in Appendix \ref{app
 $M_n^m$ to local expansion coefficients $L_n^m$ one can approximate the the interaction
 between two boxes in the tree. Roughly speaking, because of the hierarchical
 nature of the tree, each box only needs to consider the interaction with a
-constant number of neighbouring boxes. Because the number of boxes $O(N)$,
+constant number of neighbouring boxes. Because the number of boxes is $O(N)$,
 the FMM is bound by an $O(N)$ asymptotic complexity \cite{Hwu:2011:MKP}.
 
 Using the above analysis, one can then describe the FMM algorithm in terms of
@@ -289,7 +288,7 @@ two basic steps,
     the multipole-to-local operation, or \textbf{\gls{M2L}}. Notice that the
     \gls{M2L} operation is only available from $l=2$ of the tree, as in coarser
     levels the \gls{interaction-list} for all boxes is empty. The coefficients found
-    from (1) and (2) are summed for each box. Steps (1) and (2) are repeated for each
+    from (1) and (2) are summed for each box. Operations (1) and (2) are repeated for each
     box until the leaf level. At this point, the local expansion
     of each leaf box is evaluated at all the \textbf{\gls{target-particles}} it contains.
     This local-to-particle, or \textbf{\gls{L2P}}, operation encodes all the \gls{far-field}
@@ -354,7 +353,7 @@ multiple different implementations already exist for Poison problems alone \cite
 In software engineering terms this is inconvenient for the purposes of studying
 the applications of the FMM in multiple different problem settings, as it leads to the requirement
 to implement problem-specific solvers for each kernel one may encounter. This
-leads to a productivity overhead in either designing a single, extensible
+leads to a productivity overhead in either creating a single, extensible
 library, which by definition will be complex to design. Or to otherwise
 maintain multiple problem-specific libraries.
 

@@ -9,13 +9,13 @@ containers themselves, rather than an abstraction layer between a data object
 and a client object, the number of object abstractions must also be kept to a
 minimum.
 
-Concerns about the overhead of using the object oriented design principles, in comparison to directly manipulating
+Concerns about the overhead of using object oriented design principles, in comparison to directly manipulating
 primitives, such as those available in compiled languages such as C
 or C++, are misplaced for two reasons. Firstly, the implementation of Python objects
-is syntactic sugar, methods and data for a given object are written into
+is syntactic sugar. Methods and data for a given object are written into
 a simple dictionary structure at run time, with the `class' syntax common to other
-object oriented languages such as C++ or Java, offered as they are familiar to
-the programmer coming from such languages. Furthermore, all `primitives' such as
+object oriented languages such as C++ or Java, offered as it is familiar to
+programmers coming from such languages. Furthermore, all `primitives' such as
 integers and strings in Python are actually objects by design, being quite different
 in their construction from C or C++ where the programmer is given the power to
 allocate memory for true primitives themselves. In Python the overhead therefore
@@ -86,15 +86,17 @@ from the context in which they're used, allowing the user - in this case the
 Fmm object - to access kernel functions via a uniform interface. Kernel
 objects also allow for the encapsulation of
 kernel specific information such as their scaling properties at different levels
-of an octree. Furthermore, the precomputed operator matrices are loaded from a cache,
+of an octree.  This allows \gls{PyExaFMM} to be trivially extended to work with
+new kernel functions, as the main loop relies only on the interface enforced by the
+abstract kernel object. Furthermore, the precomputed operator matrices are loaded from a cache,
 and injected into the Fmm object. Crucially, this means that the Fmm object can
 remain ignorant of the implementation details of how these operators were computed.
 
 The main point to note is that a loose hierarchy of objects allows for
-the logic of the main \gls{FMM} loop to be separated from the code it depends on
-, for example for the creation and partitioning of an octree.
-Safe interactions between objects are further enforced by interfaces for data containers.
-Specifically the Abstract Density and Node classes define interfaces for access to concrete Potential density
+the logic of the main \gls{FMM} loop to be separated from the code it depends on,
+ for example for the creation and partitioning of an octree.
+ Safe interactions between objects are further enforced by interfaces for data containers.
+Specifically the Abstract Density and Node classes define interfaces for access to concrete Potential Density
 objects (used to store the potential computed at a target particle as a result
 of the FMM algorithm), and the multipole or local expansions for a given box in an octree respectively,
 as well as their underlying Numpy containers, in a uniform manner.

@@ -1,7 +1,7 @@
 Practical implementations of the \gls{KIFMM} rely on the creation of efficient
 surfaces used in the calculation of kernel matrices, as well as a stable method for
 computing the inverse of these kernel matrices. The former problem naturally leads
-to the implementation of caching code to store, re-use, and scale operator matrices
+to the implementation of caching codes, used to store, re-use, and scale operator matrices
 as appropriate. Whereas the latter requires the implementation of a stable method to
 solve the system of linear equations for each \gls{KIFMM} operator. As mentioned
 in Chapter \ref{chpt:1_introduction}, Section \ref{sec:1_2_kifmm_overview}, \gls{PyExaFMM} uses
@@ -13,7 +13,7 @@ to the same degree, this follows the precedent set by the original authors \cite
 allows for the application of simple quadrature rules to calculate the various
 operator integrals such as those in equations (\ref{eq:1_2_m2m}), (\ref{eq:1_2_m2l})
 and (\ref{eq:1_2_l2l}). In fact, as the number of quadrature points is generally
-chosen to be relatively low \gls{PyExaFMM} uses a direct computation to
+chosen to be relatively low, \gls{PyExaFMM} uses a direct computation to
 compute the required integrals. Specifically, an order $p$ expansion results in,
 
 \begin{equation}
@@ -131,12 +131,12 @@ of the \gls{KIFMM} \cite{exafmm,Malhotra:2015:CCP}.
 
 As mentioned, the required operator matrices are loaded from disk at run-time, ready to
 be used by \gls{PyExaFMM}. Currently, objects corresponding to cached \gls{M2L}
-matrices are simple serialised to be loaded in their entirety at run time by
+matrices are simply serialised to be loaded in their entirety at run time by
 \gls{PyExaFMM}. However, the translation of the cache to HDF5 based storage is
 an area of future extension, and has been implemented
 for the storage of the \gls{M2M} and \gls{L2L} operator matrices. HDF5 offers an
-interface for loading slices of large datasets that may be stored on disks, allowing
-for rapid read times for subsets of a data, even if the underlying dataset
+interface for loading slices of large datasets that may be stored on disk, allowing
+for rapid read times for subsets of a dataset, even if the underlying dataset
 is of the order of gigabytes \cite{Wasser:NSF}. Furthermore, HDF5 allows for the
 hierarchical storage of numeric arrays, this amounts to creating
 a database like structure on disk which can store numeric arrays of different
@@ -183,7 +183,7 @@ giving,
 For numerical stability, singular vectors corresponding to `large' diagonal terms in
 $(\alpha I + \Sigma^*\Sigma)^{-1}$ are filtered out, if they exceed
 a specified tolerance. This tolerance value is set using a number close
-to machine precision, and \gls{PyExaFMM} uses a value of, $\text{tol} = 1/ (4 \cdot \text{EPS} \cdot \max (\alpha I + \Sigma^*\Sigma) )$,
+to machine precision, and \gls{PyExaFMM} uses a value of $\text{tolerance} = 1/ (4 \cdot \text{EPS} \cdot \max (\alpha I + \Sigma^*\Sigma) )$,
 where EPS is machine precision, and $\max ( \alpha I + \Sigma^*\Sigma)$ is the largest
 entry in $(\alpha I + \Sigma^*\Sigma)$. This has been determined empirically to provide
 stable results. The regularisation parameter $\alpha$ is also determined empirically,

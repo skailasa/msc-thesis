@@ -55,8 +55,8 @@ can be stated mathematically as follows,
     \hfill
   {\includegraphics[width=0.4\textwidth]{introduction/downward_surface.png}}
   \vspace{0pt}
-  \caption{Cross section of three dimensional cubic upward/downward equivalent and
-    check surfaces. Source points are denoted by green circles. Red solid lines
+  \caption{Cross section of three dimensional cubic (A) upward and (B) downward,
+    equivalent and check surfaces. Source points are denoted by green circles. Red solid lines
     denote equivalent surfaces, and blue checked lines denote check surfaces.
     The black solid line defines the box $B$. This figure is adapted directly from \cite{Ying:2004:JCP}.}
   \label{fig:1_2_upward_downward_surfaces}
@@ -184,7 +184,7 @@ where $\alpha$ is an appropriate regularisation parameter, and $I$ is the identi
 matrix. This equation, a second-kind Fredholm equation, can be solved in numerous
 ways. The authors of \cite{Ying:2004:JCP} make use of a Nyström method, and indicate
 the possibility of using either Galerkin or Collocation methods. For ease of
-implementation, a simpler approach is to instead approximate the solution using a pseudoinverse
+implementation, a simpler approach is used instead to approximate the solution using a pseudoinverse
 estimated from a Singular Value Decomposition, or \textbf{\gls{SVD}}. This
 approach is adapted from current C++ implementations of the \gls{KIFMM}: ExaFMM-t,
 as well as PVFMM \cite{Malhotra:2015:CCP,exafmm}.
@@ -208,18 +208,18 @@ We can write an approximate pseudoinverse of $A$ as \cite{Trefethen:1997:SIAM},
 here, $A^{-1}$ has $n$ rows and $m$ columns, and $\Sigma^{-1}$ is formed
 by taking the reciprocal of all the diagonal elements. Furthermore, to ensure
 numerical stability for this reciprocal calculation, one can choose to filter
-out components of $V$ and $U^*$ if their singular values smaller than a specified
+out components of $V$ and $U^*$ if their singular values are smaller than a specified
 tolerance. \gls{PyExaFMM} calculates the pseudoinverse of an operator matrix $K$,
 by first applying an \gls{SVD} decomposition using (\ref{eq:1_2_svd}) and then
 inverting the diagonal matrix $\Sigma$ using Tikhonov regularisation
-(\ref{eq:1_2_tikhonov}), and finally applying (\ref{eq:1_2_pseudo_inverse}) to find
-the inverse. The justification of the choices for the regularisation parameter
+similar to (\ref{eq:1_2_tikhonov}), and finally by applying (\ref{eq:1_2_pseudo_inverse}).
+The justification of the choices for the regularisation parameter
 $\alpha$ and the tolerance for the pseudoinverse are discussed in detail in
 Chapter \ref{chpt:2_strategy_for_practical_implementation},
 Section \ref{sec:2_3_operator_caching}. In terms of the asymptotic complexity of the \gls{SVD},
-as the singular values/vectors are iterated through once in a straightforward
+as the singular values and vectors are iterated through once in a straightforward
 manner to find the pseudoinverse, the complexity of this operation is at most $O(N)$,
-where $N$ is the number of singlar values of $A$.
+where $N$ is the number of singular values of $A$.
 
 The \gls{KIFMM} algorithm shares almost all of its algorithmic steps with the analytic \gls{FMM}, the
 main novelties are the least-squares solves (\ref{eq:1_2_tikhonov}) to compute
@@ -229,25 +229,24 @@ as well as the numerical quadrature over the equivalent/source densities to comp
 the required check potentials. However, the the matrix to be inverted
 in the \gls{M2M} operation as well as the \gls{L2L} operation are very similar, which can
 be seen from figure (\ref{fig:1_2_m2m_l2l}). In fact for the kernel function of
-the model problem (\ref{eq:electrostatic_paradigm}), if
+the model problem  of three dimensional electrostatics with a Laplace kernel (\ref{eq:electrostatic_paradigm}), if
 the upward \gls{check-surface} is chosen to coincide with the downward
 \gls{equivalent-surface}, and the upward \gls{equivalent-surface} is chosen to
 coincide with the downward \gls{check-surface}, the matrix to be inverted for the M2M
 operation is the transpose of the matrix to be inverted for the \gls{L2L} operation,
 except for a scaling factor dependent on the level of the Octree the surfaces
-are created in. This scaling factor is easy to identify for the model problem of
-three dimensional electrostatics with a Laplace kernel,
+are created in. This scaling factor is easy to identify for the model problem,
 kernel matrices evaluated at two adjacent Octree levels, $l$, are scaled as $K^{l+1} = 2K^l$.
 Similarly, the required matrix inverse for the \gls{L2L} and \gls{M2L} operations exactly coincide
 except for a scaling factor. Therefore, practical implementations of (\ref{eq:electrostatic_paradigm})
 need to compute at most one matrix inversion which can be cached. This can then
 be scaled and applied as required at each step of the algorithm. Furthermore,
-for the Laplace kernel specifically, the scaling factors are present on both sides
+for the Laplace kernel, the scaling factors are present on both sides
 of the equations (\ref{eq:1_2_m2m}) and (\ref{eq:1_2_l2l}), cancelling each other out.
 This means that the \gls{M2M} and \gls{L2L} operations can also be calculated between just one
 parent box and its respective child boxes, and cached for later use.
 
-Considering the asymptotic complexity of the inverse, its calculation is bound
+The calculation of the pseudoinverse is bound
 by a term proportional to the number of singular values of the kernel
 matrix, which in turn is dependent on the number of quadrature points chosen for
 the check and equivalent surfaces. Therefore as long as this number of quadrature
@@ -256,7 +255,7 @@ of the \gls{KIFMM}. The remainder of the \gls{M2M}, \gls{M2L} and \gls{L2L} oper
 the complexity of computing a matrix vector product between the calculated inverse
 matrix and the check potentials, which is resultantly also not impactful on the
 algorithm's asymptotic complexity as long as the requirement on the number of
-quadrature points is satisfied. As the other algorithmic analysis from
+quadrature points is satisfied. As the remaining algorithmic analysis from
 Section \ref{sec:1_1_fmm_overview} remains the same, we can see approximately how
 the $O(N)$ complexity is maintained for the \gls{KIFMM}.
 
@@ -312,11 +311,11 @@ to be,
 
 Meaning that each surface has $O(p^2)$ points, and therefore the \gls{M2L} operation
 (\ref{eq:1_2_m2l}) is of $O(p^4)$ between a given target box and source box.
-This FFT based method to find equivalent densities, accelerates the \gls{M2L} calculation between a given target box
-and a given source box to $O(p^3 \log(p))$. In PyExaFMM we use an alternative
+This \gls{FFT} based method to find equivalent densities, accelerates the \gls{M2L} calculation between a given target box
+and a given source box to $O(p^3 \log(p))$ \cite{Ying:2004:JCP}. In PyExaFMM we use an alternative
 acceleration scheme, based on low rank SVD approximations, discussed further in
 Chapter \ref{chpt:2_strategy_for_practical_implementation}, Section \ref{sec:2_4_svd_compression}. Therefore we defer to the
-literature for further details on FFT based acceleration methods \cite{Malhotra:2015:CCP}.
+literature for further details on FFT based acceleration methods \cite{Ying:2004:JCP, Malhotra:2015:CCP}.
 
 The \gls{KIFMM} presents many of the same opportunities for parallel implementation
 as the \gls{FMM}. In terms of \gls{task-level-parallelism}, PyExaFMM implements

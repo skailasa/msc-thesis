@@ -86,8 +86,8 @@ analysis takes so much longer for some Numpy based functions than others.
 \end{table}
 
 
-The loading and saving speeds, as a function of file size, into memory by
-HDF5 in comparison to Python's native object serialisation library, Pickle,
+The loading and saving speeds of files into/from memory, as a function of file size,
+by HDF5 in comparison to Python's native object serialisation library, Pickle,
 are illustrated in figures (\ref{fig:3_1_loadtime}) and (\ref{fig:3_1_savetime})
 respectively. Each trial was repeated five times with each file size for statistics.
 The multiplicative speedups for loading and saving using HDF5 are illustrated
@@ -168,7 +168,7 @@ for the operator matrices of the model electrostatic problem in three dimensions
 a unit cube. These are taken to be both sources and targets, with unit charges
 placed on all sources. The problem is discretised using an octree with a maximum depth of 3 levels,
 and we vary the number of processor cores accessible to the script.
-Televant surfaces are calculated to order $p=2$, and therefore discretised
+Relevant surfaces are calculated to order $p=2$, and therefore discretised
 with 8 quadrature points (\ref{eq:2_2_quadrature_points}). The parameters for
 the relative sizes of different surfaces are the same as those provided
 in Chapter \ref{chpt:2_strategy_for_practical_implementation},
@@ -209,7 +209,7 @@ to fit a linear relationship to,
 
 computing the value of $x$ from the gradient. Performing this calculation for the
 results from the \gls{FMM} and direct approaches we report $x=1.14$ (2 d.p) for
-the FMM, and $x=1.98$ (2 d.p) for the direct method. This implies an approximate
+\gls{PyExaFMM}, and $x=1.98$ (2 d.p) for the direct computation. This implies an approximate
 asymptotic complexity of $O(N)$, and $O(N^2)$ for the \gls{FMM} and direct methods
 respectively in line with what is expected, with the limitation that this has
 been tested on relatively small inputs of only $O(10^3)$ particles.
@@ -227,7 +227,7 @@ been tested on relatively small inputs of only $O(10^3)$ particles.
     \label{fig:3_1_complexity}
 \end{figure}
 
-We report that with a simulation with the above octree and
+We report that a simulation with the above octree and
 $N=3000$ takes $17.1 \pm 0.2$ s, over the three runs with
 error calculated from standard deviation and reported to 1 s.f. From correspondence
 with the authors of ExaFMM-T, we can report their corresponding benchmark figure,

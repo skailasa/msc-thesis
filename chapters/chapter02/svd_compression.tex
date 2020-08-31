@@ -6,7 +6,7 @@ in the fact that it is defined on all matrices, real and complex
 concatenated M2L operators can be written as,
 
 \begin{equation}
-    A = \left [ A_1 | A_2 | ... | A_I \right]
+    A = \left [ A_1 | A_2 | ... | A_I \right],
     \label{eq:2_4_concatenated_m2l}
 \end{equation}
 
@@ -20,21 +20,21 @@ matrices, it is always the case that either the rows or columns (whichever is
 greater in number), are linearly dependent. Therefore,
 
 \begin{equation}
-    \text{rank}(A) \leq \min (T, I \cdot S)
+    \text{rank}(A) \leq \min (T, I \cdot S),
 \end{equation}
 
 using this fact, it's therefore possible to write a lower-rank approximation of $A$.
 However, an even lower rank approximation is possible using an SVD,
 
 \begin{equation}
-    A = U \Sigma V^*
+    A = U \Sigma V^*,
 \end{equation}
 
 this can also be rephrased as a weighted sum of rank one matrices, or put simply,
 written in terms of the products of the left and right singular vectors \cite{Trefethen:1997:SIAM},
 
 \begin{equation}
-    A = \sum_{j=1}^{r}\sigma_j u_j v_j^*
+    A = \sum_{j=1}^{r}\sigma_j u_j v_j^*,
 \end{equation}
 
 where $r = \text{rank} (A)$, $\{\sigma_j | j \in [1, ..., r] \}$ are the singular
@@ -45,14 +45,14 @@ However, noting that singular values are generally arranged in weakly increasing
 order in terms of magnitude such that,
 
 \begin{equation}
-    \sigma_1 \geq \sigma_2 \geq ... \geq \sigma_{r-1} \geq \sigma_r
+    \sigma_1 \geq \sigma_2 \geq ... \geq \sigma_{r-1} \geq \sigma_r,
 \end{equation}
 
 one can say that the $\tau^{th}$ partial sum where
 $\tau \leq r$ captures as much `energy' of $A$ as possible,
 
 \begin{equation}
-    A_\tau = \sum_{j=1}^{\tau}\sigma_j u_j v_j^*
+    A_\tau = \sum_{j=1}^{\tau}\sigma_j u_j v_j^*,
     \label{eq:2_4_sum_svd}
 \end{equation}
 
@@ -62,7 +62,7 @@ that for any $\tau$ with $0 \leq \tau \leq r$, if $\tau = \min \{T, I \cdot S\}$
 and we define $\sigma_{\tau + 1} = 0$ then,
 
 \begin{equation}
-    ||A - A_\tau ||_2 = \sigma_{\tau+1} = 0
+    ||A - A_\tau ||_2 = \sigma_{\tau+1} = 0,
 \end{equation}
 
 meaning that $A_\tau$ is the best approximation of $A$, by a matrix of a lower rank
@@ -70,7 +70,7 @@ meaning that $A_\tau$ is the best approximation of $A$, by a matrix of a lower r
 if the energy of the approximated $A_\tau$ is within some acceptable tolerance,
 
 \begin{equation}
-    ||A - A_\tau ||_2  \leq  \text{tol}
+    ||A - A_\tau ||_2  \leq  \text{tol},
     \label{eq:2_4_svd_tol}
 \end{equation}
 
@@ -80,7 +80,7 @@ $\sigma_{k+1} \leq \text{tol}$. The \gls{SVD} of the approximation $A_\tau$ can
 then be written as,
 
 \begin{equation}
-    A_\tau = U_k \Sigma_k V_k^*
+    A_\tau = U_k \Sigma_k V_k^*,
     \label{eq:2_4_decomposed_approximation_a_tau}
 \end{equation}
 
@@ -159,7 +159,8 @@ $O(m^2 + n^2)$ from (\ref{eq:2_4_b_svd}). Compared with the application of the
 of $O(k(m + n))$. As long as $k < \min (m, n)$, this represents a complexity
 saving and therefore faster matrix-vector products with the approximation
 $B_\tau$. This internal dimension $k$ which represents the amount of compression
-is often referred to as the target rank. Optimum choices for $k$ are explored in
+is often referred to as the target rank. Optimum choices for $k$ for compressing
+the concatenated \gls{M2L} operator matrix, $A$, are explored in
 Chapter \ref{chpt:3} Section \ref{sec:3_2_svd_params}.
 
 Currently, \gls{PyExaFMM} computes the \gls{SVD} using the provided function
@@ -172,7 +173,7 @@ communication and data transfer overhead between processes, than by number of
 operations \cite{Halko:2011:SIAM}. Halko et. al introduce new `randomised'
 approaches for generating low-rank approximations of matrices, which can be
 optimised for modern heterogenous and distributed computing environments as they
-consist of processes which can be easily parallelised.
+consist of processes which can be easily parallelised \cite{Halko:2011:SIAM}.
 
 The low-rank approximation implemented in \gls{PyExaFMM} via a truncated
 \gls{SVD} (\ref{eq:2_4_decomposed_approximation_a_tau}) is costly to compute

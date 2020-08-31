@@ -96,7 +96,7 @@
 \glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{equivalent surface?\glossentry{equivalent-surface}|setentrycounter[]{page}\glsnumberformat}{15}
 \glossaryentry{check surface?\glossentry{check-surface}|setentrycounter[]{page}\glsnumberformat}{15}
-\glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{15}
+\glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{16}
 \glossaryentry{L2L?\glossentry{L2L}|setentrycounter[]{page}\glsnumberformat}{16}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{16}
 \glossaryentry{M2M?\glossentry{M2M}|setentrycounter[]{page}\glsnumberformat}{16}
@@ -122,6 +122,7 @@
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{17}
+\glossaryentry{FFT?\glossentry{FFT}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{17}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{17}
@@ -205,9 +206,9 @@
 \glossaryentry{KIFMM?\glossentry{KIFMM}|setentrycounter[]{page}\glsnumberformat}{23}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{23}
 \glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{23}
-\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{24}
-\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{24}
-\glossaryentry{CPU?\glossentry{CPU}|setentrycounter[]{page}\glsnumberformat}{24}
+\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{23}
+\glossaryentry{GPU?\glossentry{GPU}|setentrycounter[]{page}\glsnumberformat}{23}
+\glossaryentry{CPU?\glossentry{CPU}|setentrycounter[]{page}\glsnumberformat}{23}
 \glossaryentry{SIMD?\glossentry{SIMD}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{24}
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{24}
@@ -229,6 +230,7 @@
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{27}
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{27}
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{M2L?\glossentry{M2L}|setentrycounter[]{page}\glsnumberformat}{27}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{27}
 \glossaryentry{SVD?\glossentry{SVD}|setentrycounter[]{page}\glsnumberformat}{27}
 \glossaryentry{LAPACK?\glossentry{LAPACK}|setentrycounter[]{page}\glsnumberformat}{27}
@@ -267,6 +269,7 @@
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{30}
 \glossaryentry{JSON?\glossentry{JSON}|setentrycounter[]{page}\glsnumberformat}{30}
 \glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{30}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{30}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{31}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{31}
@@ -296,6 +299,7 @@
 \glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{33}
 \glossaryentry{JIT?\glossentry{JIT}|setentrycounter[]{page}\glsnumberformat}{33}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{35}
+\glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{35}
 \glossaryentry{FMM?\glossentry{FMM}|setentrycounter[]{page}\glsnumberformat}{35}
 \glossaryentry{CPU?\glossentry{CPU}|setentrycounter[]{page}\glsnumberformat}{35}
 \glossaryentry{PyExaFMM?\glossentry{PyExaFMM}|setentrycounter[]{page}\glsnumberformat}{35}
