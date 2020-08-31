@@ -183,9 +183,9 @@ giving,
 For numerical stability, singular vectors corresponding to `large' diagonal terms in
 $(\alpha I + \Sigma^*\Sigma)^{-1}$ are filtered out, if they exceed
 a specified tolerance. This tolerance value is set using a number close
-to machine precision, and \gls{PyExaFMM} uses a value of, $\text{tol} = 1/ (4 \cdot \text{EPS} \cdot \max (\alpha I + \Sigma^*\Sigma)^{-1} )$,
-where EPS is machine precision, and $\max ( \alpha I + \Sigma^*\Sigma)^{-1}$ is the largest
-entry in $(\alpha I + \Sigma^*\Sigma)^{-1}$. This has been determined empirically to provide
+to machine precision, and \gls{PyExaFMM} uses a value of, $\text{tol} = 1/ (4 \cdot \text{EPS} \cdot \max (\alpha I + \Sigma^*\Sigma) )$,
+where EPS is machine precision, and $\max ( \alpha I + \Sigma^*\Sigma)$ is the largest
+entry in $(\alpha I + \Sigma^*\Sigma)$. This has been determined empirically to provide
 stable results. The regularisation parameter $\alpha$ is also determined empirically,
 and a value proportional to the largest singular value of $K_A$,
 $\alpha=0.075 \cdot \max(\Sigma)$ is found to provide stable results.\footnote{
